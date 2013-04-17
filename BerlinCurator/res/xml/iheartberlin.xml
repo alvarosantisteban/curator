@@ -1,0 +1,55 @@
+<feed>
+	<entry>
+	    <date>
+			Jueves, Marzo 28, 2013					
+		</date>
+		<image>
+			http://www.iheartberlin.de/wp-content/uploads/2013/03/documentary-donnerstag.jpg					
+		</image>
+		<info>
+			The Berlin Film Society presents a unique programme of exemplary documentary films which explore topics as diverse as censorship, race, sexuality, cinematic history, collective and personal memory, war on drugs. Every thursday 8 new and archive thought-provoking and award-winning films will be showcased, starting this week with the American documentary MARWENCOL. Join the event at Urban Spree, Revaler Str. 99.						
+		</info>
+	</entry>
+	
+	<entry>
+	    <date>
+			Thursday, March 28, 2013					
+		</date>
+		<image>
+			http://www.iheartberlin.de/wp-content/uploads/2013/03/documentary-donnerstag.jpg					
+		</image>
+		<info>
+			Bla bla bla bla
+		</info>
+	</entry>
+	<!-- 
+	<entry>
+	    <date>
+		Thursday, April 8, 2013					
+	</date>
+		<image>
+			http://www.iheartberlin.de/wp-content/uploads/2013/03/documentary-donnerstag.jpg					
+		</image>
+		<info>
+			<class>
+				<time>
+					19:04h							
+				</time>
+				<category>
+					Movieerws						
+				</category>
+			</class>
+				Document		
+			<p>
+				The Berlin Film Socihis week with the American documentary MARWENCOL. Join the event at Urban Spree, Revaler Str. 99.						
+			</p>
+			<author>
+				added by Devid						
+				<links>
+					https://www.facebook.com/events/560632803962103			
+				</links>
+			</author>
+		</info>
+	</entry>
+	-->
+</feed>
