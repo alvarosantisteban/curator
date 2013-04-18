@@ -35,4 +35,23 @@
         android:layout_centerHorizontal="true"
         android:visibility="invisible" />
 
+    <TextView
+        android:id="@+id/myText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="61dp"
+        android:layout_marginLeft="16dp"
+        android:text="Esto deberia cambiar" />
+
+    <Button
+        android:id="@+id/buttonDownload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/myText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
+        android:text="Download" />
+
 </RelativeLayout>
