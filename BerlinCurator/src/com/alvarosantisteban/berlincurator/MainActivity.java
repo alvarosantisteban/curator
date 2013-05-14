@@ -21,6 +21,8 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
 import com.alvarosantisteban.berlincurator.IHeartBerlinHtmlParser.Entry;
 
 /**
@@ -90,10 +92,20 @@ public class MainActivity extends Activity {
 			    if (networkInfo != null && networkInfo.isConnected()) {
 					DownloadWebpageTask download = new DownloadWebpageTask();
 					// Execute the asyncronous task of downloading the websites
+					// TODO Try to make it fail by giving ONE false url
 					download.execute(stringUrls);
 					try {
 						// Get the downloaded htmls
 						htmls = download.get();
+						if (htmls != null){
+							// Go to the DateActivity and pass it the downloaded data
+							Intent intent = new Intent(context, DateActivity.class);
+							intent.putExtra(EXTRA_HTML, htmls);
+							startActivity(intent);
+						}else{
+							// Something went wrong retrieving the data from the urls
+							Toast.makeText(getBaseContext(), "Something went wrong retrieving the data from the urls.", Toast.LENGTH_LONG).show();
+						}
 					} catch (InterruptedException e) {
 						System.out.println("interrupted exception");
 						e.printStackTrace();
@@ -102,12 +114,10 @@ public class MainActivity extends Activity {
 						e.printStackTrace();
 					}
 			    } else {
+			    	// Inform the user that there is no network connection available
+			    	Toast.makeText(getBaseContext(), "No network connection available.", Toast.LENGTH_LONG).show();
 			        System.out.println("No network connection available.");
 			    }
-				// Go to the DateActivity and pass it the downloaded data
-				Intent intent = new Intent(context, DateActivity.class);
-				intent.putExtra(EXTRA_HTML, htmls);
-				startActivity(intent);
 			}
 		});
 	}
@@ -170,14 +180,21 @@ public class MainActivity extends Activity {
 		 * Downloads the htmls. Updates the status of the progressBar.
 		 */
 		protected String[] doInBackground(String... urls) {   
-        	// params comes from the execute() call: params[0] is the url.
 			try {
 				String[] webpages = new String[MAX_NUMBER_OF_WEBSITES];
 				for (int i = 0; i < urls.length; i++) {
-					webpages[i] = downloadUrl(urls[i]);
-					progressBarStatus++;
-					System.out.println("Estoy en doInBackgroung:"+progressBarStatus);
-					publishProgress(progressBarStatus);
+					String check = downloadUrl(urls[i]);
+					if (check == "Invalid response code"){
+						// TODO Think of a strategy (try one more time or whatever)
+						return null;
+					}else if (check == "Exception"){
+						return null;
+					}else{
+						webpages[i] = check;
+						progressBarStatus++;
+						System.out.println("Estoy en doInBackgroung:"+progressBarStatus);
+						publishProgress(progressBarStatus);
+					}
 				}
 				return webpages;
 			} catch (IOException e) {
@@ -190,7 +207,6 @@ public class MainActivity extends Activity {
 		 */
 		protected void onProgressUpdate(Integer... progress) {
     		System.out.println("Estoy en onProgressUpdate:"+progress[0].intValue());
-        	//setProgressPercent(progress);
           	loadProgressBar.setProgress(progress[0].intValue());
 		}
        
@@ -203,12 +219,6 @@ public class MainActivity extends Activity {
 		}
        
        /*
-       private void setProgressPercent(int progress){
-    	   System.out.println("Estoy en setProgressPercent:"+progress);
-    	   loadProgressBar.setProgress(progress);
-       }*/
-       
-       /*
        private EventView extractEventFromHtml(String theHtml){    	   
     	   return null;
        }*/
@@ -218,7 +228,7 @@ public class MainActivity extends Activity {
         * the web page content as a InputStream, which it returns as
         *  a string.
         */
-		private String downloadUrl(String myurl) throws IOException {
+		private String downloadUrl(String myurl) throws IOException{
 			InputStream is = null;
 		   
       	   	try {
@@ -232,14 +242,18 @@ public class MainActivity extends Activity {
       	   		conn.connect();
       	   		int response = conn.getResponseCode();
       	   		Log.d(DEBUG_TAG, "The response is: " + response);
+      	   		if (response == -1){
+      	   			return "Invalid response code";
+      	   		}
       	   		is = conn.getInputStream();
       	   		// Convert the InputStream into a string
       	   		String contentAsString = convertStreamToString(is);
       	   		return contentAsString;
-      	         
-      	   		// Makes sure that the InputStream is closed after the app is
-      	   		// finished using it.
-      	   	} finally {
+      	   	} catch (Exception e){
+      	   		System.out.println("Problems downloading the url:"+myurl +". Exception: "+e);
+      	   		return "Exception";
+      	    // Makes sure that the InputStream is closed after the app is finished using it.
+      	   	}finally {
       	   		if (is != null) {
       	   			is.close();
       	   		} 
