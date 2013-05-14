@@ -37,6 +37,8 @@ public class EventView extends View {
 		text.setText(date +time +title +image +info +category +link);
 	}
 	
+	
+	
 	/*
 	protected void onDraw(Canvas canvas){
 		

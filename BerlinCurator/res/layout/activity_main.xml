@@ -9,49 +9,38 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <Button
-        android:id="@+id/buttonLoad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/progressBar1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="@string/button_load" />
-
-    <TextView
-        android:id="@+id/textLoad"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:text="@string/loading_events" />
-
     <ProgressBar
-        android:id="@+id/progressBar1"
+        android:id="@+id/progressLoadHtml"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textLoad"
         android:layout_centerHorizontal="true"
+        style="@android:style/Widget.ProgressBar.Large"
         android:visibility="invisible" />
 
     <TextView
-        android:id="@+id/myText"
+        android:id="@+id/textCalendar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="61dp"
-        android:layout_marginLeft="16dp"
-        android:text="Esto deberia cambiar" />
+        android:text="@string/calendar" />
 
-    <Button
-        android:id="@+id/buttonDownload"
+    <TextView
+        android:id="@+id/textSettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/myText"
+        android:layout_alignBaseline="@+id/textCalendar"
+        android:layout_alignBottom="@+id/textCalendar"
+        android:layout_alignParentRight="true"
+        android:text="@string/settings" />
+
+    <ImageButton
+        android:id="@+id/loadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="32dp"
-        android:text="Download" />
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/loading_events"
+        android:src="@drawable/ic_launcher" />
 
 </RelativeLayout>

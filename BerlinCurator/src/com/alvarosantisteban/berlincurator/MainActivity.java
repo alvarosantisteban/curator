@@ -8,94 +8,94 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-
 import com.alvarosantisteban.berlincurator.IHeartBerlinHtmlParser.Entry;
 
 public class MainActivity extends Activity {
 
+	public static final int MAX_NUMBER_OF_WEBSITES = 5;
 	private static final String DEBUG_TAG = "HttpExample";
-   	String stringUrl = "http://www.iheartberlin.de/events/";
+	public static final String EXTRA_HTML = "com.alvarosantisteban.berlincurator.html";
 	
-	Button loadButton, downloadButton;
-	TextView loadText;
+   	String[] stringUrls = {"http://www.iheartberlin.de/events/",
+				   			"http://www.berlin-artparasites.com/recommended",
+				   			"http://berlinmetal.lima-city.de/index.php/index.php?id=start",
+				   			"http://www.whitetrashfastfood.com/events/",
+				   			"http://www.koepi137.net/eventskonzerte.php",};
+   	String[] htmls = new String[MAX_NUMBER_OF_WEBSITES];
+
 	ProgressBar loadProgressBar;
 	RelativeLayout mainLayout;
-    private TextView downloadTextView;
+    ImageButton loadButton;
+    
+    private int progressBarStatus = 0;
 
-	
 	List<Entry> entries;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		System.out.println("Empezamos");
-		//final Context context = this;
+		System.out.println("--------------- Empezamos ------------");
+		final Context context = this;
 		
 		mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
-		loadButton = (Button) findViewById(R.id.buttonLoad);
-		downloadButton = (Button) findViewById(R.id.buttonDownload);
-		loadText = (TextView) findViewById(R.id.textLoad);
-		loadProgressBar = (ProgressBar)findViewById(R.id.progressBar1);
-		downloadTextView = (TextView) findViewById(R.id.myText);
-		
-		downloadButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				ConnectivityManager connMgr = (ConnectivityManager) 
-			            getSystemService(Context.CONNECTIVITY_SERVICE);
-			        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-			        if (networkInfo != null && networkInfo.isConnected()) {
-			            new DownloadWebpageTask().execute(stringUrl);
-			        } else {
-			            downloadTextView.setText("No network connection available.");
-			        }
-
-			}
-		});
+		loadButton = (ImageButton) findViewById(R.id.loadButton);
+		loadProgressBar = (ProgressBar)findViewById(R.id.progressLoadHtml);
 		
 		loadButton.setOnClickListener(new OnClickListener() {
 			
+			/**
+			 * Downloads the html from the websites and goes to the DataActivity
+			 */
 			public void onClick(View v) {
-				//loadProgressBar = new ProgressBar(context);
-				loadText.setText("Loading events...");
-				loadButton.setText("Loading");
-				loadProgressBar.setVisibility(0);
-				try {
-					loadXml();
-					loadText.setText("Events loaded");
-					loadButton.setVisibility(4);
-					//((RelativeLayout)loadButton.getParent()).removeView(loadButton); Another way of deleting views
-					mainLayout.removeView(loadProgressBar);
-					
-					/*
-					TextView date = new TextView(getBaseContext());
-					date.setText(entries.get(0).date);
-					mainLayout.addView(date);
-					*/
-					EventView event = new EventView(getBaseContext(), entries.get(0).date, entries.get(0).time, entries.get(0).title, entries.get(0).image, entries.get(0).info, entries.get(0).category, entries.get(0).link);
-					mainLayout.addView(event.text);
-				}catch(Exception e) {
-					System.out.println("Error loading the xml." +e);
-				}
+				
+				// prepare for a progress bar dialog
+				loadProgressBar.setProgress(0);
+				loadProgressBar.setMax(MAX_NUMBER_OF_WEBSITES);
+				loadProgressBar.setVisibility(View.VISIBLE);
+				
+				
+				ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+			    if (networkInfo != null && networkInfo.isConnected()) {
+					DownloadWebpageTask download = new DownloadWebpageTask();
+					download.execute(stringUrls);
+					try {
+						htmls = download.get();
+					} catch (InterruptedException e) {
+						System.out.println("interrupted exception");
+						e.printStackTrace();
+					} catch (ExecutionException e) {
+						System.out.println("execution exception");
+						e.printStackTrace();
+					}
+			    } else {
+			        System.out.println("No network connection available.");
+			    }
+				
+				Intent intent = new Intent(context, DateActivity.class);
+				intent.putExtra(EXTRA_HTML, htmls);
+				startActivity(intent);
 			}
 		});
 	}
@@ -107,7 +107,7 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	// Loads a XML from disk corresponding to the iheartberlin website and parses it
+	/* Loads a XML from disk corresponding to the iheartberlin website and parses it
     private void loadXml() throws XmlPullParserException, IOException {
     	System.out.println("loadXml()");
         InputStream stream = null;
@@ -136,72 +136,195 @@ public class MainActivity extends Activity {
         	entry.printEntry();
         }
     }
+    */
     
-    // Uses AsyncTask to create a task away from the main UI thread. This task takes a 
-    // URL string and uses it to create an HttpUrlConnection. Once the connection
-    // has been established, the AsyncTask downloads the contents of the webpage as
-    // an InputStream. Finally, the InputStream is converted into a string, which is
-    // displayed in the UI by the AsyncTask's onPostExecute method.
-	private class DownloadWebpageTask extends AsyncTask<String, Void, String> {
-       @Override
-       protected String doInBackground(String... urls) {   
-           // params comes from the execute() call: params[0] is the url.
-           try {
-               return downloadUrl(urls[0]);
-           } catch (IOException e) {
-               return "Unable to retrieve web page. URL may be invalid.";
-           }
-       }
-       // onPostExecute displays the results of the AsyncTask.
-       @Override
-       protected void onPostExecute(String result) {
-           downloadTextView.setText(result);
-      }
+    /** Uses AsyncTask to create a task away from the main UI thread. This task takes the 
+    * URL strings and uses them to create several HttpUrlConnection. Once the connection
+    * has been established, the AsyncTask downloads the html of the webpage as
+    * an InputStream. Finally, the InputStream is converted into a string.
+    */
+	private class DownloadWebpageTask extends AsyncTask<String, Integer, String[]> {
+		
+		/**
+		 * Makes the progressBar visible
+		 */
+		protected void onPreExecute(){
+	    	System.out.println("onPreExecute");
+	    	loadProgressBar.setVisibility(View.VISIBLE);
+		}
+	       
+		/**
+		 * Downloads the htmls. Updates the status of the progressBar.
+		 */
+		protected String[] doInBackground(String... urls) {   
+        	// params comes from the execute() call: params[0] is the url.
+			try {
+				String[] webpages = new String[MAX_NUMBER_OF_WEBSITES];
+				for (int i = 0; i < urls.length; i++) {
+					webpages[i] = downloadUrl(urls[i]);
+					progressBarStatus++;
+					System.out.println("Estoy en doInBackgroung:"+progressBarStatus);
+					publishProgress(progressBarStatus);
+				}
+				return webpages;
+			} catch (IOException e) {
+				return null;
+			}
+		}
        
+		/**
+		 * Sets the progress of the progressBar.
+		 */
+		protected void onProgressUpdate(Integer... progress) {
+    		System.out.println("Estoy en onProgressUpdate:"+progress[0].intValue());
+        	//setProgressPercent(progress);
+          	loadProgressBar.setProgress(progress[0].intValue());
+		}
        
-    // Given a URL, establishes an HttpUrlConnection and retrieves
-       // the web page content as a InputStream, which it returns as
-       // a string.
-          private String downloadUrl(String myurl) throws IOException {
-          	InputStream is = null;
-      	     // Only display the first 500 characters of the retrieved
-      	     // web page content.
-      	     int len = 500;
+		/**
+        * Hides the progressBar.
+        */
+		protected void onPostExecute(String[] result) {
+			System.out.println("onPostExecute:" +result[0] +".");
+			loadProgressBar.setVisibility(View.GONE);
+		}
+       
+       /*
+       private void setProgressPercent(int progress){
+    	   System.out.println("Estoy en setProgressPercent:"+progress);
+    	   loadProgressBar.setProgress(progress);
+       }*/
+       
+       /*
+       private EventView extractEventFromHtml(String theHtml){    	   
+    	   return null;
+       }*/
+       
+		/** 
+        * Given a URL, establishes an HttpUrlConnection and retrieves
+        * the web page content as a InputStream, which it returns as
+        *  a string.
+        */
+		private String downloadUrl(String myurl) throws IOException {
+			InputStream is = null;
+		   
+      	   	try {
+      	   		URL url = new URL(myurl);
+      	   		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      	   		conn.setReadTimeout(10000 /* milliseconds */);
+      	   		conn.setConnectTimeout(15000 /* milliseconds */);
+      	   		conn.setRequestMethod("GET");
+      	   		conn.setDoInput(true);
+      	   		// Starts the query
+      	   		conn.connect();
+      	   		int response = conn.getResponseCode();
+      	   		Log.d(DEBUG_TAG, "The response is: " + response);
+      	   		is = conn.getInputStream();
+      	   		// Convert the InputStream into a string
+      	   		String contentAsString = convertStreamToString(is);
+      	   		return contentAsString;
       	         
-      	     try {
-      	         URL url = new URL(myurl);
-      	         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      	         conn.setReadTimeout(10000 /* milliseconds */);
-      	         conn.setConnectTimeout(15000 /* milliseconds */);
-      	         conn.setRequestMethod("GET");
-      	         conn.setDoInput(true);
-      	         // Starts the query
-      	         conn.connect();
-      	         int response = conn.getResponseCode();
-      	         Log.d(DEBUG_TAG, "The response is: " + response);
-      	         is = conn.getInputStream();
-      	
-      	         // Convert the InputStream into a string
-      	         String contentAsString = readIt(is, len);
-      	         return contentAsString;
-      	         
-      	     // Makes sure that the InputStream is closed after the app is
-      	     // finished using it.
-      	     } finally {
-      	         if (is != null) {
-      	             is.close();
-      	         } 
-      	     }
-          }
+      	   		// Makes sure that the InputStream is closed after the app is
+      	   		// finished using it.
+      	   	} finally {
+      	   		if (is != null) {
+      	   			is.close();
+      	   		} 
+      	   	}
+		}
           
-      	// Reads an InputStream and converts it to a String.
-          public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
-              Reader reader = null;
-              reader = new InputStreamReader(stream, "UTF-8");        
-              char[] buffer = new char[len];
-              reader.read(buffer);
-              return new String(buffer);
-          }
-   }
-	
+		/**
+		 * Converts a InputStream to String. 
+		 * Taken from http://stackoverflow.com/questions/309424/read-convert-an-inputstream-to-a-string
+		 * @param is the InputStream to be converted
+		 * @return the resulting String
+		 */
+		public String convertStreamToString(java.io.InputStream is) {
+			java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+			return s.hasNext() ? s.next() : "";
+		}
+	}
 }
+
+
+/*
+
+loadButton.setOnClickListener(new OnClickListener() {
+
+public void onClick(View v) {
+	//loadProgressBar = new ProgressBar(context);
+	loadButton.setText("Loading");
+	loadProgressBar.setVisibility(0);
+	try {
+		loadXml();
+		loadButton.setVisibility(4);
+		//((RelativeLayout)loadButton.getParent()).removeView(loadButton); Another way of deleting views
+		mainLayout.removeView(loadProgressBar);
+		
+		/*
+		TextView date = new TextView(getBaseContext());
+		date.setText(entries.get(0).date);
+		mainLayout.addView(date);
+		*
+		EventView event = new EventView(getBaseContext(), entries.get(0).date, entries.get(0).time, entries.get(0).title, entries.get(0).image, entries.get(0).info, entries.get(0).category, entries.get(0).link);
+		mainLayout.addView(event.text);
+	}catch(Exception e) {
+		System.out.println("Error loading the xml." +e);
+	}
+}
+});
+
+*/
+
+/*
+ * 
+ * INTENTO CON EL PUTO WEBHARVEST
+ *
+try{
+	System.out.println("Loco");
+	String strPageURL = "http://www.iheartberlin.com/events";
+	//InputStream in_s = context.getResources().openRawResource(R.xml.iheartwebharvestconfig);
+	InputStream in_s = context.getResources().openRawResource(R.raw.iheartwebharvestconfig2);
+	
+	BufferedReader r = new BufferedReader(new InputStreamReader(in_s));
+	StringBuilder total = new StringBuilder();
+	String line;
+	while ((line = r.readLine()) != null) {
+	    total.append(line);
+	}
+	r.close();
+	System.out.println("----");
+	System.out.println(total);
+	System.out.println("----");
+	
+	InputSource inputSource = new InputSource(in_s);
+	
+	//inputSource.setEncoding("UTF-8");
+	//inputSource.setPublicId("Soy el id publico");
+	
+	//System.out.println(inputSource.getEncoding());
+	//System.out.println(inputSource.getPublicId());
+	//System.out.println(inputSource.getSystemId());				
+	System.out.println("----");
+	
+	/*
+	 * 
+	 * Writing directly the xml *
+	InputStream in = new ByteArrayInputStream("<html-to-xml><http url=\"http://www.iheartberlin.com/events\"/></html-to-xml>".getBytes());
+    InputSource inputSource2 = new InputSource(in);
+    ScraperConfiguration config = new ScraperConfiguration(inputSource2);
+    
+	
+	//ScraperConfiguration config = new ScraperConfiguration(inputSource);
+	Scraper scraper = new Scraper(config, System.getProperty("user.dir"));
+	scraper.addVariableToContext("url",strPageURL);
+	scraper.setDebug(true);
+	scraper.execute();
+	Variable varScrappedContent = (Variable)scraper.getContext().getVar("scrappedContent");
+	 
+	// Printing the scraped data here
+	System.out.println(varScrappedContent.toString());
+}catch(Exception e){
+    e.printStackTrace();
+}
+	*/
