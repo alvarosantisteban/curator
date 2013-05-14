@@ -2,15 +2,10 @@ package com.alvarosantisteban.berlincurator;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import org.xmlpull.v1.XmlPullParserException;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,8 +14,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -30,17 +23,31 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.alvarosantisteban.berlincurator.IHeartBerlinHtmlParser.Entry;
 
+/**
+ * Creates the main screen, from where the user can access the Settings, load the events of the current day or 
+ * go to Calendar to select another day
+ * 
+ * @author Alvaro Santisteban 2013 - alvarosantisteban@gmail.com
+ *
+ */
 public class MainActivity extends Activity {
 
 	public static final int MAX_NUMBER_OF_WEBSITES = 5;
 	private static final String DEBUG_TAG = "HttpExample";
 	public static final String EXTRA_HTML = "com.alvarosantisteban.berlincurator.html";
 	
+	/**
+	 * The set of urls from where the html will be downloaded
+	 */
    	String[] stringUrls = {"http://www.iheartberlin.de/events/",
 				   			"http://www.berlin-artparasites.com/recommended",
 				   			"http://berlinmetal.lima-city.de/index.php/index.php?id=start",
 				   			"http://www.whitetrashfastfood.com/events/",
 				   			"http://www.koepi137.net/eventskonzerte.php",};
+   	
+   	/**
+   	 * The set of htmls from the corresponding {@link stringUrls}
+   	 */
    	String[] htmls = new String[MAX_NUMBER_OF_WEBSITES];
 
 	ProgressBar loadProgressBar;
@@ -51,7 +58,9 @@ public class MainActivity extends Activity {
 
 	List<Entry> entries;
 	
-	@Override
+	/**
+	 * Loads the elements from the resources
+	 */
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -77,10 +86,13 @@ public class MainActivity extends Activity {
 				
 				ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+			    // Check if is possible to establish a connection
 			    if (networkInfo != null && networkInfo.isConnected()) {
 					DownloadWebpageTask download = new DownloadWebpageTask();
+					// Execute the asyncronous task of downloading the websites
 					download.execute(stringUrls);
 					try {
+						// Get the downloaded htmls
 						htmls = download.get();
 					} catch (InterruptedException e) {
 						System.out.println("interrupted exception");
@@ -92,7 +104,7 @@ public class MainActivity extends Activity {
 			    } else {
 			        System.out.println("No network connection available.");
 			    }
-				
+				// Go to the DateActivity and pass it the downloaded data
 				Intent intent = new Intent(context, DateActivity.class);
 				intent.putExtra(EXTRA_HTML, htmls);
 				startActivity(intent);
@@ -138,7 +150,8 @@ public class MainActivity extends Activity {
     }
     */
     
-    /** Uses AsyncTask to create a task away from the main UI thread. This task takes the 
+    /** 
+     * Uses AsyncTask to create a task away from the main UI thread. This task takes the 
     * URL strings and uses them to create several HttpUrlConnection. Once the connection
     * has been established, the AsyncTask downloads the html of the webpage as
     * an InputStream. Finally, the InputStream is converted into a string.
