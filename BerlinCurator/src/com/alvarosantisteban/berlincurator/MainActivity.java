@@ -6,6 +6,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Context;
@@ -214,14 +216,9 @@ public class MainActivity extends Activity {
         * Hides the progressBar.
         */
 		protected void onPostExecute(String[] result) {
-			System.out.println("onPostExecute:" +result[0] +".");
+			//System.out.println("onPostExecute:" +result[0] +".");
 			loadProgressBar.setVisibility(View.GONE);
 		}
-       
-       /*
-       private EventView extractEventFromHtml(String theHtml){    	   
-    	   return null;
-       }*/
        
 		/** 
         * Given a URL, establishes an HttpUrlConnection and retrieves

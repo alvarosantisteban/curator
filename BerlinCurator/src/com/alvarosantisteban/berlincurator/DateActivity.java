@@ -32,6 +32,7 @@ public class DateActivity extends Activity{
 
 	private TextView date;
 	ExpandableListView expandableSitesList;
+	public static final String EXTRA_EVENT = "com.alvarosantisteban.berlincurator.event";
 	
 	/**
 	 * A LinkedHashMap with the a String as key and a HeaderInfo as value
@@ -83,7 +84,12 @@ public class DateActivity extends Activity{
 		// Add some extra data to the expandableList
 		addEvent("I Heart Berlin", htmls[0]);
 		addEvent("Berlin Art Parasites", htmls[1]);
-		addEvent("Metal Concerts", htmls[2]);
+		// Add the events from the Metal Concerts site
+		// TODO Add only the ones that correspond to the day "date"
+		Event[] metalEvents = extractEventFromMetalConcerts(htmls[2]);
+		for (int i=0; i<metalEvents.length; i++){
+			addEvent("Metal Concerts", metalEvents[i]);
+		}
 		addEvent("White Trashs concerts", htmls[3]);
 		addEvent("Koepis activities", htmls[4]);
 		
@@ -126,7 +132,6 @@ public class DateActivity extends Activity{
 		  addEvent("I Heart Berlin","Kino Night");
 		  addEvent("I Heart Berlin","Party party");
 		  addEvent("I Heart Berlin","Running out of shorts");
-	 
 		  addEvent("Metal Concerts","Manilla Road");
 		  addEvent("Metal Concerts","Dream Theater");
 	}
@@ -171,6 +176,44 @@ public class DateActivity extends Activity{
 		groupPosition = websitesList.indexOf(headerInfo);
 		return groupPosition;
 	}
+	/**
+	 * Add a event to its corresponding group (site where it comes from)
+	 * 
+	 * @param websiteName String with the name of the website from where the event comes from
+	 * @param newEvent The event to be attached
+	 * @return the position of group where the event was added
+	 */
+	private int addEvent(String websiteName, Event newEvent){
+		int groupPosition = 0;
+	   
+		// Check in the hash map if the group already exists
+		HeaderInfo headerInfo = websites.get(websiteName);
+		// Add the group if doesn't exists
+		if(headerInfo == null){
+			headerInfo = new HeaderInfo();
+			headerInfo.setName(websiteName);
+			websites.put(websiteName, headerInfo);
+			websitesList.add(headerInfo);
+		}
+	 
+		// Get the children (events) for the group
+		ArrayList<Event> eventsList = headerInfo.getEventsList();
+		// Get the size of the children list
+		int listSize = eventsList.size();
+		// Add to the counter
+		listSize++;
+	 
+		// Set the sequence for the event
+		newEvent.setSequence(String.valueOf(listSize));
+		// Add it to its list of events
+		eventsList.add(newEvent);
+		// Update the site with the "new" eventsList
+		headerInfo.setEventsList(eventsList);
+		 
+		//find the group position inside the list
+		groupPosition = websitesList.indexOf(headerInfo);
+		return groupPosition;
+	}
 	
 	/**
 	 * The child listener for the events
@@ -186,6 +229,7 @@ public class DateActivity extends Activity{
 			  // Display it or do something with it
 			  Toast.makeText(getBaseContext(), "Clicked on Detail " + headerInfo.getName() + "/" + clickedEvent.getName(), Toast.LENGTH_LONG).show();
 			  Intent intent = new Intent(context, EventActivity.class);
+			  intent.putExtra(EXTRA_EVENT, clickedEvent);
 			  startActivity(intent);
 			  return false;
 		  }
@@ -230,6 +274,39 @@ public class DateActivity extends Activity{
 		return true;
 	}
 
+	/**
+	 * Creates a set of events from the html of the Metal Concerts website. 
+	 * Each Event has name, day and a link.
+	 * 
+	 * @param theHtml the String containing the html from the Metal Concerts website
+	 * @return an array of Event with the name, day and links set
+	 */
+	private Event[] extractEventFromMetalConcerts(String theHtml){  
+		String myPattern = "<p class=\"konzerte\">"; //<p class=\"konzerte\">.*?</p>
+		String[] result = theHtml.split(myPattern);
+		/*
+		for (int i=0; i<result.length; i++){
+			System.out.println("result[i]:"+result[i]);
+		}*/
+		
+		// Throw away the first one because it does not contain an event
+		Event[] events = new Event[result.length-1]; 
+		for (int i=1; i<result.length; i++){
+			// Separate up to the "@"
+			String[] twoParts = result[i].split("@");
+			// Separate the date and the name of the band
+			String[] dateAndName = twoParts[0].split("\\. ");
+			Event event = new Event();
+			event.setName(dateAndName[1]);
+			event.setDay(dateAndName[0]);
+			// TODO Clean the String of the link
+			event.setLink(twoParts[1]);
+			// TODO Get the location from the link part and put it into the description
+			events[i-1] = event;
+		}
+		return events;
+    }
+	
 	/*
 	public void onClick(View v) {
 	 
@@ -261,4 +338,26 @@ public class DateActivity extends Activity{
 		}
 	}
 */
+	
+	/*
+	 * 
+	 * USING PATTERNS 
+	 * 
+    Pattern p = Pattern.compile(myPattern,Pattern.DOTALL);
+    Matcher m = p.matcher(example);
+    String[] result = null;
+
+    if ( m.matches() ){
+        Log.d("Matcher", "PATTERN MATCHES!");
+    	System.out.println("PATTERN MATCHES!");
+    	result = p.split(example);
+    	System.out.println(result.length);
+    	System.out.println(result.toString());
+    	System.out.println("Start:" +m.start());
+    	System.out.println("End:" +m.end());
+    } else{
+    	System.out.println("PATTERN DOES NOT MATCH");
+        Log.d("MATCHER", "PATTERN DOES NOT MATCH!");
+    }*/
+	
 }
