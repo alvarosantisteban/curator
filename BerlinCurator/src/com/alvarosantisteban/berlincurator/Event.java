@@ -68,7 +68,11 @@ public class Event implements Serializable{
 		this.name = name;
 	}
 	
-	public String[] getLink(){
+	public String getLink(){
+		return links[0];
+	}
+	
+	public String[] getLinks(){
 		return links;
 	}
 	
@@ -101,6 +105,14 @@ public class Event implements Serializable{
 		this.day = day;
 	}
 
+	public void setDescription(String description){
+		this.description = description;
+	}
+	
+	public String getDescription(){
+		return description;
+	}
+	
 	public void print() {
 		System.out.println("Name:"+getName());
 		System.out.println("Day:"+getDay());

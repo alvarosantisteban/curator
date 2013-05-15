@@ -3,6 +3,8 @@ package com.alvarosantisteban.berlincurator;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.Menu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,11 +22,13 @@ public class EventActivity extends Activity {
 	TextView day;
 	TextView time;
 	TextView link;
+	TextView description;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_event);
+		
 		
 		// Get the intent with the Event
 		Intent intent = getIntent();
@@ -35,12 +39,23 @@ public class EventActivity extends Activity {
 		day = (TextView)findViewById(R.id.date);
 		time = (TextView)findViewById(R.id.events_time);
 		link = (TextView)findViewById(R.id.events_link);
+		description = (TextView)findViewById(R.id.events_description);
 		
 		// TODO Probably I will have to distinguise what I set depending where does the Event come from (which group = website)
+		
 		name.setText(event.getName());
 		day.setText(event.getDay());
-		link.setText(event.getLink().toString());
+		description.setText(event.getDescription());
+		link.setText(event.getLink());
+		// Make the link clickable
+		Linkify.addLinks(link, Linkify.WEB_URLS);
+		link.setMovementMethod(LinkMovementMethod.getInstance());
 		
+		/*
+		 * To make possible pieces of html on the text
+		link.setMovementMethod(LinkMovementMethod.getInstance());
+		link.setText(Html.fromHtml("te das <a href=\"http://google.com\">cueeeen?</a>"));
+		*/
 	}
 
 	@Override
@@ -49,5 +64,4 @@ public class EventActivity extends Activity {
 		getMenuInflater().inflate(R.menu.event, menu);
 		return true;
 	}
-
 }

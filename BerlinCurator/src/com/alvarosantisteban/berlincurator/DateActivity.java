@@ -289,7 +289,7 @@ public class DateActivity extends Activity{
 			System.out.println("result[i]:"+result[i]);
 		}*/
 		
-		// Throw away the first one because it does not contain an event
+		// Throw away the first entry of the array because it does not contain a concert
 		Event[] events = new Event[result.length-1]; 
 		for (int i=1; i<result.length; i++){
 			// Separate up to the "@"
@@ -299,9 +299,21 @@ public class DateActivity extends Activity{
 			Event event = new Event();
 			event.setName(dateAndName[1]);
 			event.setDay(dateAndName[0]);
-			// TODO Clean the String of the link
-			event.setLink(twoParts[1]);
-			// TODO Get the location from the link part and put it into the description
+			
+			// Remove useless code
+			String htmlLink = twoParts[1].replaceFirst("</p>", "");
+			// Check if there is a link
+			if(htmlLink.charAt(0) == '<'){
+				// Remove useless code
+				htmlLink = htmlLink.replaceFirst("</a>", "");
+				String[] pureLink = htmlLink.split("\""); // Get link
+				String[] concertPlace = htmlLink.split(">"); // Get name
+				event.setLink(pureLink[1]);
+				event.setDescription("The concert will take place at the " +concertPlace[1]);
+			}else{
+				String concertPlace = htmlLink;
+				event.setDescription("The concert will take place at the " +concertPlace);
+			}
 			events[i-1] = event;
 		}
 		return events;

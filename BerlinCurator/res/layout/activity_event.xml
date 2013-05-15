@@ -35,15 +35,6 @@
         android:contentDescription="@string/image_content_description"
         android:src="@android:drawable/btn_star" />
 
-    <TextView
-        android:id="@+id/events_link"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/events_image"
-        android:layout_below="@+id/events_image"
-        android:layout_marginTop="78dp"
-        android:text="@string/events_links" />
-
     <ImageView
         android:id="@+id/clock_image"
         android:layout_width="wrap_content"
@@ -83,5 +74,23 @@
         android:layout_alignTop="@+id/events_info_tag"
         android:layout_toRightOf="@+id/events_name"
         android:text="@string/description" />
+
+    <TextView
+        android:id="@+id/events_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/events_image"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="116dp"
+        android:text="@string/events_links" />
+
+    <TextView
+        android:id="@+id/events_links_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/events_info_tag"
+        android:layout_below="@+id/events_image"
+        android:layout_marginTop="39dp"
+        android:text="@string/related_links" />
 
 </RelativeLayout>
