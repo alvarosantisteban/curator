@@ -183,10 +183,10 @@ public class MainActivity extends Activity {
 				String[] webpages = new String[MAX_NUMBER_OF_WEBSITES];
 				for (int i = 0; i < urls.length; i++) {
 					String check = downloadUrl(urls[i]);
-					if (check == "Invalid response code"){
+					if (check.equals("Invalid response code")){
 						// TODO Think of a strategy (try one more time or whatever)
 						return null;
-					}else if (check == "Exception"){
+					}else if (check.equals("Exception")){
 						return null;
 					}else{
 						webpages[i] = check;

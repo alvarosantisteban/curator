@@ -89,7 +89,7 @@ public class DateActivity extends Activity{
 		for (int i=0; i<metalEvents.length; i++){
 			// Add the events from the Metal Concerts site of the selected day
 			if(metalEvents[i].getDay().equals(date.getText().toString())){
-			//if(metalEvents[i].getDay().equals("17/05/2013")){
+			//if(metalEvents[i].getDay().equals("17/05/2013")){ Used to check if it works on a day that has a concert
 				addEvent("Metal Concerts", metalEvents[i]);
 			}
 		}

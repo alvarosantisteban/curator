@@ -45,8 +45,12 @@ public class EventActivity extends Activity {
 		
 		name.setText(event.getName());
 		day.setText(event.getDay());
-		description.setText(event.getDescription());
-		if (event.getLink() != ""){
+		// Check if there is a description to show
+		if (!event.getDescription().equals("")){
+			description.setText(event.getDescription());
+		}
+		// Check if there is a link to show
+		if (!event.getLink().equals("")){
 			link.setText(event.getLink());
 			// Make the link clickable
 			Linkify.addLinks(link, Linkify.WEB_URLS);
