@@ -104,6 +104,14 @@ public class Event implements Serializable{
 	public void setDay(String day){
 		this.day = day;
 	}
+	
+	public String getHour(){
+		return hour;
+	}
+	
+	public void setHour(String hour){
+		this.hour = hour;
+	}
 
 	public void setDescription(String description){
 		this.description = description;

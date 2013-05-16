@@ -94,7 +94,15 @@ public class DateActivity extends Activity{
 			}
 		}
 		addEvent("White Trashs concerts", htmls[3]);
-		addEvent("Koepis activities", htmls[4]);
+		//addEvent("Koepis activities", htmls[4]);
+		Event[] koepiEvents = extractEventFromKoepi(htmls[4]);
+		for (int i=0; i<koepiEvents.length; i++){
+			// Add the events from the Metal Concerts site of the selected day
+			if(koepiEvents[i].getDay().equals(date.getText().toString())){
+			//if(koepiEvents[i].getDay().equals("17/05/2013")){ Used to check if it works on a day that has a concert
+				addEvent("Koepis activities", koepiEvents[i]);
+			}
+		}
 		
 		// Expand all Groups
 		expandAll();
@@ -107,7 +115,7 @@ public class DateActivity extends Activity{
 		// Listener for the sites
 		expandableSitesList.setOnGroupClickListener(myListGroupClicked);
 	}
-	
+
 	/**
 	 * Expand all groups
 	 */
@@ -277,7 +285,7 @@ public class DateActivity extends Activity{
 
 	/**
 	 * Creates a set of events from the html of the Metal Concerts website. 
-	 * Each Event has name, day and a link.
+	 * Each Event has name, day, description and a link.
 	 * 
 	 * @param theHtml the String containing the html from the Metal Concerts website
 	 * @return an array of Event with the name, day and links set
@@ -322,6 +330,65 @@ public class DateActivity extends Activity{
 		}
 		return events;
     }
+	
+	/**
+	 * Creates a set of events from the html of the Koepi website. 
+	 * Each Event has name, day, time, a description and sometimes a link.
+	 * 
+	 * @param theHtml the String containing the html from the Metal Concerts website
+	 * @return an array of Event with the name, day and links set
+	 */
+	private Event[] extractEventFromKoepi(String theHtml) {
+		String[] uselessAndGood = theHtml.split("</div -->");
+		String myPattern = "<span class=\"datum\">"; //<p class=\"konzerte\">.*?</p>
+		String[] result = uselessAndGood[1].split(myPattern);
+		/*
+		for (int i=0; i<result.length; i++){
+			System.out.println("result[i]:"+result[i]);
+		}*/
+		
+		// Throw away the first entry of the array because it does not contain an event
+		Event[] events = new Event[result.length-1]; 
+		for (int i=1; i<result.length; i++){
+			Event event = new Event();
+			// Remove the left part of ", "
+			String[] twoParts = result[i].split(", ", 2); // We want just the first
+			// Remove useless code
+			String[] dateAndRest = twoParts[1].split("</span><br />");
+			// Format the date and set it to the event
+			event.setDay(dateAndRest[0].replace('.', '/'));
+			// Separate the first paragraph
+			String[] paragraphs = dateAndRest[1].split("<br />", 2);
+			
+			// Get the time and name
+			String[] hourAndName = paragraphs[0].split(" Uhr: ", 2);
+			// Set the time to the event
+			event.setHour(hourAndName[0]);
+			// Set the name to the event
+			event.setName(hourAndName[1]);
+			
+			event.setDescription(paragraphs[1]);
+			
+			/*
+			// Remove useless code
+			String htmlLink = twoParts[1].replaceFirst("</p>", "");
+			// Check if there is a link
+			if(htmlLink.charAt(0) == '<'){
+				// Remove useless code
+				htmlLink = htmlLink.replaceFirst("</a>", "");
+				String[] pureLink = htmlLink.split("\""); // Get link
+				String[] concertPlace = htmlLink.split(">"); // Get name
+				event.setLink(pureLink[1]);
+				event.setDescription("The concert will take place at the " +concertPlace[1]);
+			}else{
+				String concertPlace = htmlLink;
+				event.setDescription("The concert will take place at the " +concertPlace);
+			}
+			*/
+			events[i-1] = event;
+		}
+		return events;
+	}
 	
 	/*
 	public void onClick(View v) {

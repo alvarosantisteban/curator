@@ -3,6 +3,7 @@ package com.alvarosantisteban.berlincurator;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.Menu;
@@ -47,7 +48,10 @@ public class EventActivity extends Activity {
 		day.setText(event.getDay());
 		// Check if there is a description to show
 		if (!event.getDescription().equals("")){
-			description.setText(event.getDescription());
+			//description.setText(event.getDescription());
+			description.setMovementMethod(LinkMovementMethod.getInstance());
+			description.setText(Html.fromHtml(event.getDescription()));
+			
 		}
 		// Check if there is a link to show
 		if (!event.getLink().equals("")){
@@ -56,6 +60,8 @@ public class EventActivity extends Activity {
 			Linkify.addLinks(link, Linkify.WEB_URLS);
 			link.setMovementMethod(LinkMovementMethod.getInstance());
 		}
+		
+		time.setText(event.getHour());
 
 		/*
 		 * To make possible pieces of html on the text
