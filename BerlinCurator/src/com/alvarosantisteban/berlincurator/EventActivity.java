@@ -46,11 +46,13 @@ public class EventActivity extends Activity {
 		name.setText(event.getName());
 		day.setText(event.getDay());
 		description.setText(event.getDescription());
-		link.setText(event.getLink());
-		// Make the link clickable
-		Linkify.addLinks(link, Linkify.WEB_URLS);
-		link.setMovementMethod(LinkMovementMethod.getInstance());
-		
+		if (event.getLink() != ""){
+			link.setText(event.getLink());
+			// Make the link clickable
+			Linkify.addLinks(link, Linkify.WEB_URLS);
+			link.setMovementMethod(LinkMovementMethod.getInstance());
+		}
+
 		/*
 		 * To make possible pieces of html on the text
 		link.setMovementMethod(LinkMovementMethod.getInstance());

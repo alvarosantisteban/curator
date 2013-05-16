@@ -33,6 +33,7 @@ public class DateActivity extends Activity{
 	private TextView date;
 	ExpandableListView expandableSitesList;
 	public static final String EXTRA_EVENT = "com.alvarosantisteban.berlincurator.event";
+	Calendar calendar = Calendar.getInstance();
 	
 	/**
 	 * A LinkedHashMap with the a String as key and a HeaderInfo as value
@@ -63,7 +64,6 @@ public class DateActivity extends Activity{
 		// Get the actual date
 		date = (TextView) findViewById(R.id.date);
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMAN);
-		Calendar calendar = Calendar.getInstance();
 		date.setText(dateFormat.format(calendar.getTime()));
 		
 		// Get the names of the sites
@@ -84,11 +84,14 @@ public class DateActivity extends Activity{
 		// Add some extra data to the expandableList
 		addEvent("I Heart Berlin", htmls[0]);
 		addEvent("Berlin Art Parasites", htmls[1]);
-		// Add the events from the Metal Concerts site
-		// TODO Add only the ones that correspond to the day "date"
+		// TODO ¿Quizas mejor ya abajo? Ver si se ahorra algo haciendolo aqui o vuelve a generar el array de Event
 		Event[] metalEvents = extractEventFromMetalConcerts(htmls[2]);
 		for (int i=0; i<metalEvents.length; i++){
-			addEvent("Metal Concerts", metalEvents[i]);
+			// Add the events from the Metal Concerts site of the selected day
+			if(metalEvents[i].getDay().equals(date.getText().toString())){
+			//if(metalEvents[i].getDay().equals("17/05/2013")){
+				addEvent("Metal Concerts", metalEvents[i]);
+			}
 		}
 		addEvent("White Trashs concerts", htmls[3]);
 		addEvent("Koepis activities", htmls[4]);
@@ -132,8 +135,6 @@ public class DateActivity extends Activity{
 		  addEvent("I Heart Berlin","Kino Night");
 		  addEvent("I Heart Berlin","Party party");
 		  addEvent("I Heart Berlin","Running out of shorts");
-		  addEvent("Metal Concerts","Manilla Road");
-		  addEvent("Metal Concerts","Dream Theater");
 	}
 	
 	/**
@@ -298,7 +299,10 @@ public class DateActivity extends Activity{
 			String[] dateAndName = twoParts[0].split("\\. ");
 			Event event = new Event();
 			event.setName(dateAndName[1]);
-			event.setDay(dateAndName[0]);
+			String eventDate = dateAndName[0].replace('.', '/');
+			DateFormat dateFormat = new SimpleDateFormat("yyyy", Locale.GERMAN);
+			eventDate = eventDate.concat("/" +dateFormat.format(calendar.getTime()));
+			event.setDay(eventDate);
 			
 			// Remove useless code
 			String htmlLink = twoParts[1].replaceFirst("</p>", "");
