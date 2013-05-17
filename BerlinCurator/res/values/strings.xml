@@ -15,6 +15,8 @@
 	<string name="extra_info">Extra info:</string>
 	<string name="related_links">Related links:</string>
 	<string name="image_content_description">No content description for this image</string>
+	<string name="time_unknown">XX:XX</string>
+	<string name="nothing"></string>
     <string-array name="sites_array">
         <item>I Heart Berlin</item>
         <item>Berlin Art Parasites</item>

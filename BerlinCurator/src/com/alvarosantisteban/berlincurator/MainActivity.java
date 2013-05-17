@@ -103,7 +103,7 @@ public class MainActivity extends Activity {
 							startActivity(intent);
 						}else{
 							// Something went wrong retrieving the data from the urls
-							Toast.makeText(getBaseContext(), "Something went wrong retrieving the data from the urls.", Toast.LENGTH_LONG).show();
+							Toast.makeText(getBaseContext(), "Something went wrong retrieving the data from the urls. Please, try again", Toast.LENGTH_LONG).show();
 						}
 					} catch (InterruptedException e) {
 						System.out.println("interrupted exception");

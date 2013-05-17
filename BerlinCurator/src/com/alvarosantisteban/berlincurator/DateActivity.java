@@ -1,12 +1,14 @@
 package com.alvarosantisteban.berlincurator;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -78,13 +80,21 @@ public class DateActivity extends Activity{
 		// Attach the adapter to the expandableList
 		expandableSitesList.setAdapter(listAdapter);
 		
-		// Add some random data to the expandableList
-		loadData();
-		
-		// Add some extra data to the expandableList
-		addEvent("I Heart Berlin", htmls[0]);
-		addEvent("Berlin Art Parasites", htmls[1]);
 		// TODO ¿Quizas mejor ya abajo? Ver si se ahorra algo haciendolo aqui o vuelve a generar el array de Event
+		
+		// I Heart Berlin
+		Event[] iHeartBerlinEvents = extractEventFromIHeartBerlin(htmls[0]);
+		for (int i=0; i<iHeartBerlinEvents.length; i++){
+			// Add the events from the I Heart Berlin site of the selected day
+			if(iHeartBerlinEvents[i].getDay().equals(date.getText().toString())){
+				addEvent("I Heart Berlin", iHeartBerlinEvents[i]);
+			}
+		}
+		
+		// Berlin Art Parasites
+		addEvent("Berlin Art Parasites", htmls[1]);
+		
+		// Metal concerts
 		Event[] metalEvents = extractEventFromMetalConcerts(htmls[2]);
 		for (int i=0; i<metalEvents.length; i++){
 			// Add the events from the Metal Concerts site of the selected day
@@ -93,15 +103,18 @@ public class DateActivity extends Activity{
 				addEvent("Metal Concerts", metalEvents[i]);
 			}
 		}
+		
+		// White Trash's concerts
 		addEvent("White Trashs concerts", htmls[3]);
-		//addEvent("Koepis activities", htmls[4]);
+
+		// Koepi's events
 		Event[] koepiEvents = extractEventFromKoepi(htmls[4]);
 		for (int i=0; i<koepiEvents.length; i++){
 			// Add the events from the Metal Concerts site of the selected day
-			if(koepiEvents[i].getDay().equals(date.getText().toString())){
+			//if(koepiEvents[i].getDay().equals(date.getText().toString())){
 			//if(koepiEvents[i].getDay().equals("17/05/2013")){ Used to check if it works on a day that has a concert
 				addEvent("Koepis activities", koepiEvents[i]);
-			}
+			//}
 		}
 		
 		// Expand all Groups
@@ -140,8 +153,8 @@ public class DateActivity extends Activity{
 	 * Loads some initial faked data into out list
 	 */
 	private void loadData(){ 
-		  addEvent("I Heart Berlin","Kino Night");
-		  addEvent("I Heart Berlin","Party party");
+		  //addEvent("I Heart Berlin","Kino Night");
+		  //addEvent("I Heart Berlin","Party party");
 		  addEvent("I Heart Berlin","Running out of shorts");
 	}
 	
@@ -282,6 +295,66 @@ public class DateActivity extends Activity{
 		getMenuInflater().inflate(R.menu.date, menu);
 		return true;
 	}
+	
+	/**
+	 * Creates a set of events from the html of the Metal Concerts website. 
+	 * Each Event has name, day, description and a link.
+	 * 
+	 * @param theHtml the String containing the html from the I Heart Berlin website
+	 * @return an array of Event with the name, day and links set
+	 */
+	private Event[] extractEventFromIHeartBerlin(String theHtml){  
+		String myPattern = "<div class=\"event_date\">";
+		String[] result = theHtml.split(myPattern);
+		
+		// Use an ArrayList because the number of events is unknown
+		ArrayList<Event> events = new ArrayList<Event>(); 
+		for (int i=1; i<result.length; i++){
+			// Separate up to the first "</div>"
+			String[] dateAndRest = result[i].split("</div>", 2);
+			// Get the date
+			String[] dayAndDate = dateAndRest[0].split(", ", 2);
+			String[] eventsOfADay = dateAndRest[1].split("<div class=\"event_entry clearfix\">");
+			for (int j=1; j<eventsOfADay.length; j++){
+				Event event = new Event();
+				// Format the date and set it
+				event.setDay(formatIHeartDate(dayAndDate[1]));
+				String[] imageAndRest = eventsOfADay[j].split("<div class=\"event_image\">");
+				String[] imageAndRest2 = imageAndRest[1].split("<div class=\"event_info\">");
+				// Set the image with all its html code 				
+				event.setImage(imageAndRest2[0].replaceFirst("</div>", ""));
+				String[] other = imageAndRest2[1].split("<div class=\"event_time\">");
+				String[] timeAndRest = other[1].split("</div>",2);
+				// Set the time when the event begins
+				event.setHour(timeAndRest[0].replace("h", "").trim()); // Remove the "h" from 22:00h
+				String[] nameAndRest = timeAndRest[1].split("<h3>");
+				String[] nameAndRest2 = nameAndRest[1].split("</h3");
+				// Set the name of the event
+				event.setName(nameAndRest2[0].trim());
+				String[] descriptionAndLinks = nameAndRest2[1].split("</p>");
+				// Set the description
+				String description = descriptionAndLinks[0].replaceFirst("<p>", "").replaceFirst(">", "").trim();
+				event.setDescription(description);
+				// Set the links
+				String[] trashAndLinks = descriptionAndLinks[1].split("<div class=\"event_links\">");
+				// Check if there are links
+				String[] htmlLink = trashAndLinks[1].split("<a href=\"");
+				if(htmlLink.length > 0){
+					String links = "";
+					// Search for the links
+					for (int z=0; z<htmlLink.length; z++){
+						String[] pureLink = htmlLink[z].split("\"",2); // Get link
+						links = pureLink[0].trim() +"\n" +links;
+					}
+					event.setLink(links);
+				}
+				events.add(event);
+			}
+		}
+		Event[] eventsArray = new Event[events.size()];
+		eventsArray = events.toArray(eventsArray);
+		return eventsArray;
+    }
 
 	/**
 	 * Creates a set of events from the html of the Metal Concerts website. 
@@ -293,10 +366,6 @@ public class DateActivity extends Activity{
 	private Event[] extractEventFromMetalConcerts(String theHtml){  
 		String myPattern = "<p class=\"konzerte\">"; //<p class=\"konzerte\">.*?</p>
 		String[] result = theHtml.split(myPattern);
-		/*
-		for (int i=0; i<result.length; i++){
-			System.out.println("result[i]:"+result[i]);
-		}*/
 		
 		// Throw away the first entry of the array because it does not contain a concert
 		Event[] events = new Event[result.length-1]; 
@@ -342,10 +411,6 @@ public class DateActivity extends Activity{
 		String[] uselessAndGood = theHtml.split("</div -->");
 		String myPattern = "<span class=\"datum\">"; //<p class=\"konzerte\">.*?</p>
 		String[] result = uselessAndGood[1].split(myPattern);
-		/*
-		for (int i=0; i<result.length; i++){
-			System.out.println("result[i]:"+result[i]);
-		}*/
 		
 		// Throw away the first entry of the array because it does not contain an event
 		Event[] events = new Event[result.length-1]; 
@@ -363,31 +428,63 @@ public class DateActivity extends Activity{
 			// Get the time and name
 			String[] hourAndName = paragraphs[0].split(" Uhr: ", 2);
 			// Set the time to the event
-			event.setHour(hourAndName[0]);
+			event.setHour(hourAndName[0].trim());
 			// Set the name to the event
 			event.setName(hourAndName[1]);
-			
+			// Set the description (with lots of html code)
 			event.setDescription(paragraphs[1]);
 			
-			/*
-			// Remove useless code
-			String htmlLink = twoParts[1].replaceFirst("</p>", "");
 			// Check if there is a link
-			if(htmlLink.charAt(0) == '<'){
+			String[] htmlLink = twoParts[1].split("<a href=\"", 2);
+			if(htmlLink.length == 2){
 				// Remove useless code
-				htmlLink = htmlLink.replaceFirst("</a>", "");
-				String[] pureLink = htmlLink.split("\""); // Get link
-				String[] concertPlace = htmlLink.split(">"); // Get name
-				event.setLink(pureLink[1]);
-				event.setDescription("The concert will take place at the " +concertPlace[1]);
-			}else{
-				String concertPlace = htmlLink;
-				event.setDescription("The concert will take place at the " +concertPlace);
-			}
-			*/
+				String[] pureLink = htmlLink[1].split("\"",2); // Get link
+				event.setLink(pureLink[0]);
+			}			
 			events[i-1] = event;
 		}
 		return events;
+	}
+	
+	/**
+	 * Normalizes a date from the I Heart Berlin format: "May 13, 2013" to the used format "13/05/2013"
+	 * 
+	 * @param dateIHeart the date in the I Heart Berlin format
+	 * @return a String with the date normalized
+	 */
+	public static String formatIHeartDate(String dateIHeart){
+		String monthNumber;
+		String[] monthDayYear = dateIHeart.split(" ");
+		String monthLetter = monthDayYear[0];
+		if (monthLetter.equals("January"))
+			monthNumber = "01";
+		else if (monthLetter.equals("February"))
+            monthNumber = "02";
+		else if (monthLetter.equals("March"))
+            monthNumber = "03";
+        else if (monthLetter.equals("April"))
+            monthNumber = "04";
+        else if (monthLetter.equals("May"))
+            monthNumber = "05";
+        else if (monthLetter.equals("June"))
+            monthNumber = "06";
+        else if (monthLetter.equals("July"))
+            monthNumber = "07";
+        else if (monthLetter.equals("August"))
+            monthNumber = "08";
+        else if (monthLetter.equals("September"))
+            monthNumber = "09";
+        else if (monthLetter.equals("October"))
+            monthNumber = "10";
+        else if (monthLetter.equals("November"))
+            monthNumber = "11";
+        else if (monthLetter.equals("December"))
+            monthNumber = "12";
+        else
+            monthNumber = "00";
+		String day = monthDayYear[1].replace(',', '/');
+		String total = day+monthNumber+"/"+monthDayYear[2];
+		return total.trim(); 
 	}
 	
 	/*

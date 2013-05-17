@@ -44,6 +44,11 @@ public class Event implements Serializable{
 	private String description = "";
 	
 	/**
+	 * The html code corresponding to a image stored in the web
+	 */
+	private String image="";
+	
+	/**
 	 * The links with more information
 	 */
 	private String[] links = {"",""};
@@ -119,6 +124,14 @@ public class Event implements Serializable{
 	
 	public String getDescription(){
 		return description;
+	}
+	
+	public String getImage(){
+		return image;
+	}
+	
+	public void setImage(String image){
+		this.image = image;
 	}
 	
 	public void print() {
