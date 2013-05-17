@@ -92,7 +92,7 @@ public class DateActivity extends Activity{
 		}
 		
 		// Berlin Art Parasites
-		addEvent("Berlin Art Parasites", htmls[1]);
+		//addEvent("Berlin Art Parasites", htmls[1]);
 		
 		// Metal concerts
 		Event[] metalEvents = extractEventFromMetalConcerts(htmls[2]);
@@ -105,23 +105,25 @@ public class DateActivity extends Activity{
 		}
 		
 		// White Trash's concerts
-		addEvent("White Trashs concerts", htmls[3]);
+		//addEvent("White Trashs concerts", htmls[3]);
 
 		// Koepi's events
 		Event[] koepiEvents = extractEventFromKoepi(htmls[4]);
 		for (int i=0; i<koepiEvents.length; i++){
 			// Add the events from the Metal Concerts site of the selected day
-			//if(koepiEvents[i].getDay().equals(date.getText().toString())){
-			//if(koepiEvents[i].getDay().equals("17/05/2013")){ Used to check if it works on a day that has a concert
+			if(koepiEvents[i].getDay().equals(date.getText().toString())){
 				addEvent("Koepis activities", koepiEvents[i]);
-			//}
+			}
 		}
 		
 		// Expand all Groups
-		expandAll();
+		//expandAll();
 		
 		// Collapse all groups
-		collapseAll();
+		//collapseAll();
+		
+		// Expand the groups with events
+		expandGroupsWithEvents();
 		
 		// Listener for the events
 		expandableSitesList.setOnChildClickListener(myEventClicked);
@@ -146,6 +148,18 @@ public class DateActivity extends Activity{
 		int count = listAdapter.getGroupCount();
 		for (int i = 0; i < count; i++){
 			expandableSitesList.collapseGroup(i);
+		}
+	}
+	
+	/**
+	 * Expand the groups with events on it
+	 */
+	private void expandGroupsWithEvents(){
+		int count = listAdapter.getGroupCount();
+		for (int i = 0; i < count; i++){
+			if(listAdapter.getChildrenCount(i) > 0){
+				expandableSitesList.expandGroup(i);
+			}
 		}
 	}
 	
