@@ -244,7 +244,7 @@ public class MainActivity extends Activity {
       	   		String contentAsString = convertStreamToString(is);
       	   		return contentAsString;
       	   	} catch (Exception e){
-      	   		System.out.println("Problems downloading the url:"+myurl +". Exception: "+e);
+      	   		System.out.println("Problems downloading the url: "+myurl +". Exception: "+e);
       	   		return "Exception";
       	    // Makes sure that the InputStream is closed after the app is finished using it.
       	   	}finally {
