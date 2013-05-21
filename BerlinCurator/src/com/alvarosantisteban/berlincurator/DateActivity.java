@@ -86,9 +86,9 @@ public class DateActivity extends Activity{
 		Event[] iHeartBerlinEvents = extractEventFromIHeartBerlin(htmls[0]);
 		for (int i=0; i<iHeartBerlinEvents.length; i++){
 			// Add the events from the I Heart Berlin site of the selected day
-			if(iHeartBerlinEvents[i].getDay().equals(date.getText().toString())){
+			//if(iHeartBerlinEvents[i].getDay().equals(date.getText().toString())){
 				addEvent("I Heart Berlin", iHeartBerlinEvents[i]);
-			}
+			//}
 		}
 		
 		// Berlin Art Parasites
@@ -105,7 +105,13 @@ public class DateActivity extends Activity{
 		}
 		
 		// White Trash's concerts
-		//addEvent("White Trashs concerts", htmls[3]);
+		Event[] whiteTrashEvent = extractEventFromWhiteTrash(htmls[3]);
+		for (int i=0; i<whiteTrashEvent.length; i++){
+			// Add the events from the White Trash site of the selected day
+			if(whiteTrashEvent[i].getDay().equals(date.getText().toString())){
+				addEvent("White Trash", whiteTrashEvent[i]);
+			}
+		}
 
 		// Koepi's events
 		Event[] koepiEvents = extractEventFromKoepi(htmls[4]);
@@ -311,7 +317,7 @@ public class DateActivity extends Activity{
 	}
 	
 	/**
-	 * Creates a set of events from the html of the Metal Concerts website. 
+	 * Creates a set of events from the html of the I Heart Berlin website. 
 	 * Each Event has name, day, description and a link.
 	 * 
 	 * @param theHtml the String containing the html from the I Heart Berlin website
@@ -332,7 +338,7 @@ public class DateActivity extends Activity{
 			for (int j=1; j<eventsOfADay.length; j++){
 				Event event = new Event();
 				// Format the date and set it
-				event.setDay(formatIHeartDate(dayAndDate[1]));
+				event.setDay(formatDate(dayAndDate[1].replace(",", "").trim()));
 				String[] imageAndRest = eventsOfADay[j].split("<div class=\"event_image\">");
 				String[] imageAndRest2 = imageAndRest[1].split("<div class=\"event_info\">");
 				// Set the image with all its html code 				
@@ -415,6 +421,57 @@ public class DateActivity extends Activity{
     }
 	
 	/**
+	 * Creates a set of events from the html of the White Trash website. 
+	 * Each Event has name, day, description and a link.
+	 * 
+	 * @param theHtml the String containing the html from the White Trash website
+	 * @return an array of Event with the name, day, hour and link set
+	 */
+	private Event[] extractEventFromWhiteTrash(String theHtml){  
+		String myPattern = "<h4>";
+		String[] result = theHtml.split(myPattern);
+		
+		// Use an ArrayList because the number of events is unknown (is likely that they are 7)
+		ArrayList<Event> events = new ArrayList<Event>(); 
+		for (int i=1; i<result.length; i++){
+			// Separate up to the first "</a>"
+			String[] dateAndRest = result[i].split("</a", 2);
+			// Get the date
+			String[] dayAndDate = dateAndRest[0].split("\">", 2);
+			String[] eventsOfADay = dateAndRest[1].split("<p class=\"time\">");
+			for (int j=1; j<eventsOfADay.length; j++){
+				Event event = new Event();
+				// Format the date and set it
+				event.setDay(formatDate(dayAndDate[1]));
+				String[] timeAndRest = eventsOfADay[j].split("</p>",2);
+				// Set the time
+				event.setHour(timeAndRest[0].replace("h", "").trim());
+				String[] linkNameAndRest = timeAndRest[1].split("<a href=\"");
+				String[] linkNameAndRest2 = linkNameAndRest[1].split("\">",2);
+				// Make the relative link absolut and set it
+				event.setLink("http://www.whitetrashfastfood.com"+linkNameAndRest2[0]); 
+				String description = "";
+				System.out.println("linkNameAndRest2[1]"+linkNameAndRest2[1]);
+				String[]nameAndRest = linkNameAndRest2[1].split("\\(",2);
+				// Set the name
+				event.setName(nameAndRest[0]);
+				String[] description1 = linkNameAndRest2[1].split("</a>");
+				// Set the constructed description
+				description = description1[0];
+				String[] description3 = description1[1].split("<br>"); // The place is in description3[0]
+				String[] description2a = description1[1].split("<span class=\"summ\">");
+				String[] description2b = description2a[1].split("</span>");
+				event.setDescription(description + description2b[0] + description3[0]);
+				events.add(event);
+			}
+		}
+		Event[] eventsArray = new Event[events.size()];
+		eventsArray = events.toArray(eventsArray);
+		return eventsArray;
+    }
+	
+	
+	/**
 	 * Creates a set of events from the html of the Koepi website. 
 	 * Each Event has name, day, time, a description and sometimes a link.
 	 * 
@@ -461,15 +518,25 @@ public class DateActivity extends Activity{
 	}
 	
 	/**
-	 * Normalizes a date from the I Heart Berlin format: "May 13, 2013" to the used format "13/05/2013"
+	 * Normalizes a date from the I Heart Berlin format: "May 13 2013"  
+	 * or the White Trash format: "22 May 2013" to the app's format "13/05/2013"
 	 * 
-	 * @param dateIHeart the date in the I Heart Berlin format
+	 * @param inputDate the date in the I Heart Berlin or White Trash format
 	 * @return a String with the date normalized
 	 */
-	public static String formatIHeartDate(String dateIHeart){
+	public static String formatDate(String inputDate){
 		String monthNumber;
-		String[] monthDayYear = dateIHeart.split(" ");
-		String monthLetter = monthDayYear[0];
+		String monthLetter = "";
+		String day = "";
+		String[] monthDayYear = inputDate.split(" ");
+		for (int i=0;i<2;i++){ // Just the first two
+			// If there is a letter, we have the month
+			if (Character.isLetter(monthDayYear[i].charAt(0))){
+				monthLetter = monthDayYear[i];
+			}else{ // If not, we have the day
+				day = monthDayYear[i];
+			}
+		}
 		if (monthLetter.equals("January"))
 			monthNumber = "01";
 		else if (monthLetter.equals("February"))
@@ -496,8 +563,9 @@ public class DateActivity extends Activity{
             monthNumber = "12";
         else
             monthNumber = "00";
-		String day = monthDayYear[1].replace(',', '/');
-		String total = day+monthNumber+"/"+monthDayYear[2];
+		System.out.println("monthDayYear.length:"+monthDayYear.length);
+		System.out.println("monthDayYear[2]:"+monthDayYear[2]);
+		String total = day+"/"+monthNumber+"/"+monthDayYear[2];
 		return total.trim(); 
 	}
 	
