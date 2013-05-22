@@ -82,45 +82,8 @@ public class DateActivity extends Activity{
 		
 		// TODO ¿Quizas mejor ya abajo? Ver si se ahorra algo haciendolo aqui o vuelve a generar el array de Event
 		
-		// I Heart Berlin
-		Event[] iHeartBerlinEvents = extractEventFromIHeartBerlin(htmls[0]);
-		for (int i=0; i<iHeartBerlinEvents.length; i++){
-			// Add the events from the I Heart Berlin site of the selected day
-			//if(iHeartBerlinEvents[i].getDay().equals(date.getText().toString())){
-				addEvent("I Heart Berlin", iHeartBerlinEvents[i]);
-			//}
-		}
+		loadEvents(htmls);
 		
-		// Berlin Art Parasites
-		//addEvent("Berlin Art Parasites", htmls[1]);
-		
-		// Metal concerts
-		Event[] metalEvents = extractEventFromMetalConcerts(htmls[2]);
-		for (int i=0; i<metalEvents.length; i++){
-			// Add the events from the Metal Concerts site of the selected day
-			if(metalEvents[i].getDay().equals(date.getText().toString())){
-			//if(metalEvents[i].getDay().equals("17/05/2013")){ Used to check if it works on a day that has a concert
-				addEvent("Metal Concerts", metalEvents[i]);
-			}
-		}
-		
-		// White Trash's concerts
-		Event[] whiteTrashEvent = extractEventFromWhiteTrash(htmls[3]);
-		for (int i=0; i<whiteTrashEvent.length; i++){
-			// Add the events from the White Trash site of the selected day
-			if(whiteTrashEvent[i].getDay().equals(date.getText().toString())){
-				addEvent("White Trash", whiteTrashEvent[i]);
-			}
-		}
-
-		// Koepi's events
-		Event[] koepiEvents = extractEventFromKoepi(htmls[4]);
-		for (int i=0; i<koepiEvents.length; i++){
-			// Add the events from the Metal Concerts site of the selected day
-			if(koepiEvents[i].getDay().equals(date.getText().toString())){
-				addEvent("Koepis activities", koepiEvents[i]);
-			}
-		}
 		
 		// Expand all Groups
 		//expandAll();
@@ -172,10 +135,46 @@ public class DateActivity extends Activity{
 	/**
 	 * Loads some initial faked data into out list
 	 */
-	private void loadData(){ 
-		  //addEvent("I Heart Berlin","Kino Night");
-		  //addEvent("I Heart Berlin","Party party");
-		  addEvent("I Heart Berlin","Running out of shorts");
+	private void loadEvents(String[] htmls){ 
+		// I Heart Berlin
+		Event[] iHeartBerlinEvents = extractEventFromIHeartBerlin(htmls[0]);
+		for (int i=0; i<iHeartBerlinEvents.length; i++){
+			// Add the events from the I Heart Berlin site of the selected day
+			if(iHeartBerlinEvents[i].getDay().equals(date.getText().toString())){
+				addEvent("I Heart Berlin", iHeartBerlinEvents[i]);
+			}
+		}
+		
+		// Berlin Art Parasites
+		//addEvent("Berlin Art Parasites", htmls[1]);
+		
+		// Metal concerts
+		Event[] metalEvents = extractEventFromMetalConcerts(htmls[2]);
+		for (int i=0; i<metalEvents.length; i++){
+			// Add the events from the Metal Concerts site of the selected day
+			if(metalEvents[i].getDay().equals(date.getText().toString())){
+			//if(metalEvents[i].getDay().equals("17/05/2013")){ Used to check if it works on a day that has a concert
+				addEvent("Metal Concerts", metalEvents[i]);
+			}
+		}
+		
+		// White Trash's concerts
+		Event[] whiteTrashEvent = extractEventFromWhiteTrash(htmls[3]);
+		for (int i=0; i<whiteTrashEvent.length; i++){
+			// Add the events from the White Trash site of the selected day
+			if(whiteTrashEvent[i].getDay().equals(date.getText().toString())){
+				addEvent("White Trash", whiteTrashEvent[i]);
+			}
+		}
+
+		// Koepi's events
+		Event[] koepiEvents = extractEventFromKoepi(htmls[4]);
+		for (int i=0; i<koepiEvents.length; i++){
+			// Add the events from the Metal Concerts site of the selected day
+			if(koepiEvents[i].getDay().equals(date.getText().toString())){
+				addEvent("Koepis activities", koepiEvents[i]);
+			}
+		}
 	}
 	
 	/**
@@ -445,6 +444,7 @@ public class DateActivity extends Activity{
 				event.setDay(formatDate(dayAndDate[1]));
 				String[] timeAndRest = eventsOfADay[j].split("</p>",2);
 				// Set the time
+				System.out.println("timeAndRest[0]" +timeAndRest[0]);
 				event.setHour(timeAndRest[0].replace("h", "").trim());
 				String[] linkNameAndRest = timeAndRest[1].split("<a href=\"");
 				String[] linkNameAndRest2 = linkNameAndRest[1].split("\">",2);
@@ -453,8 +453,15 @@ public class DateActivity extends Activity{
 				String description = "";
 				System.out.println("linkNameAndRest2[1]"+linkNameAndRest2[1]);
 				String[]nameAndRest = linkNameAndRest2[1].split("\\(",2);
+				System.out.println("nameAndRest[0]"+nameAndRest[0]);
+				if (nameAndRest[0].equals(linkNameAndRest2[1])){
+					System.out.println("HOLAAA-----------");
+					String[] nameAndBlaBla = linkNameAndRest2[1].split("</a>",2);
+					event.setName(nameAndBlaBla[0]);
+				}else{
 				// Set the name
-				event.setName(nameAndRest[0]);
+					event.setName(nameAndRest[0]);
+				}
 				String[] description1 = linkNameAndRest2[1].split("</a>");
 				// Set the constructed description
 				description = description1[0];

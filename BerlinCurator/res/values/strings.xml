@@ -7,16 +7,17 @@
     <string name="button_load">Load events</string>
     <string name="title_activity_date">Date Activity</string>
     <string name="date">Date to be extracted</string>
-	<string name="calendar">Calendar</string>
-	<string name="settings">Settings</string>
-	<string name="events_name">Name of the event</string>
-	<string name="events_links">There are no links for this event.</string>
-	<string name="description">There are no more details about this event.</string>
-	<string name="extra_info">Extra info:</string>
-	<string name="related_links">Related links:</string>
-	<string name="image_content_description">No content description for this image</string>
-	<string name="time_unknown">XX:XX</string>
-	<string name="nothing"></string>
+    <string name="calendar">Calendar</string>
+    <string name="settings">Settings</string>
+    <string name="events_name">Name of the event</string>
+    <string name="events_links">There are no links for this event.</string>
+    <string name="description">There are no more details about this event.</string>
+    <string name="extra_info">Extra info:</string>
+    <string name="related_links">Related links:</string>
+    <string name="image_content_description">No content description for this image</string>
+    <string name="time_unknown">XX:XX</string>
+    <string name="nothing"></string>
+
     <string-array name="sites_array">
         <item>I Heart Berlin</item>
         <item>Berlin Art Parasites</item>
@@ -24,6 +25,9 @@
         <item>White Trashs concerts</item>
         <item>Koepis activities</item>
     </string-array>
+
     <string name="title_activity_event">TODO</string>
+    <string name="title_activity_calendar">CalendarActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

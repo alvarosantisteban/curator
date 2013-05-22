@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alvarosantisteban.berlincurator.IHeartBerlinHtmlParser.Entry;
@@ -54,6 +56,8 @@ public class MainActivity extends Activity {
 	ProgressBar loadProgressBar;
 	RelativeLayout mainLayout;
     ImageButton loadButton;
+    TextView calendarText;
+    TextView settingsText;
     
     private int progressBarStatus = 0;
 
@@ -71,6 +75,18 @@ public class MainActivity extends Activity {
 		mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
 		loadButton = (ImageButton) findViewById(R.id.loadButton);
 		loadProgressBar = (ProgressBar)findViewById(R.id.progressLoadHtml);
+		calendarText = (TextView)findViewById(R.id.textCalendar);
+		
+		/*
+		calendarText.setOnClickListener(new OnClickListener() {
+			
+			// Goes to the Calendar activity
+			public void onClick(View v) {
+				Intent intent = new Intent(context, CalendarActivity.class);
+				startActivity(intent);
+			}
+		});
+		*/
 		
 		loadButton.setOnClickListener(new OnClickListener() {
 			
