@@ -3,6 +3,7 @@ package com.alvarosantisteban.berlincurator;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +77,7 @@ public class ListAdapter extends BaseExpandableListAdapter {
 		TextView sequence = (TextView) convertView.findViewById(R.id.sequence);
 		sequence.setText(detailInfo.getSequence().trim() + ") ");
 		TextView childItem = (TextView) convertView.findViewById(R.id.childItem);
-		childItem.setText(detailInfo.getName().trim());
+		childItem.setText(Html.fromHtml(detailInfo.getName().trim())); // <------------------------ CAMBIADO
 	   
 		return convertView;
 	}

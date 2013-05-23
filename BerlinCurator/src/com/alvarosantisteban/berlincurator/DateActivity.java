@@ -20,7 +20,6 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Displays a list with the events for a concrete day organized by the origin of the website and the time.
@@ -133,7 +132,7 @@ public class DateActivity extends Activity{
 	}
 	
 	/**
-	 * Loads some initial faked data into out list
+	 * Loads the events from the different websites into out list
 	 */
 	private void loadEvents(String[] htmls){ 
 		// I Heart Berlin
@@ -146,7 +145,14 @@ public class DateActivity extends Activity{
 		}
 		
 		// Berlin Art Parasites
-		//addEvent("Berlin Art Parasites", htmls[1]);
+		Event[] parasitesEvents = extractEventFromArtParasites(htmls[1]);
+		for (int i=0; i<parasitesEvents.length; i++){
+			// Add the events from the Metal Concerts site of the selected day
+			if(parasitesEvents[i].getDay().equals(date.getText().toString())){
+			//if(metalEvents[i].getDay().equals("17/05/2013")){ Used to check if it works on a day that has a concert
+				addEvent("Berlin Art Parasites", parasitesEvents[i]);
+			}
+		}
 		
 		// Metal concerts
 		Event[] metalEvents = extractEventFromMetalConcerts(htmls[2]);
@@ -163,7 +169,7 @@ public class DateActivity extends Activity{
 		for (int i=0; i<whiteTrashEvent.length; i++){
 			// Add the events from the White Trash site of the selected day
 			if(whiteTrashEvent[i].getDay().equals(date.getText().toString())){
-				addEvent("White Trash", whiteTrashEvent[i]);
+				addEvent("White Trashs concerts", whiteTrashEvent[i]);
 			}
 		}
 
@@ -177,46 +183,6 @@ public class DateActivity extends Activity{
 		}
 	}
 	
-	/**
-	 * Add a event to its corresponding group (site where it comes from)
-	 * 
-	 * @param websiteName String with the name of the website from where the event comes from
-	 * @param eventName String with the name of the event to be attached
-	 * @return the position of group where the event was added
-	 */
-	private int addEvent(String websiteName, String eventName){
-		int groupPosition = 0;
-	   
-		// Check in the hash map if the group already exists
-		HeaderInfo headerInfo = websites.get(websiteName);
-		// Add the group if doesn't exists
-		if(headerInfo == null){
-			headerInfo = new HeaderInfo();
-			headerInfo.setName(websiteName);
-			websites.put(websiteName, headerInfo);
-			websitesList.add(headerInfo);
-		}
-	 
-		// Get the children (events) for the group
-		ArrayList<Event> eventsList = headerInfo.getEventsList();
-		// Get the size of the children list
-		int listSize = eventsList.size();
-		// Add to the counter
-		listSize++;
-	 
-		// Create a new event
-		Event newEvent = new Event();
-		newEvent.setSequence(String.valueOf(listSize));
-		newEvent.setName(eventName);
-		// Add it to its list of events
-		eventsList.add(newEvent);
-		// Update the site with the "new" eventsList
-		headerInfo.setEventsList(eventsList);
-		 
-		//find the group position inside the list
-		groupPosition = websitesList.indexOf(headerInfo);
-		return groupPosition;
-	}
 	/**
 	 * Add a event to its corresponding group (site where it comes from)
 	 * 
@@ -268,7 +234,7 @@ public class DateActivity extends Activity{
 			  // Get the child info
 			  Event clickedEvent =  headerInfo.getEventsList().get(childPosition);
 			  // Display it or do something with it
-			  Toast.makeText(getBaseContext(), "Clicked on Detail " + headerInfo.getName() + "/" + clickedEvent.getName(), Toast.LENGTH_LONG).show();
+			  //Toast.makeText(getBaseContext(), "Clicked on Detail " + headerInfo.getName() + "/" + clickedEvent.getName(), Toast.LENGTH_LONG).show();
 			  Intent intent = new Intent(context, EventActivity.class);
 			  intent.putExtra(EXTRA_EVENT, clickedEvent);
 			  startActivity(intent);
@@ -286,7 +252,7 @@ public class DateActivity extends Activity{
 			  // Get the group header
 			  HeaderInfo headerInfo = websitesList.get(groupPosition);
 			  // Display it or do something with it
-			  Toast.makeText(getBaseContext(), "Child on Header " + headerInfo.getName(), Toast.LENGTH_LONG).show();
+			  //Toast.makeText(getBaseContext(), "Child on Header " + headerInfo.getName(), Toast.LENGTH_LONG).show();
 	     
 			  return false;
 		  }
@@ -374,6 +340,82 @@ public class DateActivity extends Activity{
 		eventsArray = events.toArray(eventsArray);
 		return eventsArray;
     }
+	
+	/**
+	 * Creates a set of events from the html of the Berlin Art Parasites website. 
+	 * Each Event has name, day, description and a link.
+	 * 
+	 * @param theHtml the String containing the html from the Berlin Art Parasites website
+	 * @return an array of Event with the name, day, hour, description and links set
+	 */
+	private Event[] extractEventFromArtParasites(String theHtml){  
+		// First, get rid of everthing that goes after <em>
+		String[] clearnerHtml = theHtml.split("<em>",2);
+		String myPattern = "<strong>"; // Marks the number of days
+		String[] result = clearnerHtml[0].split(myPattern);
+		
+		// Use an ArrayList because the number of events per day is unknown
+		ArrayList<Event> events = new ArrayList<Event>(); 
+		for (int i=1; i<result.length; i++){
+			System.out.println("-------------i="+i);
+			// Separate up to the first "</strong>"
+			String[] dateAndRest = result[i].split("</strong>", 2);
+			// Get the date
+			String[] dayAndDate = dateAndRest[0].split(" ", 2);
+			String[] eventsOfADay = dateAndRest[1].split("<a href=\""); // Marks the number of events
+			for (int j=1; j<=(eventsOfADay.length-1)/2; j++){
+				System.out.println("-------------J="+j);
+				Event event = new Event();
+				// Format the date and set it
+				String day = formatDate(dayAndDate[1].replace(",", "").trim());
+				System.out.println("day:"+day);
+				event.setDay(day);
+				
+				//System.out.println("eventsOfADay[(j*2)-1]"+eventsOfADay[(j*2)-1]);
+				String[] linkAndPlace = eventsOfADay[(j*2)-1].split("</a>",2);
+				// We will use the "place" for the description ---> place[1]
+				String[] place = linkAndPlace[0].split("\">"); 
+				String placeLink = place[0];
+				System.out.println("placeLink"+placeLink);
+				System.out.println("place:"+place[1]); // AQUI HAY MUGRE
+				event.setLink("http://www.berlin-artparasites.com"+placeLink);
+				
+				// Extract the name and a link and set them
+				//System.out.println("eventsOfADay[(j*2)]"+eventsOfADay[(j*2)]);
+				String[] linkNameAndRest = eventsOfADay[(j*2)].split("</a>",2);
+				String[] linkAndName = linkNameAndRest[0].split("\">"); 
+				System.out.println("linkAndName[1]"+linkAndName[1]);
+				event.setName(linkAndName[1]);
+				System.out.println("linkAndName[0]"+linkAndName[0]);
+				if(linkAndName[0].charAt(0) == '/'){
+					event.setLink("http://www.berlin-artparasites.com"+linkAndName[0]);
+				}else{
+					String[] linkAndCrap = linkAndName[0].split("\"",2);
+					event.setLink(linkAndCrap[0]);
+				}
+				
+				// Extract the time and set it
+				System.out.println("linkNameAndRest[1]"+linkNameAndRest[1]);
+				String[] timeAndRest = linkNameAndRest[1].split("pm</p>"); 
+				String[] crapTime = timeAndRest[0].split("-",2);
+				System.out.println("crapTime[1]:"+crapTime[1].trim() +".");
+				event.setHour(crapTime[1].trim());
+				
+				String[] nothingAndDescription = timeAndRest[1].split(">", 2);
+				String[] descriptionAndNothing = nothingAndDescription[1].split("</p>",2);
+				
+				// Create the description and set it
+				String description = linkAndName[1] + " at the " +place[1] +":" +System.getProperty("line.separator") + descriptionAndNothing[0].trim(); // System.getProperty("line.separator")
+				System.out.println("description: "+description);
+				event.setDescription(description);
+				
+				events.add(event);
+			}
+		}
+		Event[] eventsArray = new Event[events.size()];
+		eventsArray = events.toArray(eventsArray);
+		return eventsArray;
+    }
 
 	/**
 	 * Creates a set of events from the html of the Metal Concerts website. 
@@ -444,22 +486,19 @@ public class DateActivity extends Activity{
 				event.setDay(formatDate(dayAndDate[1]));
 				String[] timeAndRest = eventsOfADay[j].split("</p>",2);
 				// Set the time
-				System.out.println("timeAndRest[0]" +timeAndRest[0]);
+				//System.out.println("timeAndRest[0]" +timeAndRest[0]);
 				event.setHour(timeAndRest[0].replace("h", "").trim());
 				String[] linkNameAndRest = timeAndRest[1].split("<a href=\"");
 				String[] linkNameAndRest2 = linkNameAndRest[1].split("\">",2);
 				// Make the relative link absolut and set it
 				event.setLink("http://www.whitetrashfastfood.com"+linkNameAndRest2[0]); 
 				String description = "";
-				System.out.println("linkNameAndRest2[1]"+linkNameAndRest2[1]);
 				String[]nameAndRest = linkNameAndRest2[1].split("\\(",2);
-				System.out.println("nameAndRest[0]"+nameAndRest[0]);
+				// Set the name depending if the band name contains "(" or not
 				if (nameAndRest[0].equals(linkNameAndRest2[1])){
-					System.out.println("HOLAAA-----------");
 					String[] nameAndBlaBla = linkNameAndRest2[1].split("</a>",2);
 					event.setName(nameAndBlaBla[0]);
 				}else{
-				// Set the name
 					event.setName(nameAndRest[0]);
 				}
 				String[] description1 = linkNameAndRest2[1].split("</a>");
@@ -525,10 +564,10 @@ public class DateActivity extends Activity{
 	}
 	
 	/**
-	 * Normalizes a date from the I Heart Berlin format: "May 13 2013"  
+	 * Normalizes a date from the I Heart Berlin and Berlin Art Parasites format: "May 13 2013"  
 	 * or the White Trash format: "22 May 2013" to the app's format "13/05/2013"
 	 * 
-	 * @param inputDate the date in the I Heart Berlin or White Trash format
+	 * @param inputDate the date in the I Heart Berlin, Berlin Art Parasites or White Trash format
 	 * @return a String with the date normalized
 	 */
 	public static String formatDate(String inputDate){
@@ -570,8 +609,6 @@ public class DateActivity extends Activity{
             monthNumber = "12";
         else
             monthNumber = "00";
-		System.out.println("monthDayYear.length:"+monthDayYear.length);
-		System.out.println("monthDayYear[2]:"+monthDayYear[2]);
 		String total = day+"/"+monthNumber+"/"+monthDayYear[2];
 		return total.trim(); 
 	}

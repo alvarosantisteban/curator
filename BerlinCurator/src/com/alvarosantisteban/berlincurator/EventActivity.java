@@ -45,11 +45,12 @@ public class EventActivity extends Activity {
 		description = (TextView)findViewById(R.id.events_description);
 		//image = (TextView)findViewById(R.id.events_image_in_text);
 		
-		name.setText(event.getName());
+		name.setMovementMethod(LinkMovementMethod.getInstance());
+		name.setText(Html.fromHtml(event.getName()));
+		
 		day.setText(event.getDay());
 		// Check if there is a description to show
 		if (!event.getDescription().equals("")){
-			description.setText(event.getDescription());
 			description.setMovementMethod(LinkMovementMethod.getInstance());
 			description.setText(Html.fromHtml(event.getDescription()));
 		}
@@ -63,7 +64,8 @@ public class EventActivity extends Activity {
 		}
 		
 		if(!event.getHour().equals("")){
-			time.setText(event.getHour());
+			time.setText(Html.fromHtml(event.getHour()));
+			//time.setText(event.getHour());
 		}
 		
 		/*

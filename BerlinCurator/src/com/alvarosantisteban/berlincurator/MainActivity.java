@@ -4,8 +4,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +23,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -38,6 +49,7 @@ public class MainActivity extends Activity {
 	public static final int MAX_NUMBER_OF_WEBSITES = 5;
 	private static final String DEBUG_TAG = "HttpExample";
 	public static final String EXTRA_HTML = "com.alvarosantisteban.berlincurator.html";
+	private boolean betweenThursdayAndSunday = true;
 	
 	/**
 	 * The set of urls from where the html will be downloaded
@@ -60,6 +72,8 @@ public class MainActivity extends Activity {
     TextView settingsText;
     
     private int progressBarStatus = 0;
+    
+    //DownloadWebpageSecondTask segundon;
 
 	List<Entry> entries;
 	
@@ -76,6 +90,8 @@ public class MainActivity extends Activity {
 		loadButton = (ImageButton) findViewById(R.id.loadButton);
 		loadProgressBar = (ProgressBar)findViewById(R.id.progressLoadHtml);
 		calendarText = (TextView)findViewById(R.id.textCalendar);
+		
+		//segundon = (DownloadWebpageSecondTask) new DownloadWebpageSecondTask();
 		
 		/*
 		calendarText.setOnClickListener(new OnClickListener() {
@@ -98,8 +114,7 @@ public class MainActivity extends Activity {
 				// prepare for a progress bar dialog
 				loadProgressBar.setProgress(0);
 				loadProgressBar.setMax(MAX_NUMBER_OF_WEBSITES);
-				loadProgressBar.setVisibility(View.VISIBLE);
-				
+				loadProgressBar.setVisibility(View.VISIBLE);				
 				
 				ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -111,8 +126,19 @@ public class MainActivity extends Activity {
 					download.execute(stringUrls);
 					try {
 						// Get the downloaded htmls
+						System.out.println("<<<<<<<<<<<<<-----------FUCKING GET ANTES DE TIEMPO, VERDAD?");
 						htmls = download.get();
-						if (htmls != null){
+						
+						DownloadWebpageSecondTask segundon = (DownloadWebpageSecondTask) new DownloadWebpageSecondTask().execute(extractHthmlFromMainArtParasites(htmls[1]));
+						System.out.println("Creo al segundo y lo ejecuto");
+						htmls[1] = segundon.get(10000, TimeUnit.MILLISECONDS);
+						System.out.println("FUCKING GET ANTES DE TIEMPO, VERDAD? 222222222");
+						System.out.println("htmls[1]:"+htmls[1]);
+						
+						if (htmls != null){							
+							// Try to wait for the second task
+							System.out.println("GOING TO INTENT SOMETHING NOT NICE");
+							
 							// Go to the DateActivity and pass it the downloaded data
 							Intent intent = new Intent(context, DateActivity.class);
 							intent.putExtra(EXTRA_HTML, htmls);
@@ -121,11 +147,15 @@ public class MainActivity extends Activity {
 							// Something went wrong retrieving the data from the urls
 							Toast.makeText(getBaseContext(), "Something went wrong retrieving the data from the urls. Please, try again", Toast.LENGTH_LONG).show();
 						}
+						
 					} catch (InterruptedException e) {
 						System.out.println("interrupted exception");
 						e.printStackTrace();
 					} catch (ExecutionException e) {
 						System.out.println("execution exception");
+						e.printStackTrace();
+					} catch (TimeoutException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 			    } else {
@@ -135,6 +165,20 @@ public class MainActivity extends Activity {
 			    }
 			}
 		});
+		
+		
+	}
+	
+	private String extractHthmlFromMainArtParasites(String parasitesMainSite){
+		// Look for the first entry of Best Weekend Art Events
+		String myPattern = "Best Weekend Art Events";
+		String[] result = parasitesMainSite.split(myPattern,2);
+		// Set the left limit of the link
+		String[] links = result[0].split("<h1><a href=\"");
+		// Set the right limit of the link
+		String[] link = links[links.length-1].split("\">");
+		// Return the absolute link
+		return "http://www.berlin-artparasites.com"+link[0];
 	}
 
 	@Override
@@ -144,36 +188,87 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	/* Loads a XML from disk corresponding to the iheartberlin website and parses it
-    private void loadXml() throws XmlPullParserException, IOException {
-    	System.out.println("loadXml()");
-        InputStream stream = null;
-        IHeartBerlinHtmlParser iHeartBerlinXmlParser = new IHeartBerlinHtmlParser((Context)this);
-        entries = null;
-        //String info = null;
-        //String image = null;
+	/**
+	 * LA SEGUNDA CLASE
+	 * @author Alvaro
+	 *
+	 */
+	private class DownloadWebpageSecondTask extends AsyncTask<String, Integer, String> {
+	
+		
+		protected String doInBackground(String... params) {
+			System.out.println("IM IN Do in Background from second task --------------------------------<<<<");
+			// Get the html from the Best events site		
+			try {
+				htmls[1] = downloadUrl(params[0]);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (htmls[1].equals("Invalid response code")){
+				// TODO Think of a strategy (try one more time or whatever)
+				return null;
+			}else if (htmls[1].equals("Exception")){
+				return null;
+			}
+			return htmls[1];
+		}
+		
+		protected void onPostExecute(String result) {
+			System.out.println("post execute de 2 task");
+			//htmls[1] = result[1];
+			loadProgressBar.setVisibility(View.GONE);
+		}
+		
+		/** 
+	        * Given a URL, establishes an HttpUrlConnection and retrieves
+	        * the web page content as a InputStream, which it returns as
+	        *  a string.
+	        */
+			private String downloadUrl(String myurl) throws IOException{
+				InputStream is = null;
+			   
+	      	   	try {
+	      	   		URL url = new URL(myurl);
+	      	   		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	      	   		conn.setReadTimeout(10000 /* milliseconds */);
+	      	   		conn.setConnectTimeout(15000 /* milliseconds */);
+	      	   		conn.setRequestMethod("GET");
+	      	   		conn.setDoInput(true);
+	      	   		// Starts the query
+	      	   		conn.connect();
+	      	   		int response = conn.getResponseCode();
+	      	   		Log.d(DEBUG_TAG, "The response is: " + response);
+	      	   		if (response == -1){
+	      	   			return "Invalid response code";
+	      	   		}
+	      	   		is = conn.getInputStream();
+	      	   		// Convert the InputStream into a string
+	      	   		String contentAsString = convertStreamToString(is);
+	      	   		return contentAsString;
+	      	   	} catch (Exception e){
+	      	   		System.out.println("Problems downloading the url: "+myurl +". Exception: "+e);
+	      	   		return "Exception";
+	      	    // Makes sure that the InputStream is closed after the app is finished using it.
+	      	   	}finally {
+	      	   		if (is != null) {
+	      	   			is.close();
+	      	   		} 
+	      	   	}
+			}
+	          
+			/**
+			 * Converts a InputStream to String. 
+			 * Taken from http://stackoverflow.com/questions/309424/read-convert-an-inputstream-to-a-string
+			 * @param is the InputStream to be converted
+			 * @return the resulting String
+			 */
+			public String convertStreamToString(java.io.InputStream is) {
+				java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+				return s.hasNext() ? s.next() : "";
+			}
 
-        try {
-            stream = iHeartBerlinXmlParser.readMyFile(null);
-            entries = iHeartBerlinXmlParser.parse(stream);
-        // Makes sure that the InputStream is closed after the app is
-        // finished using it.
-        } finally {
-            if (stream != null) {
-                stream.close();
-            }
-        }
-
-        // StackOverflowXmlParser returns a List (called "entries") of Entry objects.
-        // Each Entry object represents a single post in the XML feed.
-        // This section processes the entries list to combine each entry with HTML markup.
-        // Each entry is displayed in the UI as a link that optionally includes
-        // a text summary.
-        for (Entry entry : entries) {
-        	entry.printEntry();
-        }
-    }
-    */
+	}
     
     /** 
      * Uses AsyncTask to create a task away from the main UI thread. This task takes the 
@@ -229,8 +324,25 @@ public class MainActivity extends Activity {
         * Hides the progressBar.
         */
 		protected void onPostExecute(String[] result) {
-			//System.out.println("onPostExecute:" +result[0] +".");
-			loadProgressBar.setVisibility(View.GONE);
+			System.out.println("onPostExecute de la primera tarea.");
+			// Call the second task
+			/*
+			String[] parasites = null;
+			DownloadWebpageSecondTask segundon = (DownloadWebpageSecondTask) new DownloadWebpageSecondTask().execute(extractHthmlFromMainArtParasites(result[1]));
+			//segundon.execute(extractHthmlFromMainArtParasites(result[1]));
+			try {
+				parasites = segundon.get();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			result[1] = parasites[1];
+			*/
+			//System.out.println("END OF POST EXECUTE CON RESULT[1]:"+result[1]);
+			//loadProgressBar.setVisibility(View.GONE);
 		}
        
 		/** 
@@ -260,7 +372,7 @@ public class MainActivity extends Activity {
       	   		String contentAsString = convertStreamToString(is);
       	   		return contentAsString;
       	   	} catch (Exception e){
-      	   		System.out.println("Problems downloading the url: "+myurl +". Exception: "+e);
+      	   		System.out.println("Prroblems downloading the url: "+myurl +". Exception: "+e);
       	   		return "Exception";
       	    // Makes sure that the InputStream is closed after the app is finished using it.
       	   	}finally {
@@ -311,6 +423,37 @@ public void onClick(View v) {
 }
 });
 
+*/
+
+/* Loads a XML from disk corresponding to the iheartberlin website and parses it
+private void loadXml() throws XmlPullParserException, IOException {
+	System.out.println("loadXml()");
+    InputStream stream = null;
+    IHeartBerlinHtmlParser iHeartBerlinXmlParser = new IHeartBerlinHtmlParser((Context)this);
+    entries = null;
+    //String info = null;
+    //String image = null;
+
+    try {
+        stream = iHeartBerlinXmlParser.readMyFile(null);
+        entries = iHeartBerlinXmlParser.parse(stream);
+    // Makes sure that the InputStream is closed after the app is
+    // finished using it.
+    } finally {
+        if (stream != null) {
+            stream.close();
+        }
+    }
+
+    // StackOverflowXmlParser returns a List (called "entries") of Entry objects.
+    // Each Entry object represents a single post in the XML feed.
+    // This section processes the entries list to combine each entry with HTML markup.
+    // Each entry is displayed in the UI as a link that optionally includes
+    // a text summary.
+    for (Entry entry : entries) {
+    	entry.printEntry();
+    }
+}
 */
 
 /*
