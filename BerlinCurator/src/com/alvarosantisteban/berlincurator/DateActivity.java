@@ -377,16 +377,31 @@ public class DateActivity extends Activity{
 				String[] place = linkAndPlace[0].split("\">"); 
 				String placeLink = place[0];
 				System.out.println("placeLink"+placeLink);
-				System.out.println("place:"+place[1]); // AQUI HAY MUGRE
-				event.setLink("http://www.berlin-artparasites.com"+placeLink);
+				// Check if the link still contains crap
+				if(placeLink.contains("\"")){
+					String[] cleanLink = placeLink.split("\"");
+					placeLink = cleanLink[0];
+				}
+				// Check if the link belongs to the Art Parasites site or not
+				if(placeLink.charAt(0) == '/'){
+					event.setLink("http://www.berlin-artparasites.com"+placeLink);
+				}else{
+					String[] linkAndCrap = placeLink.split("\"",2);
+					event.setLink(linkAndCrap[0]);
+				}
 				
 				// Extract the name and a link and set them
-				//System.out.println("eventsOfADay[(j*2)]"+eventsOfADay[(j*2)]);
 				String[] linkNameAndRest = eventsOfADay[(j*2)].split("</a>",2);
 				String[] linkAndName = linkNameAndRest[0].split("\">"); 
 				System.out.println("linkAndName[1]"+linkAndName[1]);
 				event.setName(linkAndName[1]);
 				System.out.println("linkAndName[0]"+linkAndName[0]);
+				// Check if the link still contains crap
+				if(linkAndName[0].contains("\"")){
+					String[] cleanLink = linkAndName[0].split("\"");
+					linkAndName[0] = cleanLink[0];
+				}
+				// Check if the link belongs to the Art Parasites site or not
 				if(linkAndName[0].charAt(0) == '/'){
 					event.setLink("http://www.berlin-artparasites.com"+linkAndName[0]);
 				}else{

@@ -56,7 +56,9 @@ public class EventActivity extends Activity {
 		}
 		// Check if there is a link to show
 		if (!event.getLink().equals("")){
-			link.setText(event.getLink());
+			String[] links = event.getLinks();
+			
+			link.setText(links[0] + " \n " +links[1]);
 			// Make the link clickable. The links have no html, so we make them clickable this way
 			Linkify.addLinks(link, Linkify.WEB_URLS);
 			link.setMovementMethod(LinkMovementMethod.getInstance());
