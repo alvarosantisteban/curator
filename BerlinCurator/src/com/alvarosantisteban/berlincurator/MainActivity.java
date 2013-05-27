@@ -50,6 +50,7 @@ public class MainActivity extends Activity {
 	private static final String DEBUG_TAG = "HttpExample";
 	public static final String EXTRA_HTML = "com.alvarosantisteban.berlincurator.html";
 	private boolean betweenThursdayAndSunday = true;
+	public static List<List<Event>> events = (ArrayList)new ArrayList <ArrayList<Event>>();
 	
 	Context context;
 	
@@ -85,7 +86,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		System.out.println("--------------- Empezamos ------------");
+		System.out.println("--------------- BEGIN ------------");
 		context = this;
 		
 		mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
@@ -279,7 +280,8 @@ public class MainActivity extends Activity {
     * has been established, the AsyncTask downloads the html of the webpage as
     * an InputStream. Finally, the InputStream is converted into a string.
     */
-	private class DownloadWebpageTask extends AsyncTask<String, Integer, String[]> {
+	//private class DownloadWebpageTask extends AsyncTask<String, Integer, String[]> {
+	private class DownloadWebpageTask extends AsyncTask<String, Integer, List<List<Event>>> {
 		
 		/**
 		 * Makes the progressBar visible
@@ -292,6 +294,7 @@ public class MainActivity extends Activity {
 		/**
 		 * Downloads the htmls. Updates the status of the progressBar.
 		 *
+		 *OLD THING
 		protected String[] doInBackground(String... urls) {   
 			try {
 				String[] webpages = new String[MAX_NUMBER_OF_WEBSITES];
@@ -320,7 +323,8 @@ public class MainActivity extends Activity {
 		
 		/**
 		 * Downloads the htmls. Updates the status of the progressBar.
-		 */
+		 * 
+		 * INTENTO INTERMEDIO
 		protected String[] doInBackground(String... urls) {   
 			try {
 				String[] webpages = new String[MAX_NUMBER_OF_WEBSITES];
@@ -346,7 +350,26 @@ public class MainActivity extends Activity {
 			} catch (IOException e) {
 				return null;
 			}
-		}
+		} */
+		
+		/**
+		 * Downloads the htmls. Updates the status of the progressBar.
+		 * 
+		 */
+		protected List<List<Event>> doInBackground(String... urls) {   
+			//List<List<Event>> events = (ArrayList)new ArrayList <ArrayList<Event>>();
+			List<Event> iHearBerlinEvents = EventLoaderFactory.newIHeartBerlinEventLoader().load();
+			List<Event> parasitesEvents = EventLoaderFactory.newArtParasitesEventLoader().load();
+			List<Event> metalConcertsEvents = EventLoaderFactory.newMetalConcertsEventLoader().load();
+			List<Event> whiteTrashEvents = EventLoaderFactory.newWhiteTrashEventLoader().load();
+			List<Event> KoepisEvents = EventLoaderFactory.newKoepiEventLoader().load();
+			events.add(iHearBerlinEvents); 
+			events.add(parasitesEvents); 
+			events.add(metalConcertsEvents); 
+			events.add(whiteTrashEvents); 
+			events.add(KoepisEvents); 
+			return events;
+		} 
        
 		/**
 		 * Sets the progress of the progressBar.
@@ -358,7 +381,7 @@ public class MainActivity extends Activity {
        
 		/**
         * Hides the progressBar.
-        */
+        *
 		protected void onPostExecute(String[] result) {
 			System.out.println("onPostExecute de la primera tarea.");
 			// CAMBIADO: AHORA HACEMOS EL INTENT AQUI
@@ -384,7 +407,19 @@ public class MainActivity extends Activity {
 			*/
 			//System.out.println("END OF POST EXECUTE CON RESULT[1]:"+result[1]);
 			//loadProgressBar.setVisibility(View.GONE);
-		}
+		//}
+		
+		/**
+	        * Hides the progressBar.
+	        */
+			protected void onPostExecute(List<List<Event>> result) {
+				System.out.println("onPostExecute de la primera tarea.");
+				// CAMBIADO: AHORA HACEMOS EL INTENT AQUI
+				Intent intent = new Intent(context, DateActivity.class);
+				//intent.putParcelableArrayListExtra(EXTRA_HTML, result); // PAsar en el intent 
+				startActivity(intent);
+				
+			}
        
 		/** 
         * Given a URL, establishes an HttpUrlConnection and retrieves

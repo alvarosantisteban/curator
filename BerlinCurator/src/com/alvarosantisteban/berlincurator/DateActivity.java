@@ -60,7 +60,7 @@ public class DateActivity extends Activity{
 		setContentView(R.layout.activity_date);
 		
 		Intent intent = getIntent();
-		String[] htmls = intent.getStringArrayExtra(MainActivity.EXTRA_HTML);
+		//String[] htmls = intent.getStringArrayExtra(MainActivity.EXTRA_HTML);
 		
 		// Get the actual date
 		date = (TextView) findViewById(R.id.date);
@@ -81,7 +81,8 @@ public class DateActivity extends Activity{
 		
 		// TODO ¿Quizas mejor ya abajo? Ver si se ahorra algo haciendolo aqui o vuelve a generar el array de Event
 		
-		loadEvents(htmls);
+		//loadEvents(htmls);
+		loadEvents();
 		
 		
 		// Expand all Groups
@@ -127,6 +128,53 @@ public class DateActivity extends Activity{
 		for (int i = 0; i < count; i++){
 			if(listAdapter.getChildrenCount(i) > 0){
 				expandableSitesList.expandGroup(i);
+			}
+		}
+	}
+	
+	/**
+	 * Loads the events from the different websites into out list
+	 */
+	private void loadEvents(){ 
+		// I Heart Berlin
+		for (int i=0; i<MainActivity.events.get(0).size(); i++){
+			// Add the events from the I Heart Berlin site of the selected day
+			if(MainActivity.events.get(0).get(i).getDay().equals(date.getText().toString())){
+				addEvent("I Heart Berlin", MainActivity.events.get(0).get(i));
+			}
+		}
+		
+		// Berlin Art Parasites
+		for (int i=0; i<MainActivity.events.get(1).size(); i++){
+			// Add the events from the Metal Concerts site of the selected day
+			if(MainActivity.events.get(1).get(i).getDay().equals(date.getText().toString())){
+			//if(metalEvents[i].getDay().equals("17/05/2013")){ Used to check if it works on a day that has a concert
+				addEvent("Berlin Art Parasites", MainActivity.events.get(1).get(i));
+			}
+		}
+		
+		// Metal concerts
+		for (int i=0; i<MainActivity.events.get(2).size(); i++){
+			// Add the events from the Metal Concerts site of the selected day
+			if(MainActivity.events.get(2).get(i).getDay().equals(date.getText().toString())){
+			//if(metalEvents[i].getDay().equals("17/05/2013")){ Used to check if it works on a day that has a concert
+				addEvent("Metal Concerts", MainActivity.events.get(2).get(i));
+			}
+		}
+		
+		// White Trash's concerts
+		for (int i=0; i<MainActivity.events.get(3).size(); i++){
+			// Add the events from the White Trash site of the selected day
+			if(MainActivity.events.get(3).get(i).getDay().equals(date.getText().toString())){
+				addEvent("White Trashs concerts", MainActivity.events.get(3).get(i));
+			}
+		}
+
+		// Koepi's events
+		for (int i=0; i<MainActivity.events.get(4).size(); i++){
+			// Add the events from the Metal Concerts site of the selected day
+			if(MainActivity.events.get(4).get(i).getDay().equals(date.getText().toString())){
+				addEvent("Koepis activities", MainActivity.events.get(4).get(i));
 			}
 		}
 	}

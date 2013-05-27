@@ -2,6 +2,7 @@ package com.alvarosantisteban.berlincurator;
 
 import java.io.Serializable;
 
+
 /**
  * The information of the event. Implements Serializable to allow this objects to be passes as extras in an Intent
  * 
