@@ -51,6 +51,8 @@ public class MainActivity extends Activity {
 	public static final String EXTRA_HTML = "com.alvarosantisteban.berlincurator.html";
 	private boolean betweenThursdayAndSunday = true;
 	
+	Context context;
+	
 	/**
 	 * The set of urls from where the html will be downloaded
 	 */
@@ -84,7 +86,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		System.out.println("--------------- Empezamos ------------");
-		final Context context = this;
+		context = this;
 		
 		mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
 		loadButton = (ImageButton) findViewById(R.id.loadButton);
@@ -124,6 +126,7 @@ public class MainActivity extends Activity {
 					// Execute the asyncronous task of downloading the websites
 					// TODO Try to make it fail by giving ONE false url
 					download.execute(stringUrls);
+					/*
 					try {
 						// Get the downloaded htmls
 						System.out.println("<<<<<<<<<<<<<-----------FUCKING GET ANTES DE TIEMPO, VERDAD?");
@@ -147,7 +150,6 @@ public class MainActivity extends Activity {
 							// Something went wrong retrieving the data from the urls
 							Toast.makeText(getBaseContext(), "Something went wrong retrieving the data from the urls. Please, try again", Toast.LENGTH_LONG).show();
 						}
-						
 					} catch (InterruptedException e) {
 						System.out.println("interrupted exception");
 						e.printStackTrace();
@@ -158,6 +160,7 @@ public class MainActivity extends Activity {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					*/
 			    } else {
 			    	// Inform the user that there is no network connection available
 			    	Toast.makeText(getBaseContext(), "No network connection available.", Toast.LENGTH_LONG).show();
@@ -288,6 +291,35 @@ public class MainActivity extends Activity {
 	       
 		/**
 		 * Downloads the htmls. Updates the status of the progressBar.
+		 *
+		protected String[] doInBackground(String... urls) {   
+			try {
+				String[] webpages = new String[MAX_NUMBER_OF_WEBSITES];
+				for (int i = 0; i < urls.length; i++) {
+					String check = downloadUrl(urls[i]);
+					if (check.equals("Invalid response code")){
+						// TODO Think of a strategy (try one more time or whatever)
+						return null;
+					}else if (check.equals("Exception")){
+						return null;
+					}else{
+						webpages[i] = check;
+						progressBarStatus++;
+						System.out.println("Estoy en doInBackgroung:"+progressBarStatus);
+						publishProgress(progressBarStatus);
+					}
+				}
+				
+				
+				return webpages;
+			} catch (IOException e) {
+				return null;
+			}
+		}
+		*/
+		
+		/**
+		 * Downloads the htmls. Updates the status of the progressBar.
 		 */
 		protected String[] doInBackground(String... urls) {   
 			try {
@@ -306,6 +338,10 @@ public class MainActivity extends Activity {
 						publishProgress(progressBarStatus);
 					}
 				}
+				
+				String parasiteUrl = extractHthmlFromMainArtParasites(webpages[1]);
+				webpages[1] = downloadUrl(parasiteUrl);
+				
 				return webpages;
 			} catch (IOException e) {
 				return null;
@@ -325,6 +361,11 @@ public class MainActivity extends Activity {
         */
 		protected void onPostExecute(String[] result) {
 			System.out.println("onPostExecute de la primera tarea.");
+			// CAMBIADO: AHORA HACEMOS EL INTENT AQUI
+			Intent intent = new Intent(context, DateActivity.class);
+			intent.putExtra(EXTRA_HTML, result);
+			startActivity(intent);
+			
 			// Call the second task
 			/*
 			String[] parasites = null;

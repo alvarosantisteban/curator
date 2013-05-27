@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
- * Displays all the information of an event.
+ * Displays all the information of an event: Day, name, hour, description and links
  * 
  * @author Alvaro Santisteban 2013 - alvarosantisteban@gmail.com
  *
@@ -65,6 +65,7 @@ public class EventActivity extends Activity {
 			
 		}
 		
+		// Check if there is an hour to show
 		if(!event.getHour().equals("")){
 			time.setText(Html.fromHtml(event.getHour()));
 			//time.setText(event.getHour());
@@ -75,13 +76,6 @@ public class EventActivity extends Activity {
 			image.setMovementMethod(LinkMovementMethod.getInstance());
 			image.setText(Html.fromHtml(event.getImage()));
 		}
-		*/
-		
-
-		/*
-		 * To make possible pieces of html on the text
-		link.setMovementMethod(LinkMovementMethod.getInstance());
-		link.setText(Html.fromHtml("te das <a href=\"http://google.com\">cueeeen?</a>"));
 		*/
 	}
 
