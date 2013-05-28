@@ -17,6 +17,7 @@
     <string name="image_content_description">No content description for this image</string>
     <string name="time_unknown">XX:XX</string>
     <string name="nothing"></string>
+    <string name="menu_settings">Settings de preferences</string>
 
     <string-array name="sites_array">
         <item>I Heart Berlin</item>
@@ -25,9 +26,26 @@
         <item>White Trashs concerts</item>
         <item>Koepis activities</item>
     </string-array>
+    
+    <string-array name="active">
+        <item>Active</item>
+        <item>Active</item>
+        <item>Active</item>
+        <item>Active</item>
+        <item>Active</item>
+    </string-array>
+    
+    <string name="multilist_title">Events sources</string>
+    <string name="multilist_summary">Choose the websites from where the information will be taken</string>
+    <string name="multilist_dialog">Active websites</string>
+    
+    <string-array name="empty_array"/>    
+    
+    <string name="pref_syncConnectionTypes_default">1 OK</string>
 
     <string name="title_activity_event">Event information</string>
     <string name="title_activity_calendar">Calendar</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_settings">Settings</string>
 
 </resources>

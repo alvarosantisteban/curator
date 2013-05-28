@@ -1,23 +1,25 @@
 package com.alvarosantisteban.berlincurator;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,6 +41,9 @@ public class MainActivity extends Activity {
 	public static final String EXTRA_HTML = "com.alvarosantisteban.berlincurator.html";
 	public static List<List<Event>> events = (ArrayList)new ArrayList <ArrayList<Event>>();
 	
+	// Settings
+	private static final int RESULT_SETTINGS = 1;
+	SharedPreferences sharedPref;
 	Context context;
 	
 	/**
@@ -60,6 +65,7 @@ public class MainActivity extends Activity {
     ImageButton loadButton;
     TextView calendarText;
     TextView settingsText;
+    ImageView loadEventsImage;
     
     private int progressBarStatus = 0;
 
@@ -78,8 +84,43 @@ public class MainActivity extends Activity {
 		loadButton = (ImageButton) findViewById(R.id.loadButton);
 		loadProgressBar = (ProgressBar)findViewById(R.id.progressLoadHtml);
 		calendarText = (TextView)findViewById(R.id.textCalendar);
+		loadEventsImage = (ImageView)findViewById(R.id.loadData);
 		
-		//segundon = (DownloadWebpageSecondTask) new DownloadWebpageSecondTask();
+		// Get the default shared preferences
+		sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		// This is suppose to be used to clear the data from shared preferences
+		//Editor editor = sharedPref.edit();
+		//editor.clear();
+		//editor.commit();
+		// Check which sites are meant to be shown
+		Map<String,?> all = sharedPref.getAll();
+		System.out.println("value:"+ all.get("multilist"));
+		for (Map.Entry<String, ?> entry : all.entrySet()){
+		    System.out.println(entry.getKey() + "/" + entry.getValue());
+		}
+
+		//Set<String> pollas = new HashSet<String>();
+		//pollas.add("Pollas en vinagre");
+		
+		// Print them once again (TO BE DELETED)
+		Set<String> algo = sharedPref.getStringSet("multilist", null);
+		System.out.println(algo.size());
+		Object[] cojon = algo.toArray();
+		for(int i=0;i<cojon.length;i++){
+			System.out.print(cojon[i].toString() + " / ");
+		}
+		
+		
+		loadEventsImage.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Toast.makeText(getBaseContext(), "HOLA CARACOLA.", Toast.LENGTH_LONG).show();
+			}
+			
+		});
+		
 		
 		/*
 		calendarText.setOnClickListener(new OnClickListener() {
@@ -101,8 +142,7 @@ public class MainActivity extends Activity {
 				
 				// prepare for a progress bar dialog
 				loadProgressBar.setProgress(0);
-				loadProgressBar.setMax(MAX_NUMBER_OF_WEBSITES);
-				loadProgressBar.setVisibility(View.VISIBLE);				
+				loadProgressBar.setMax(MAX_NUMBER_OF_WEBSITES);				
 				
 				ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -120,21 +160,41 @@ public class MainActivity extends Activity {
 			}
 		});	
 	}
-
+	
+	/**
+	 * Inflates the menu from the XML
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		//getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.preferences, menu);
 		return true;
 	}
+	
+	/**
+	 * Checks which item from the menu has been clicked
+	 */
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+ 
+        // Goes to the settings activity
+        case R.id.menu_settings:
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivityForResult(i, RESULT_SETTINGS);
+            break;
+ 
+        }
+ 
+        return true;
+    }
     
     /** 
-     * Uses AsyncTask to create a task away from the main UI thread. This task takes the 
-    * URL strings and uses them to create several HttpUrlConnection. Once the connection
-    * has been established, the AsyncTask downloads the html of the webpage as
-    * an InputStream. Finally, the InputStream is converted into a string.
+     * Uses AsyncTask to create a task away from the main UI thread. 
+     * This task takes the creates several HttpUrlConnection to download the html from different websites. 
+     * Afterwards, the several lists of Events are created and the execution goes to the Date Activity.
     */
-	//private class DownloadWebpageTask extends AsyncTask<String, Integer, String[]> {
 	private class DownloadWebpageTask extends AsyncTask<String, Integer, List<List<Event>>> {
 		
 		/**
@@ -146,7 +206,8 @@ public class MainActivity extends Activity {
 		}
 		
 		/**
-		 * Downloads the htmls. Updates the status of the progressBar.
+		 * Downloads the htmls and creates the lists of Events. 
+		 * Updates the status of the progressBar.
 		 * 
 		 */
 		protected List<List<Event>> doInBackground(String... urls) {  
@@ -172,13 +233,14 @@ public class MainActivity extends Activity {
 		}
 		
 		/**
-		* Hides the progressBar.
+		* Goes to the Date Activity and hides the progressBar.
         */
 		protected void onPostExecute(List<List<Event>> result) {
 			System.out.println("onPostExecute de la primera tarea.");
-			// CAMBIADO: AHORA HACEMOS EL INTENT AQUI
+			loadProgressBar.setVisibility(View.GONE);
+			// Go to the Date Activity
 			Intent intent = new Intent(context, DateActivity.class);
-			//intent.putParcelableArrayListExtra(EXTRA_HTML, result); // PAsar en el intent 
+			//intent.putParcelableArrayListExtra(EXTRA_HTML, result);
 			startActivity(intent);
 			
 		}

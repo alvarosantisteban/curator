@@ -36,6 +36,19 @@
         android:layout_alignBottom="@+id/textCalendar"
         android:layout_alignParentRight="true"
         android:text="@string/settings" />
+    
+    <ImageView
+        android:id="@+id/loadData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/loading_events"
+        android:src="@drawable/sexistisch" 
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:clickable="true"/>
+        
 
     <ImageButton
         android:id="@+id/loadButton"

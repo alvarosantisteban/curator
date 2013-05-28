@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <MultiSelectListPreference
+        android:key="multilist"
+        android:dialogTitle="@string/multilist_dialog"
+        android:summary="@string/multilist_summary"        
+        android:title="@string/multilist_title"
+        android:entries="@array/sites_array"
+        android:entryValues="@array/sites_array"
+        android:defaultValue="@array/sites_array"
+        />
+</PreferenceScreen>
