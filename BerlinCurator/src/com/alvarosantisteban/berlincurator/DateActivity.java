@@ -5,8 +5,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -132,11 +138,14 @@ public class DateActivity extends Activity{
 	 */
 	private void loadEvents(){ 
 		// Load the events for the selected websites
-		for(int j=0;j<MainActivity.webs.length;j++){
-			for (int i=0; i<MainActivity.events.get(j).size(); i++){
-				// Add the events from the site of the selected day
-				if(MainActivity.events.get(j).get(i).getDay().equals(date.getText().toString())){
-					addEvent(MainActivity.webs[j], MainActivity.events.get(j).get(i));
+		Set <Entry<String, List<Event>>> keyValue = MainActivity.events.entrySet();
+		Iterator<Entry<String, List<Event>>> keyValueIterator = keyValue.iterator();
+		while(keyValueIterator.hasNext()){
+			Entry<String, List<Event>> entry = keyValueIterator.next();
+			List<Event> eventsList = entry.getValue();
+			for (int i=0; i<eventsList.size();i++){
+				if(eventsList.get(i).getDay().equals(date.getText().toString())){
+					addEvent(entry.getKey(), eventsList.get(i));
 				}
 			}
 		}

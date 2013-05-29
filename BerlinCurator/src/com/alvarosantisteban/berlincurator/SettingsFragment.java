@@ -1,5 +1,7 @@
 package com.alvarosantisteban.berlincurator;
 
+import java.util.Set;
+
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -36,8 +38,12 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
 		if (key.equals(KEY_PREF_SYNC_CONN)) {
         	System.out.println("key multilist changed");
             MultiSelectListPreference connectionPref = (MultiSelectListPreference) findPreference(key);
-            // Set the values
-            connectionPref.setValues(sharedPreferences.getStringSet(key, null));
+            // Get the new values
+            Set<String> set = sharedPreferences.getStringSet(key, null);
+            // Set the new values on the list
+    		MainActivity.webs = set.toArray(new String[0]);
+    		// Set the values on the list
+            connectionPref.setValues(set);
         }
 		
 	}

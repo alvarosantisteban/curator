@@ -1,6 +1,8 @@
 package com.alvarosantisteban.berlincurator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,7 +41,8 @@ public class MainActivity extends Activity {
 	public static final int MAX_NUMBER_OF_WEBSITES = 5;
 	private static final String DEBUG_TAG = "HttpExample";
 	public static final String EXTRA_HTML = "com.alvarosantisteban.berlincurator.html";
-	public static List<List<Event>> events = (ArrayList)new ArrayList <ArrayList<Event>>();
+	//public static List<List<Event>> events = (ArrayList)new ArrayList <ArrayList<Event>>();
+	public static Map<String, List<Event>> events = (Map<String, List<Event>>)(Map<String,?>) new HashMap <String, ArrayList<Event>>();
 	
 	// Settings
 	private static final int RESULT_SETTINGS = 1;
@@ -102,20 +105,20 @@ public class MainActivity extends Activity {
 		webs = set.toArray(new String[0]);
 
 		/*
-		 * To check that they are there
+		 * To check that they are there*/
 		System.out.println();
 		for(int i=0;i<webs.length;i++){
 			System.out.print(webs[i] + " / ");
 		}
 		System.out.println();
-		*/
+		
 		
 		loadEventsImage.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(getBaseContext(), "HOLA CARACOLA.", Toast.LENGTH_LONG).show();
+				Toast.makeText(getBaseContext(), "HOLA CARACOLA.", Toast.LENGTH_SHORT).show();
 			}
 			
 		});
@@ -194,7 +197,7 @@ public class MainActivity extends Activity {
      * This task takes the creates several HttpUrlConnection to download the html from different websites. 
      * Afterwards, the several lists of Events are created and the execution goes to the Date Activity.
     */
-	private class DownloadWebpageTask extends AsyncTask<String, Integer, List<List<Event>>> {
+	private class DownloadWebpageTask extends AsyncTask<String, Integer, Map<String,List<Event>>> {
 		
 		/**
 		 * Makes the progressBar visible
@@ -209,20 +212,11 @@ public class MainActivity extends Activity {
 		 * Updates the status of the progressBar.
 		 * 
 		 */
-		protected List<List<Event>> doInBackground(String... urls) { 
-			/*
-			 * The old way of doing it
-			List<Event> iHearBerlinEvents = EventLoaderFactory.newIHeartBerlinEventLoader().load();
-			List<Event> parasitesEvents = EventLoaderFactory.newArtParasitesEventLoader().load();
-			List<Event> metalConcertsEvents = EventLoaderFactory.newMetalConcertsEventLoader().load();
-			List<Event> whiteTrashEvents = EventLoaderFactory.newWhiteTrashEventLoader().load();
-			List<Event> KoepisEvents = EventLoaderFactory.newKoepiEventLoader().load();
-			events.add(iHearBerlinEvents); 
-			events.add(parasitesEvents); 
-			events.add(metalConcertsEvents); 
-			events.add(whiteTrashEvents); 
-			events.add(KoepisEvents); 
-			*/
+		protected Map<String,List<Event>> doInBackground(String... urls) { 	
+			// Remove all the entries from the map
+			events.clear();
+			// TODO Instead of clearing all the events, maintain the ones that did not change
+			// Load the events from the selected websites
 			for (int i=0; i<webs.length; i++){
 				List<Event> event = null;
 				if (webs[i].equals("I Heart Berlin")){
@@ -240,7 +234,7 @@ public class MainActivity extends Activity {
 				}else{
 					return null;
 				}
-				events.add(event);
+				events.put(webs[i], event);					
 			}
 			return events;
 		} 
@@ -256,7 +250,7 @@ public class MainActivity extends Activity {
 		/**
 		* Goes to the Date Activity and hides the progressBar.
         */
-		protected void onPostExecute(List<List<Event>> result) {
+		protected void onPostExecute(Map<String, List<Event>> result) {
 			System.out.println("onPostExecute de la primera tarea.");
 			loadProgressBar.setVisibility(View.GONE);
 			// Go to the Date Activity
