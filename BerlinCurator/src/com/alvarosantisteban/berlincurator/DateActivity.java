@@ -59,7 +59,7 @@ public class DateActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_date);
 		
-		Intent intent = getIntent();
+		//Intent intent = getIntent();
 		//String[] htmls = intent.getStringArrayExtra(MainActivity.EXTRA_HTML);
 		
 		// Get the actual date
@@ -67,11 +67,15 @@ public class DateActivity extends Activity{
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMAN);
 		date.setText(dateFormat.format(calendar.getTime()));
 		
+		/*
+		 * The old way
 		// Get the names of the sites
 		Resources res = this.getResources();
 		String[] sitesNames = res.getStringArray(R.array.sites_array); 
 		// Populate the ArrayList "websitesList" and the LinkedHashMap "websites"
 		createHeaderGroups(sitesNames);
+		*/
+		createHeaderGroups(MainActivity.webs);
 		
 		expandableSitesList = (ExpandableListView) findViewById(R.id.expandableSitesList);
 		// Create the adapter by passing the ArrayList data
@@ -79,17 +83,8 @@ public class DateActivity extends Activity{
 		// Attach the adapter to the expandableList
 		expandableSitesList.setAdapter(listAdapter);
 		
-		// TODO ¿Quizas mejor ya abajo? Ver si se ahorra algo haciendolo aqui o vuelve a generar el array de Event
-		
-		//loadEvents(htmls);
+		// Load the events for the selected websites
 		loadEvents();
-		
-		
-		// Expand all Groups
-		//expandAll();
-		
-		// Collapse all groups
-		//collapseAll();
 		
 		// Expand the groups with events
 		expandGroupsWithEvents();
@@ -133,48 +128,16 @@ public class DateActivity extends Activity{
 	}
 	
 	/**
-	 * Loads the events from the different websites into out list
+	 * Loads the events from the selected websites into out list if the day is the right one
 	 */
 	private void loadEvents(){ 
-		// I Heart Berlin
-		for (int i=0; i<MainActivity.events.get(0).size(); i++){
-			// Add the events from the I Heart Berlin site of the selected day
-			if(MainActivity.events.get(0).get(i).getDay().equals(date.getText().toString())){
-				addEvent("I Heart Berlin", MainActivity.events.get(0).get(i));
-			}
-		}
-		
-		// Berlin Art Parasites
-		for (int i=0; i<MainActivity.events.get(1).size(); i++){
-			// Add the events from the Metal Concerts site of the selected day
-			if(MainActivity.events.get(1).get(i).getDay().equals(date.getText().toString())){
-			//if(metalEvents[i].getDay().equals("17/05/2013")){ Used to check if it works on a day that has a concert
-				addEvent("Berlin Art Parasites", MainActivity.events.get(1).get(i));
-			}
-		}
-		
-		// Metal concerts
-		for (int i=0; i<MainActivity.events.get(2).size(); i++){
-			// Add the events from the Metal Concerts site of the selected day
-			if(MainActivity.events.get(2).get(i).getDay().equals(date.getText().toString())){
-			//if(metalEvents[i].getDay().equals("17/05/2013")){ Used to check if it works on a day that has a concert
-				addEvent("Metal Concerts", MainActivity.events.get(2).get(i));
-			}
-		}
-		
-		// White Trash's concerts
-		for (int i=0; i<MainActivity.events.get(3).size(); i++){
-			// Add the events from the White Trash site of the selected day
-			if(MainActivity.events.get(3).get(i).getDay().equals(date.getText().toString())){
-				addEvent("White Trashs concerts", MainActivity.events.get(3).get(i));
-			}
-		}
-
-		// Koepi's events
-		for (int i=0; i<MainActivity.events.get(4).size(); i++){
-			// Add the events from the Metal Concerts site of the selected day
-			if(MainActivity.events.get(4).get(i).getDay().equals(date.getText().toString())){
-				addEvent("Koepis activities", MainActivity.events.get(4).get(i));
+		// Load the events for the selected websites
+		for(int j=0;j<MainActivity.webs.length;j++){
+			for (int i=0; i<MainActivity.events.get(j).size(); i++){
+				// Add the events from the site of the selected day
+				if(MainActivity.events.get(j).get(i).getDay().equals(date.getText().toString())){
+					addEvent(MainActivity.webs[j], MainActivity.events.get(j).get(i));
+				}
 			}
 		}
 	}

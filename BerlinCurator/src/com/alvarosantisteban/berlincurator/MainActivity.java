@@ -45,6 +45,7 @@ public class MainActivity extends Activity {
 	private static final int RESULT_SETTINGS = 1;
 	SharedPreferences sharedPref;
 	Context context;
+	public static String[] webs = {"I Heart Berlin", "Berlin Art Parasites", "Metal Concerts", "White Trashs concerts", "Koepis activities"};
 	
 	/**
 	 * The set of urls from where the html will be downloaded
@@ -88,28 +89,26 @@ public class MainActivity extends Activity {
 		
 		// Get the default shared preferences
 		sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		// This is suppose to be used to clear the data from shared preferences
-		//Editor editor = sharedPref.edit();
-		//editor.clear();
-		//editor.commit();
+		/*
+		Editor editor = sharedPref.edit();
+		editor.clear();
+		editor.commit();
+		 */
+		
 		// Check which sites are meant to be shown
-		Map<String,?> all = sharedPref.getAll();
-		System.out.println("value:"+ all.get("multilist"));
-		for (Map.Entry<String, ?> entry : all.entrySet()){
-		    System.out.println(entry.getKey() + "/" + entry.getValue());
-		}
+		Set<String> set = sharedPref.getStringSet("multilist", null);
+		webs = set.toArray(new String[0]);
 
-		//Set<String> pollas = new HashSet<String>();
-		//pollas.add("Pollas en vinagre");
-		
-		// Print them once again (TO BE DELETED)
-		Set<String> algo = sharedPref.getStringSet("multilist", null);
-		System.out.println(algo.size());
-		Object[] cojon = algo.toArray();
-		for(int i=0;i<cojon.length;i++){
-			System.out.print(cojon[i].toString() + " / ");
+		/*
+		 * To check that they are there
+		System.out.println();
+		for(int i=0;i<webs.length;i++){
+			System.out.print(webs[i] + " / ");
 		}
-		
+		System.out.println();
+		*/
 		
 		loadEventsImage.setOnClickListener(new OnClickListener() {
 
@@ -210,7 +209,9 @@ public class MainActivity extends Activity {
 		 * Updates the status of the progressBar.
 		 * 
 		 */
-		protected List<List<Event>> doInBackground(String... urls) {  
+		protected List<List<Event>> doInBackground(String... urls) { 
+			/*
+			 * The old way of doing it
 			List<Event> iHearBerlinEvents = EventLoaderFactory.newIHeartBerlinEventLoader().load();
 			List<Event> parasitesEvents = EventLoaderFactory.newArtParasitesEventLoader().load();
 			List<Event> metalConcertsEvents = EventLoaderFactory.newMetalConcertsEventLoader().load();
@@ -221,6 +222,26 @@ public class MainActivity extends Activity {
 			events.add(metalConcertsEvents); 
 			events.add(whiteTrashEvents); 
 			events.add(KoepisEvents); 
+			*/
+			for (int i=0; i<webs.length; i++){
+				List<Event> event = null;
+				if (webs[i].equals("I Heart Berlin")){
+					System.out.println("Ihearberlin dentro");
+					event = EventLoaderFactory.newIHeartBerlinEventLoader().load();
+				}else if(webs[i].equals("Berlin Art Parasites")){
+					event = EventLoaderFactory.newArtParasitesEventLoader().load();
+				}else if(webs[i].equals("Metal Concerts")){
+					event = EventLoaderFactory.newMetalConcertsEventLoader().load();
+				}else if(webs[i].equals("White Trashs concerts")){
+					event = EventLoaderFactory.newWhiteTrashEventLoader().load();
+				}else if(webs[i].equals("Koepis activities")){
+					System.out.println("koepi dentro");
+					event = EventLoaderFactory.newKoepiEventLoader().load();
+				}else{
+					return null;
+				}
+				events.add(event);
+			}
 			return events;
 		} 
        
@@ -245,4 +266,11 @@ public class MainActivity extends Activity {
 			
 		}
 	}
+	/* Check which sites are meant to be shown
+	Map<String,?> all = sharedPref.getAll();
+	System.out.println("value:"+ all.get("multilist"));
+	for (Map.Entry<String, ?> entry : all.entrySet()){
+	    System.out.println(entry.getKey() + "/" + entry.getValue());
+	}
+	*/
 }
