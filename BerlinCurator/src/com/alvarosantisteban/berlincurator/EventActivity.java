@@ -8,6 +8,7 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -85,4 +86,28 @@ public class EventActivity extends Activity {
 		getMenuInflater().inflate(R.menu.event, menu);
 		return true;
 	}
+	
+	/**
+	 * Checks which item from the menu has been clicked
+	 */
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+ 
+        /*
+        // Goes to the settings activity
+        case R.id.menu_settings:
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivityForResult(i, RESULT_SETTINGS);
+            break;  
+            */
+         // Goes to the calendar activity
+        case R.id.menu_calendar:
+        	Intent i2 = new Intent(this, CalendarActivity.class);
+        	startActivity(i2);
+        	break; 
+        }
+ 
+        return true;
+    }
 }

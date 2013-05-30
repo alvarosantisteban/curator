@@ -17,6 +17,8 @@
     <string name="image_content_description">No content description for this image</string>
     <string name="time_unknown">XX:XX</string>
     <string name="nothing"></string>
+    
+    <string name="menu_calendar">Calendar</string>
 
     <string-array name="sites_array">
         <item>I Heart Berlin</item>

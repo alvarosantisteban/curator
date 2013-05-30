@@ -1,26 +1,22 @@
 package com.alvarosantisteban.berlincurator;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
@@ -41,6 +37,9 @@ public class DateActivity extends Activity{
 	ExpandableListView expandableSitesList;
 	public static final String EXTRA_EVENT = "com.alvarosantisteban.berlincurator.event";
 	Calendar calendar = Calendar.getInstance();
+	
+	// Settings
+		private static final int RESULT_SETTINGS = 1;
 	
 	/**
 	 * A LinkedHashMap with the a String as key and a HeaderInfo as value
@@ -65,13 +64,17 @@ public class DateActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_date);
 		
-		//Intent intent = getIntent();
+		Intent intent = getIntent();
+		String choosenDate = intent.getStringExtra(CalendarActivity.EXTRA_DATE);
 		//String[] htmls = intent.getStringArrayExtra(MainActivity.EXTRA_HTML);
-		
-		// Get the actual date
 		date = (TextView) findViewById(R.id.date);
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMAN);
-		date.setText(dateFormat.format(calendar.getTime()));
+		if (choosenDate == null){
+			// Get the actual date
+			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMAN);
+			date.setText(dateFormat.format(calendar.getTime()));
+		}else{
+			date.setText(choosenDate);
+		}
 		
 		/*
 		 * The old way
@@ -301,5 +304,29 @@ public class DateActivity extends Activity{
 		getMenuInflater().inflate(R.menu.date, menu);
 		return true;
 	}
+	
+	/**
+	 * Checks which item from the menu has been clicked
+	 */
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+ 
+        /*
+        // Goes to the settings activity
+        case R.id.menu_settings:
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivityForResult(i, RESULT_SETTINGS);
+            break;  
+            */
+         // Goes to the calendar activity
+        case R.id.menu_calendar:
+        	Intent i2 = new Intent(this, CalendarActivity.class);
+        	startActivity(i2);
+        	break; 
+        }
+ 
+        return true;
+    }
 	
 }

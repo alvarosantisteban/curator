@@ -69,8 +69,6 @@ public class MainActivity extends Activity {
 	ProgressBar loadProgressBar;
 	RelativeLayout mainLayout;
     ImageButton loadButton;
-    TextView calendarText;
-    TextView settingsText;
     ImageView loadEventsImage;
     
     private int progressBarStatus = 0;
@@ -89,7 +87,6 @@ public class MainActivity extends Activity {
 		mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
 		loadButton = (ImageButton) findViewById(R.id.loadButton);
 		loadProgressBar = (ProgressBar)findViewById(R.id.progressLoadHtml);
-		calendarText = (TextView)findViewById(R.id.textCalendar);
 		loadEventsImage = (ImageView)findViewById(R.id.loadData);
 		
 		// Get the default shared preferences
@@ -171,8 +168,8 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.main, menu);
-		getMenuInflater().inflate(R.menu.preferences, menu);
+		getMenuInflater().inflate(R.menu.main, menu);
+		//getMenuInflater().inflate(R.menu.preferences, menu);
 		return true;
 	}
 	
@@ -188,7 +185,12 @@ public class MainActivity extends Activity {
             Intent i = new Intent(this, SettingsActivity.class);
             startActivityForResult(i, RESULT_SETTINGS);
             break;
- 
+            /*
+        case R.id.menu_calendar:
+        	Intent i2 = new Intent(this, CalendarActivity.class);
+        	startActivity(i2);
+        	break; 
+        	*/
         }
  
         return true;
@@ -225,10 +227,13 @@ public class MainActivity extends Activity {
 					System.out.println("Ihearberlin dentro");
 					event = EventLoaderFactory.newIHeartBerlinEventLoader().load();
 				}else if(webs[i].equals("Berlin Art Parasites")){
+					System.out.println("artParasites dentro");
 					event = EventLoaderFactory.newArtParasitesEventLoader().load();
 				}else if(webs[i].equals("Metal Concerts")){
+					System.out.println("metalConcerts dentro");
 					event = EventLoaderFactory.newMetalConcertsEventLoader().load();
 				}else if(webs[i].equals("White Trashs concerts")){
+					System.out.println("whitetrash dentro");
 					event = EventLoaderFactory.newWhiteTrashEventLoader().load();
 				}else if(webs[i].equals("Koepis activities")){
 					System.out.println("koepi dentro");

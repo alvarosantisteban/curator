@@ -12,6 +12,7 @@ public class ArtParasitesEventLoader implements EventLoader {
 		String html = WebUtils.downloadHtml(URL);
 		// TODO Control that it's only done from thursday to sunday
 		String subUrl = extractUrlFromMainArtParasites(html);
+		System.out.println("subUrl"+subUrl);
 		html = WebUtils.downloadHtml(subUrl);
 		return extractEventsFromArtParasites(html);
 	}
@@ -44,7 +45,7 @@ public class ArtParasitesEventLoader implements EventLoader {
 				String day = Utils.formatDate(dayAndDate[1].replace(",", "").trim());
 				event.setDay(day);
 				
-				//System.out.println("eventsOfADay[(j*2)-1]"+eventsOfADay[(j*2)-1]);
+				System.out.println("eventsOfADay[(j*2)-1]"+eventsOfADay[(j*2)-1]);
 				String[] linkAndPlace = eventsOfADay[(j*2)-1].split("</a>",2);
 				// We will use the "place" for the description ---> place[1]
 				String[] place = linkAndPlace[0].split("\">"); 

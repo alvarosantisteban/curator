@@ -16,26 +16,6 @@
         android:layout_centerHorizontal="true"
         style="@android:style/Widget.ProgressBar.Large"
         android:visibility="invisible" />
-
-    <TextView
-        android:id="@+id/textCalendar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="@string/calendar" 
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:clickable="true"/>
-
-    <TextView
-        android:id="@+id/textSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textCalendar"
-        android:layout_alignBottom="@+id/textCalendar"
-        android:layout_alignParentRight="true"
-        android:text="@string/settings" />
     
     <ImageView
         android:id="@+id/loadData"
