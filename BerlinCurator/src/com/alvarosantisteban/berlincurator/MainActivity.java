@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,10 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.alvarosantisteban.berlincurator.IHeartBerlinHtmlParser.Entry;
 
 /**
  * Creates the main screen, from where the user can access the Settings, load the events of the current day or 
@@ -72,8 +68,6 @@ public class MainActivity extends Activity {
     ImageView loadEventsImage;
     
     private int progressBarStatus = 0;
-
-	List<Entry> entries;
 	
 	/**
 	 * Loads the elements from the resources
