@@ -19,7 +19,12 @@ public class Utils {
 			if (Character.isLetter(monthDayYear[i].charAt(0))){
 				monthLetter = monthDayYear[i];
 			}else{ // If not, we have the day
-				day = monthDayYear[i];
+				if (monthDayYear[i].length() == 1){
+					// We need to add a extra "0"
+					day = "0"+monthDayYear[i];
+				}else{
+					day = monthDayYear[i];
+				}
 			}
 		}
 		if (monthLetter.equals("January"))
