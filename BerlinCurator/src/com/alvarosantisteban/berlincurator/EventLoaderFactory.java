@@ -21,4 +21,8 @@ public class EventLoaderFactory {
 	public static EventLoader newKoepiEventLoader() {
 		return new KoepiEventLoader();
 	}
+	
+	public static EventLoader newGothDatumEventLoader() {
+		return new GothDatumEventLoader();
+	}
 }

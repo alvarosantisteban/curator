@@ -36,8 +36,7 @@ import android.widget.Toast;
  */
 public class MainActivity extends Activity {
 
-	public static final int MAX_NUMBER_OF_WEBSITES = 5;
-	private static final String DEBUG_TAG = "HttpExample";
+	public static final int MAX_NUMBER_OF_WEBSITES = 6;
 	public static final String EXTRA_HTML = "com.alvarosantisteban.berlincurator.html";
 	//public static List<List<Event>> events = (ArrayList)new ArrayList <ArrayList<Event>>();
 	public static Map<String, List<Event>> events = (Map<String, List<Event>>)(Map<String,?>) new HashMap <String, ArrayList<Event>>();
@@ -46,7 +45,7 @@ public class MainActivity extends Activity {
 	private static final int RESULT_SETTINGS = 1;
 	SharedPreferences sharedPref;
 	Context context;
-	public static String[] webs = {"I Heart Berlin", "Berlin Art Parasites", "Metal Concerts", "White Trashs concerts", "Koepis activities"};
+	public static String[] webs = {"I Heart Berlin", "Berlin Art Parasites", "Metal Concerts", "White Trashs concerts", "Koepis activities", "Goth Datum"};
 	
 	/**
 	 * The set of urls from where the html will be downloaded
@@ -55,7 +54,8 @@ public class MainActivity extends Activity {
 				   			"http://www.berlin-artparasites.com/recommended",
 				   			"http://berlinmetal.lima-city.de/index.php/index.php?id=start",
 				   			"http://www.whitetrashfastfood.com/events/",
-				   			"http://www.koepi137.net/eventskonzerte.php",};
+				   			"http://www.koepi137.net/eventskonzerte.php",
+				   			"http://www.goth-city-radio.com/dsb/dates.php",};
    	
    	/**
    	 * The set of htmls from the corresponding {@link stringUrls}
@@ -110,8 +110,7 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Toast.makeText(getBaseContext(), "HOLA CARACOLA.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getBaseContext(), "HOLA CARACOLA", Toast.LENGTH_SHORT).show();
 			}
 			
 		});
@@ -232,6 +231,9 @@ public class MainActivity extends Activity {
 				}else if(webs[i].equals("Koepis activities")){
 					System.out.println("koepi dentro");
 					event = EventLoaderFactory.newKoepiEventLoader().load();
+				}else if(webs[i].equals("Goth Datum")){
+					System.out.println("goth dentro");
+					event = EventLoaderFactory.newGothDatumEventLoader().load();
 				}else{
 					return null;
 				}

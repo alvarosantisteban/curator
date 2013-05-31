@@ -154,58 +154,6 @@ public class DateActivity extends Activity{
 		}
 	}
 	
-	/**
-	 * Loads the events from the different websites into out list
-	 *
-	private void loadEvents(String[] htmls){ 
-		// I Heart Berlin
-		Event[] iHeartBerlinEvents = extractEventFromIHeartBerlin(htmls[0]);
-		for (int i=0; i<iHeartBerlinEvents.length; i++){
-			// Add the events from the I Heart Berlin site of the selected day
-			if(iHeartBerlinEvents[i].getDay().equals(date.getText().toString())){
-				addEvent("I Heart Berlin", iHeartBerlinEvents[i]);
-			}
-		}
-		
-		// Berlin Art Parasites
-		Event[] parasitesEvents = extractEventFromArtParasites(htmls[1]);
-		for (int i=0; i<parasitesEvents.length; i++){
-			// Add the events from the Metal Concerts site of the selected day
-			if(parasitesEvents[i].getDay().equals(date.getText().toString())){
-			//if(metalEvents[i].getDay().equals("17/05/2013")){ Used to check if it works on a day that has a concert
-				addEvent("Berlin Art Parasites", parasitesEvents[i]);
-			}
-		}
-		
-		// Metal concerts
-		Event[] metalEvents = extractEventFromMetalConcerts(htmls[2]);
-		for (int i=0; i<metalEvents.length; i++){
-			// Add the events from the Metal Concerts site of the selected day
-			if(metalEvents[i].getDay().equals(date.getText().toString())){
-			//if(metalEvents[i].getDay().equals("17/05/2013")){ Used to check if it works on a day that has a concert
-				addEvent("Metal Concerts", metalEvents[i]);
-			}
-		}
-		
-		// White Trash's concerts
-		Event[] whiteTrashEvent = extractEventFromWhiteTrash(htmls[3]);
-		for (int i=0; i<whiteTrashEvent.length; i++){
-			// Add the events from the White Trash site of the selected day
-			if(whiteTrashEvent[i].getDay().equals(date.getText().toString())){
-				addEvent("White Trashs concerts", whiteTrashEvent[i]);
-			}
-		}
-
-		// Koepi's events
-		Event[] koepiEvents = extractEventFromKoepi(htmls[4]);
-		for (int i=0; i<koepiEvents.length; i++){
-			// Add the events from the Metal Concerts site of the selected day
-			if(koepiEvents[i].getDay().equals(date.getText().toString())){
-				addEvent("Koepis activities", koepiEvents[i]);
-			}
-		}
-	}
-	*/
 	
 	/**
 	 * Add a event to its corresponding group (site where it comes from)

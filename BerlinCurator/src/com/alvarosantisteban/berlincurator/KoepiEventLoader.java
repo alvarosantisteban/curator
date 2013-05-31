@@ -17,7 +17,7 @@ public class KoepiEventLoader implements EventLoader{
 	 * Creates a set of events from the html of the Koepi website. 
 	 * Each Event has name, day, time, a description and sometimes a link.
 	 * 
-	 * @param theHtml the String containing the html from the Metal Concerts website
+	 * @param theHtml the String containing the html from the Koepi website
 	 * @return a List of Event with the name, day and links set
 	 */
 	private List<Event> extractEventsFromKoepi(String theHtml) {

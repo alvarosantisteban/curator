@@ -89,7 +89,7 @@ public class ArtParasitesEventLoader implements EventLoader {
 				String[] descriptionAndNothing = nothingAndDescription[1].split("</p>",2);
 				
 				// Create the description and set it
-				String description = linkAndName[1] + " at the " +place[1] +":" +System.getProperty("line.separator") + descriptionAndNothing[0].trim(); 
+				String description = linkAndName[1] + " at the " +place[1] +":" +"<br>" + descriptionAndNothing[0].trim(); 
 				event.setDescription(description);
 				
 				events.add(event);
