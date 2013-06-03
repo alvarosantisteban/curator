@@ -64,7 +64,7 @@ public class WebUtils {
 	 * @return the resulting String
 	 */
 	public static String convertStreamToString(java.io.InputStream is) {
-		java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+		java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
 		return s.hasNext() ? s.next() : "";
 	}
 }

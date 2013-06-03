@@ -36,7 +36,7 @@ import android.widget.Toast;
  */
 public class MainActivity extends Activity {
 
-	public static final int MAX_NUMBER_OF_WEBSITES = 6;
+	public static final int MAX_NUMBER_OF_WEBSITES = 7;
 	public static final String EXTRA_HTML = "com.alvarosantisteban.berlincurator.html";
 	//public static List<List<Event>> events = (ArrayList)new ArrayList <ArrayList<Event>>();
 	public static Map<String, List<Event>> events = (Map<String, List<Event>>)(Map<String,?>) new HashMap <String, ArrayList<Event>>();
@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
 	private static final int RESULT_SETTINGS = 1;
 	SharedPreferences sharedPref;
 	Context context;
-	public static String[] webs = {"I Heart Berlin", "Berlin Art Parasites", "Metal Concerts", "White Trashs concerts", "Koepis activities", "Goth Datum"};
+	public static String[] webs = {"I Heart Berlin", "Berlin Art Parasites", "Metal Concerts", "White Trashs concerts", "Koepis activities", "Goth Datum", "Stress Faktor"};
 	
 	/**
 	 * The set of urls from where the html will be downloaded
@@ -55,7 +55,8 @@ public class MainActivity extends Activity {
 				   			"http://berlinmetal.lima-city.de/index.php/index.php?id=start",
 				   			"http://www.whitetrashfastfood.com/events/",
 				   			"http://www.koepi137.net/eventskonzerte.php",
-				   			"http://www.goth-city-radio.com/dsb/dates.php",};
+				   			"http://www.goth-city-radio.com/dsb/dates.php",
+				   			"http://stressfaktor.squat.net/termine.php?display=7",};
    	
    	/**
    	 * The set of htmls from the corresponding {@link stringUrls}
@@ -234,6 +235,9 @@ public class MainActivity extends Activity {
 				}else if(webs[i].equals("Goth Datum")){
 					System.out.println("goth dentro");
 					event = EventLoaderFactory.newGothDatumEventLoader().load();
+				}else if(webs[i].equals("Stress Faktor")){
+					System.out.println("stresssfaktor dentro");
+					event = EventLoaderFactory.newStressFaktorEventLoader().load();
 				}else{
 					return null;
 				}

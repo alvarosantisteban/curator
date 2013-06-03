@@ -87,8 +87,9 @@ public class Event implements Serializable{
 	 * @param links the Strings containing the links of the event
 	 */
 	public void setLinks(String[] links){
-		this.links[0] = links[0];
-		this.links[1] = links[1];
+		for (int i=0; i<links.length && i<2; i++){
+			this.links[i] = links[i];
+		}
 	}
 	
 	/**

@@ -14,7 +14,7 @@ public class GothDatumEventLoader implements EventLoader {
 	}
 
 	/**
-	 * Creates a set of events from the html of the Koepi website. 
+	 * Creates a set of events from the html of the Goth Datum website. 
 	 * Each Event has name, day, time, a sometimes a description and a link.
 	 * 
 	 * @param theHtml the String containing the html from the Goth Datum website

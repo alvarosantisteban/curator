@@ -25,4 +25,8 @@ public class EventLoaderFactory {
 	public static EventLoader newGothDatumEventLoader() {
 		return new GothDatumEventLoader();
 	}
+
+	public static EventLoader newStressFaktorEventLoader() {
+		return new StressFaktorEventLoader();
+	}
 }
