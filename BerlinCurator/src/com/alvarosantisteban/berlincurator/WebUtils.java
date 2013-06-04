@@ -22,7 +22,7 @@ public class WebUtils {
 	 * @return the html from that url
 	 * @throws IOException if there is a connecting problem
 	 */
-	public final static String downloadHtml(String myurl){
+	public final static String downloadHtml(String myurl, Context context){
 			InputStream is = null;
 		   
    	   	try {
@@ -45,6 +45,7 @@ public class WebUtils {
    	   		return contentAsString;
    	   	} catch (Exception e){
    	   		System.out.println("Problems downloading the url: "+myurl +". Exception: "+e);
+   	   		Toast.makeText(context, "There were problems downloading the content from: "+myurl +" It's events won't be displayed.", Toast.LENGTH_LONG).show();
    	   		return "Exception";
    	    // Makes sure that the InputStream is closed after the app is finished using it.
    	   	}finally {

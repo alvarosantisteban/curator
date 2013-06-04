@@ -3,14 +3,16 @@ package com.alvarosantisteban.berlincurator;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+
 public class MetalConcertsEventLoader implements EventLoader{
 	
 	private final static String URL = "http://berlinmetal.lima-city.de/index.php/index.php?id=start";
 	private final static String ACTUAL_YEAR = "2013";
 
 	@Override
-	public List<Event> load() {
-		String html = WebUtils.downloadHtml(URL);
+	public List<Event> load(Context context) {
+		String html = WebUtils.downloadHtml(URL, context);
 		return extractEventsFromMetalConcerts(html);
 	}
 

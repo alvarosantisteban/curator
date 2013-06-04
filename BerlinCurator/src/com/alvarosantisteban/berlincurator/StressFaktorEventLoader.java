@@ -3,13 +3,15 @@ package com.alvarosantisteban.berlincurator;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+
 public class StressFaktorEventLoader implements EventLoader {
 	
 	private final static String URL = "http://stressfaktor.squat.net/termine.php?display=7";
 
 	@Override
-	public List<Event> load() {
-		String html = WebUtils.downloadHtml(URL);
+	public List<Event> load(Context context) {
+		String html = WebUtils.downloadHtml(URL, context);
 		return extractEventsFromStressFaktor(html);
 	}
 
@@ -77,7 +79,6 @@ public class StressFaktorEventLoader implements EventLoader {
 			String[] links = maybeLink.split("<a href=\"http:");
 			String[] nothingAddress = links[1].split("title=\"");
 			if(nothingAddress.length == 2){
-				System.out.println("nothingAddress[1]"+nothingAddress[1]);
 				String[] AddressAndDescription = nothingAddress[1].split("\"", 2);
 				address = address + AddressAndDescription[0];
 				String[] placeAndDescription = AddressAndDescription[1].split("<",2);
@@ -103,7 +104,6 @@ public class StressFaktorEventLoader implements EventLoader {
 			for (int z=1; z<links.length; z++){
 				// Check if it is a link
 				if (links[z].contains("title=\"Weitere Infos:")){
-					System.out.println(" --------------------------- ------------------- ------");
 					String[] linkAndNothing = links[z].split("\"",2);
 					// Set the links
 					theLinks.add("http:" +linkAndNothing[0]);

@@ -3,17 +3,19 @@ package com.alvarosantisteban.berlincurator;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+
 public class ArtParasitesEventLoader implements EventLoader {
 	
 	private final static String URL = "http://www.berlin-artparasites.com/recommended";
 
 	@Override
-	public List<Event> load() {
-		String html = WebUtils.downloadHtml(URL);
+	public List<Event> load(Context context) {
+		String html = WebUtils.downloadHtml(URL, context);
 		// TODO Control that it's only done from thursday to sunday
 		String subUrl = extractUrlFromMainArtParasites(html);
 		System.out.println("subUrl"+subUrl);
-		html = WebUtils.downloadHtml(subUrl);
+		html = WebUtils.downloadHtml(subUrl, context);
 		return extractEventsFromArtParasites(html);
 	}
 

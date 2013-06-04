@@ -220,25 +220,25 @@ public class MainActivity extends Activity {
 				List<Event> event = null;
 				if (webs[i].equals("I Heart Berlin")){
 					System.out.println("Ihearberlin dentro");
-					event = EventLoaderFactory.newIHeartBerlinEventLoader().load();
+					event = EventLoaderFactory.newIHeartBerlinEventLoader().load(context);
 				}else if(webs[i].equals("Berlin Art Parasites")){
 					System.out.println("artParasites dentro");
-					event = EventLoaderFactory.newArtParasitesEventLoader().load();
+					event = EventLoaderFactory.newArtParasitesEventLoader().load(context);
 				}else if(webs[i].equals("Metal Concerts")){
 					System.out.println("metalConcerts dentro");
-					event = EventLoaderFactory.newMetalConcertsEventLoader().load();
+					event = EventLoaderFactory.newMetalConcertsEventLoader().load(context);
 				}else if(webs[i].equals("White Trashs concerts")){
 					System.out.println("whitetrash dentro");
-					event = EventLoaderFactory.newWhiteTrashEventLoader().load();
+					event = EventLoaderFactory.newWhiteTrashEventLoader().load(context);
 				}else if(webs[i].equals("Koepis activities")){
 					System.out.println("koepi dentro");
-					event = EventLoaderFactory.newKoepiEventLoader().load();
+					event = EventLoaderFactory.newKoepiEventLoader().load(context);
 				}else if(webs[i].equals("Goth Datum")){
 					System.out.println("goth dentro");
-					event = EventLoaderFactory.newGothDatumEventLoader().load();
+					event = EventLoaderFactory.newGothDatumEventLoader().load(context);
 				}else if(webs[i].equals("Stress Faktor")){
 					System.out.println("stresssfaktor dentro");
-					event = EventLoaderFactory.newStressFaktorEventLoader().load();
+					event = EventLoaderFactory.newStressFaktorEventLoader().load(context);
 				}else{
 					return null;
 				}

@@ -3,13 +3,15 @@ package com.alvarosantisteban.berlincurator;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+
 public class GothDatumEventLoader implements EventLoader {
 	
 	private final static String URL = "http://www.goth-city-radio.com/dsb/dates.php";
 
 	@Override
-	public List<Event> load() {
-		String html = WebUtils.downloadHtml(URL);
+	public List<Event> load(Context context) {
+		String html = WebUtils.downloadHtml(URL, context);
 		return extractEventsFromGothDatum(html);
 	}
 
