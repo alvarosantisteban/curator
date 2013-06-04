@@ -27,7 +27,7 @@ public class CalendarActivity extends Activity {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                     int dayOfMonth) {
-                 Toast.makeText(getApplicationContext(), "The selected day is: "+dayOfMonth +"/" +(++month) +"/" +year, Toast.LENGTH_SHORT).show();
+                 Toast.makeText(getApplicationContext(), "You selected to see the events for the day: "+dayOfMonth +"/" +(++month) +"/" +year, Toast.LENGTH_SHORT).show();
                  selectedDay = dayOfMonth;
                  Intent intent = new Intent(context, DateActivity.class);
                  String day;
