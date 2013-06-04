@@ -138,7 +138,8 @@ public class MainActivity extends Activity {
 				
 				// prepare for a progress bar dialog
 				loadProgressBar.setProgress(0);
-				loadProgressBar.setMax(MAX_NUMBER_OF_WEBSITES);				
+				loadProgressBar.setMax(MAX_NUMBER_OF_WEBSITES);	
+				loadButton.setEnabled(false);
 				
 				ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -153,6 +154,7 @@ public class MainActivity extends Activity {
 			    	Toast.makeText(getBaseContext(), "No network connection available.", Toast.LENGTH_LONG).show();
 			        System.out.println("No network connection available.");
 			    }
+			    
 			}
 		});	
 	}
@@ -261,6 +263,8 @@ public class MainActivity extends Activity {
 		protected void onPostExecute(Map<String, List<Event>> result) {
 			System.out.println("onPostExecute de la primera tarea.");
 			loadProgressBar.setVisibility(View.GONE);
+			// Enable the button
+			loadButton.setEnabled(true);
 			// Go to the Date Activity
 			Intent intent = new Intent(context, DateActivity.class);
 			//intent.putParcelableArrayListExtra(EXTRA_HTML, result);
