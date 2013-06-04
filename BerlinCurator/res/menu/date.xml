@@ -1,6 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/menu_calendar"
           android:title="@string/menu_calendar"
-          android:showAsAction="ifRoom" />
+          android:showAsAction="ifRoom"
+          android:drawable="@drawable/icon_calendar" />
 
 </menu>

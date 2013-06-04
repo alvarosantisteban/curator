@@ -21,7 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -65,8 +65,8 @@ public class MainActivity extends Activity {
 
 	ProgressBar loadProgressBar;
 	RelativeLayout mainLayout;
-    ImageButton loadButton;
-    ImageView loadEventsImage;
+    Button loadButton;
+    //ImageView loadEventsImage;
     
     private int progressBarStatus = 0;
 	
@@ -80,9 +80,9 @@ public class MainActivity extends Activity {
 		context = this;
 		
 		mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
-		loadButton = (ImageButton) findViewById(R.id.loadButton);
+		loadButton = (Button) findViewById(R.id.loadButton);
 		loadProgressBar = (ProgressBar)findViewById(R.id.progressLoadHtml);
-		loadEventsImage = (ImageView)findViewById(R.id.loadData);
+		//loadEventsImage = (ImageView)findViewById(R.id.loadData);
 		
 		// Get the default shared preferences
 		sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -106,7 +106,7 @@ public class MainActivity extends Activity {
 		}
 		System.out.println();
 		
-		
+		/*
 		loadEventsImage.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -115,6 +115,7 @@ public class MainActivity extends Activity {
 			}
 			
 		});
+		*/
 		
 		
 		/*
