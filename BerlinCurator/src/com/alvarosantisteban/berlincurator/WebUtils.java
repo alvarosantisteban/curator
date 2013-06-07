@@ -55,8 +55,6 @@ public class WebUtils {
    	   			//contentAsString = convertStreamToString(is);
    	   			contentAsString = convert(is,"UTF-8");
    	   		}
-   	   		
-   	   		//contentAsString = checkUTF(contentAsString);
    	   		return contentAsString;
    	   	} catch (Exception e){
    	   		System.out.println("Problems downloading the url: "+myurl +". Exception: "+e);
@@ -74,12 +72,23 @@ public class WebUtils {
    	   	}
 	}
 	
-	
-
+	/**
+	 * Calls the method convert with the DEFAULT_ENCODING as an extra parameter
+	 * @param in the InputStream to be converted
+	 * @return the resulting String
+	 * @throws IOException
+	 */
 	public static final String convert(final InputStream in) throws IOException {
 	  return convert(in, DEFAULT_ENCODING);
 	}
 
+	/**
+	 *  Converts a InputStream to String for a specific encoding
+	 * @param in the InputStream to be converted
+	 * @param encoding the type of encoding
+	 * @return the resulting String
+	 * @throws IOException
+	 */
 	public static final String convert(final InputStream in, final String encoding) throws IOException {
 	  final ByteArrayOutputStream out = new ByteArrayOutputStream();
 	  final byte[] buf = new byte[2048];
@@ -90,8 +99,6 @@ public class WebUtils {
 	  return new String(out.toByteArray(), encoding);
 	}
 	
-
-
 	/**
 	 * Converts a InputStream to String. 
 	 * Taken from http://stackoverflow.com/questions/309424/read-convert-an-inputstream-to-a-string
@@ -103,19 +110,4 @@ public class WebUtils {
 		java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
 		return s.hasNext() ? s.next() : "";
 	}
-	
-	/*
-	private static String checkUTF(String contentAsString) {
-		if(contentAsString.contains("charset=ISO-8859-1")){
-			try {
-				byte[] utf8 = contentAsString.getBytes("UTF-8");
-				return new String(utf8, "UTF-8");
-			} catch (UnsupportedEncodingException e1) {
-				e1.printStackTrace();
-				return null;
-			}
-		}
-		return contentAsString;
-	}
-*/
 }

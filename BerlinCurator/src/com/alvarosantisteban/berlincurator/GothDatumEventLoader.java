@@ -10,6 +10,9 @@ import android.content.Context;
 public class GothDatumEventLoader implements EventLoader {
 	
 	private final static String URL = "http://www.goth-city-radio.com/dsb/dates.php";
+	/**
+	 * Map with names of clubs and its corresponding website url
+	 */
 	public static final Map<String,String> clubs;
 	static {
         clubs = new HashMap<String, String>();

@@ -22,9 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 /**
@@ -36,15 +34,26 @@ import android.widget.Toast;
  */
 public class MainActivity extends Activity {
 
-	public static final int MAX_NUMBER_OF_WEBSITES = 7;
-	public static final String EXTRA_HTML = "com.alvarosantisteban.berlincurator.html";
+	//public static final String EXTRA_HTML = "com.alvarosantisteban.berlincurator.html";
 	//public static List<List<Event>> events = (ArrayList)new ArrayList <ArrayList<Event>>();
+	/**
+	 * The map with the events.
+	 * The key is the name of the website and the value its corresponding list of events.
+	 */
 	public static Map<String, List<Event>> events = (Map<String, List<Event>>)(Map<String,?>) new HashMap <String, ArrayList<Event>>();
 	
-	// Settings
+	/**
+	 *  Settings
+	 */
 	private static final int RESULT_SETTINGS = 1;
+	/**
+	 *  User preferences
+	 */
 	SharedPreferences sharedPref;
 	Context context;
+	/**
+	 * The total set of webs where the events can be extracted
+	 */
 	public static String[] webs = {"I Heart Berlin", "Berlin Art Parasites", "Metal Concerts", "White Trashs concerts", "Koepis activities", "Goth Datum", "Stress Faktor"};
 	
 	/**
@@ -57,18 +66,14 @@ public class MainActivity extends Activity {
 				   			"http://www.koepi137.net/eventskonzerte.php",
 				   			"http://www.goth-city-radio.com/dsb/dates.php",
 				   			"http://stressfaktor.squat.net/termine.php?display=7",};
-   	
    	/**
-   	 * The set of htmls from the corresponding {@link stringUrls}
+   	 * The progress bar for downloading and extracting the events
    	 */
-   	String[] htmls = new String[MAX_NUMBER_OF_WEBSITES];
-
 	ProgressBar loadProgressBar;
-	RelativeLayout mainLayout;
+	/**
+	 * The button that triggers the download and extraction of events
+	 */
     Button loadButton;
-    //ImageView loadEventsImage;
-    
-    private int progressBarStatus = 0;
 	
 	/**
 	 * Loads the elements from the resources
@@ -77,13 +82,10 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		System.out.println("--------------- BEGIN ------------");
+		
 		context = this;
-		
-		mainLayout = (RelativeLayout) findViewById(R.id.mainLayout);
 		loadButton = (Button) findViewById(R.id.loadButton);
-		loadProgressBar = (ProgressBar)findViewById(R.id.progressLoadHtml);
-		//loadEventsImage = (ImageView)findViewById(R.id.loadData);
-		
+		loadProgressBar = (ProgressBar)findViewById(R.id.progressLoadHtml);		
 		// Get the default shared preferences
 		sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 		
@@ -99,23 +101,13 @@ public class MainActivity extends Activity {
 		webs = set.toArray(new String[0]);
 
 		/*
-		 * To check that they are there*/
+		 * To check that the websites are there
+		 * */
 		System.out.println();
 		for(int i=0;i<webs.length;i++){
 			System.out.print(webs[i] + " / ");
 		}
 		System.out.println();
-		
-		/*
-		loadEventsImage.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(getBaseContext(), "HOLA CARACOLA", Toast.LENGTH_SHORT).show();
-			}
-			
-		});
-		*/
 		
 		
 		/*
@@ -136,9 +128,7 @@ public class MainActivity extends Activity {
 			 */
 			public void onClick(View v) {
 				
-				// prepare for a progress bar dialog
-				loadProgressBar.setProgress(0);
-				loadProgressBar.setMax(MAX_NUMBER_OF_WEBSITES);	
+				// prepare for a progress bar dialog	
 				loadButton.setEnabled(false);
 				
 				ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -147,7 +137,6 @@ public class MainActivity extends Activity {
 			    if (networkInfo != null && networkInfo.isConnected()) {
 					DownloadWebpageTask download = new DownloadWebpageTask();
 					// Execute the asyncronous task of downloading the websites
-					// TODO Try to make it fail by giving ONE false url
 					download.execute(stringUrls);
 			    } else {
 			    	// Inform the user that there is no network connection available
@@ -210,7 +199,7 @@ public class MainActivity extends Activity {
 		
 		/**
 		 * Downloads the htmls and creates the lists of Events. 
-		 * Updates the status of the progressBar.
+		 * Detects any possible problem during the download of the website or the extraction of events.
 		 * 
 		 */
 		protected Map<String,List<Event>> doInBackground(String... urls) { 	
@@ -249,7 +238,7 @@ public class MainActivity extends Activity {
 					System.out.println("Event is null");
 					publishProgress("Exception", webs[i]);		
 				}else{
-					// If not, we store the events
+					// If not, we store its events
 					events.put(webs[i], event);
 				}
 			}
@@ -257,7 +246,7 @@ public class MainActivity extends Activity {
 		} 
        
 		/**
-		 * Sets the progress of the progressBar.
+		 * If there was a problem, inform the user
 		 */
 		protected void onProgressUpdate(String... progress) {
     		System.out.println("Estoy en onProgressUpdate:"+progress[0]);
@@ -282,11 +271,4 @@ public class MainActivity extends Activity {
 			
 		}
 	}
-	/* Check which sites are meant to be shown
-	Map<String,?> all = sharedPref.getAll();
-	System.out.println("value:"+ all.get("multilist"));
-	for (Map.Entry<String, ?> entry : all.entrySet()){
-	    System.out.println(entry.getKey() + "/" + entry.getValue());
-	}
-	*/
 }
