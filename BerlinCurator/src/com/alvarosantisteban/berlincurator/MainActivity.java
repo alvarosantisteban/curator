@@ -239,7 +239,7 @@ public class MainActivity extends Activity {
 					System.out.println("goth dentro");
 					event = EventLoaderFactory.newGothDatumEventLoader().load(context);
 				}else if(webs[i].equals("Stress Faktor")){
-					System.out.println("stresssfaktor dentro");
+					System.out.println("Stresssssss faktor dentro");
 					event = EventLoaderFactory.newStressFaktorEventLoader().load(context);
 				}else{
 					return null;

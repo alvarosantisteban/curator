@@ -1,9 +1,13 @@
 package com.alvarosantisteban.berlincurator;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.util.Log;
@@ -12,6 +16,8 @@ import android.widget.Toast;
 public class WebUtils {
 	
 	private static final String DEBUG_TAG = "HttpExample";
+	//private static final String DEFAULT_ENCODING = "UTF-8";// "ISO-8859-1";
+	private static final String DEFAULT_ENCODING = "ISO-8859-1";
 
 	/**
 	 * Given a URL, establishes an HttpUrlConnection and retrieves
@@ -40,8 +46,17 @@ public class WebUtils {
    	   			return "Invalid response code";
    	   		}
    	   		is = conn.getInputStream();
+   	   		String contentType = conn.getContentType();
    	   		// Convert the InputStream into a string
-   	   		String contentAsString = convertStreamToString(is);
+   	   		String contentAsString = "";
+   	   		if (contentType.equals("text/html; charset=ISO-8859-1") || myurl.equals("http://stressfaktor.squat.net/termine.php?display=7")){
+   	   			contentAsString = convert(is);
+   	   		}else{
+   	   			//contentAsString = convertStreamToString(is);
+   	   			contentAsString = convert(is,"UTF-8");
+   	   		}
+   	   		
+   	   		//contentAsString = checkUTF(contentAsString);
    	   		return contentAsString;
    	   	} catch (Exception e){
    	   		System.out.println("Problems downloading the url: "+myurl +". Exception: "+e);
@@ -59,7 +74,39 @@ public class WebUtils {
    	   		} 
    	   	}
 	}
+	
+	
+
+	public static final String convert(final InputStream in) throws IOException {
+		System.out.println("----RARUNO");
+	  return convert(in, DEFAULT_ENCODING);
+	}
+
+	public static final String convert(final InputStream in, final String encoding) throws IOException {
+	  final ByteArrayOutputStream out = new ByteArrayOutputStream();
+	  final byte[] buf = new byte[2048];
+	  int rd;
+	  while ((rd = in.read(buf, 0, 2048)) >= 0) {
+	    out.write(buf, 0, rd);
+	  }
+	  return new String(out.toByteArray(), encoding);
+	}
 		
+	private static String checkUTF(String contentAsString) {
+		if(contentAsString.contains("charset=ISO-8859-1")){
+			try {
+				byte[] utf8 = contentAsString.getBytes("UTF-8");
+				return new String(utf8, "UTF-8");
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+				return null;
+			}
+		}
+		return contentAsString;
+	}
+
+
+
 	/**
 	 * Converts a InputStream to String. 
 	 * Taken from http://stackoverflow.com/questions/309424/read-convert-an-inputstream-to-a-string
@@ -67,6 +114,7 @@ public class WebUtils {
 	 * @return the resulting String
 	 */
 	public static String convertStreamToString(java.io.InputStream is) {
+		System.out.println("GUAY ---------");
 		java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
 		return s.hasNext() ? s.next() : "";
 	}
