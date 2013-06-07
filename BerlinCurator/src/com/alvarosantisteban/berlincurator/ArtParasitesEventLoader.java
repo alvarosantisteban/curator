@@ -108,6 +108,7 @@ public class ArtParasitesEventLoader implements EventLoader {
 	 * @return the url of the site with the events for the weekend
 	 */
 	private String extractUrlFromMainArtParasites(String parasitesMainSite){
+		
 		// Look for the first entry of Best Weekend Art Events
 		String myPattern = "Best Weekend Art Events";
 		String[] result = parasitesMainSite.split(myPattern,2);
@@ -117,5 +118,19 @@ public class ArtParasitesEventLoader implements EventLoader {
 		String[] link = links[links.length-1].split("\">");
 		// Return the absolute link
 		return "http://www.berlin-artparasites.com"+link[0];
+		
+		
+		/* Look for the first entry of Best Weekend Art Events
+		String myPattern = "Recommended Art Events";
+		String[] result = parasitesMainSite.split(myPattern,2);
+		//System.out.println("result[1]"+result[1]);
+		// Set the left limit of the link
+		String[] links = result[1].split("<h1><a href=\"",2);
+		//System.out.println("links[0]"+links[0]);
+		// Set the right limit of the link
+		String[] link = links[1].split("\">",2);
+		// Return the absolute link
+		return "http://www.berlin-artparasites.com"+link[0];	
+		*/	
 	}
 }

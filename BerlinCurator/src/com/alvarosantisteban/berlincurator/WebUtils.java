@@ -43,7 +43,7 @@ public class WebUtils {
    	   		int response = conn.getResponseCode();
    	   		Log.d(DEBUG_TAG, "The response is: " + response);
    	   		if (response == -1){
-   	   			return "Invalid response code";
+   	   			return "Exception";
    	   		}
    	   		is = conn.getInputStream();
    	   		String contentType = conn.getContentType();
@@ -60,7 +60,6 @@ public class WebUtils {
    	   		return contentAsString;
    	   	} catch (Exception e){
    	   		System.out.println("Problems downloading the url: "+myurl +". Exception: "+e);
-   	   		Toast.makeText(context, "There were problems downloading the content from: "+myurl +" It's events won't be displayed.", Toast.LENGTH_LONG).show();
    	   		return "Exception";
    	    // Makes sure that the InputStream is closed after the app is finished using it.
    	   	}finally {
@@ -78,7 +77,6 @@ public class WebUtils {
 	
 
 	public static final String convert(final InputStream in) throws IOException {
-		System.out.println("----RARUNO");
 	  return convert(in, DEFAULT_ENCODING);
 	}
 
@@ -91,20 +89,7 @@ public class WebUtils {
 	  }
 	  return new String(out.toByteArray(), encoding);
 	}
-		
-	private static String checkUTF(String contentAsString) {
-		if(contentAsString.contains("charset=ISO-8859-1")){
-			try {
-				byte[] utf8 = contentAsString.getBytes("UTF-8");
-				return new String(utf8, "UTF-8");
-			} catch (UnsupportedEncodingException e1) {
-				e1.printStackTrace();
-				return null;
-			}
-		}
-		return contentAsString;
-	}
-
+	
 
 
 	/**
@@ -118,4 +103,19 @@ public class WebUtils {
 		java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
 		return s.hasNext() ? s.next() : "";
 	}
+	
+	/*
+	private static String checkUTF(String contentAsString) {
+		if(contentAsString.contains("charset=ISO-8859-1")){
+			try {
+				byte[] utf8 = contentAsString.getBytes("UTF-8");
+				return new String(utf8, "UTF-8");
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+				return null;
+			}
+		}
+		return contentAsString;
+	}
+*/
 }

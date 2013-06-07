@@ -12,6 +12,9 @@ public class GothDatumEventLoader implements EventLoader {
 	@Override
 	public List<Event> load(Context context) {
 		String html = WebUtils.downloadHtml(URL, context);
+		if(html.equals("Exception")){
+			return null;
+		}
 		return extractEventsFromGothDatum(html);
 	}
 

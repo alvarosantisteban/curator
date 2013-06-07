@@ -198,7 +198,7 @@ public class MainActivity extends Activity {
      * This task takes the creates several HttpUrlConnection to download the html from different websites. 
      * Afterwards, the several lists of Events are created and the execution goes to the Date Activity.
     */
-	private class DownloadWebpageTask extends AsyncTask<String, Integer, Map<String,List<Event>>> {
+	private class DownloadWebpageTask extends AsyncTask<String, String, Map<String,List<Event>>> {
 		
 		/**
 		 * Makes the progressBar visible
@@ -244,7 +244,14 @@ public class MainActivity extends Activity {
 				}else{
 					return null;
 				}
-				events.put(webs[i], event);					
+				// If there was a problem loading the events we tell the user
+				if (event == null){
+					System.out.println("Event is null");
+					publishProgress("Exception", webs[i]);		
+				}else{
+					// If not, we store the events
+					events.put(webs[i], event);
+				}
 			}
 			return events;
 		} 
@@ -252,9 +259,12 @@ public class MainActivity extends Activity {
 		/**
 		 * Sets the progress of the progressBar.
 		 */
-		protected void onProgressUpdate(Integer... progress) {
-    		System.out.println("Estoy en onProgressUpdate:"+progress[0].intValue());
-          	loadProgressBar.setProgress(progress[0].intValue());
+		protected void onProgressUpdate(String... progress) {
+    		System.out.println("Estoy en onProgressUpdate:"+progress[0]);
+    		if (progress[0].equals("Exception")){
+    			Toast.makeText(context, "There were problems downloading the content from: " +progress[1] +" It's events won't be displayed.", Toast.LENGTH_LONG).show();
+    		}
+    		//loadProgressBar.setProgress(progress[0].intValue());
 		}
 		
 		/**
