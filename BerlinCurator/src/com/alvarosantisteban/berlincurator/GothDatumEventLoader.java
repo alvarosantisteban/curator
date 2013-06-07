@@ -15,7 +15,11 @@ public class GothDatumEventLoader implements EventLoader {
 		if(html.equals("Exception")){
 			return null;
 		}
-		return extractEventsFromGothDatum(html);
+		try{
+			return extractEventsFromGothDatum(html);
+		}catch(ArrayIndexOutOfBoundsException e){
+			return null;
+		}
 	}
 
 	/**
@@ -25,7 +29,7 @@ public class GothDatumEventLoader implements EventLoader {
 	 * @param theHtml the String containing the html from the Goth Datum website
 	 * @return a List of Event with the name, day, time, description and link
 	 */
-	private List<Event> extractEventsFromGothDatum(String theHtml) {
+	private List<Event> extractEventsFromGothDatum(String theHtml) throws ArrayIndexOutOfBoundsException{
 		String myPattern = "<TD ALIGN=\"LEFT\" VALIGN=\"TOP\"><hr /><b><i>";
 		String[] result = theHtml.split(myPattern);
 		

@@ -15,7 +15,12 @@ public class IHeartBerlinEventLoader implements EventLoader {
 		if(html.equals("Exception")){
 			return null;
 		}
-		return extractEventsFromIHeartBerlin(html);
+		try{
+			return extractEventsFromIHeartBerlin(html);
+		}catch(ArrayIndexOutOfBoundsException exception){
+			System.out.println("Exception catched!!!");
+			return null;
+		}
 	}
 	
 	/**
@@ -25,7 +30,7 @@ public class IHeartBerlinEventLoader implements EventLoader {
 	 * @param theHtml the String containing the html from the I Heart Berlin website
 	 * @return a List of Event with the name, day and links set
 	 */
-	private List<Event> extractEventsFromIHeartBerlin(String theHtml){  
+	private List<Event> extractEventsFromIHeartBerlin(String theHtml) throws ArrayIndexOutOfBoundsException{  
 		String myPattern = "<div class=\"event_date\">";
 		String[] result = theHtml.split(myPattern);
 		

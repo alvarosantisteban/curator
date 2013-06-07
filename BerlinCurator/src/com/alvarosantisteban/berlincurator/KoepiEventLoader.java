@@ -15,7 +15,12 @@ public class KoepiEventLoader implements EventLoader{
 		if(html.equals("Exception")){
 			return null;
 		}
-		return extractEventsFromKoepi(html);
+		try {
+			return extractEventsFromKoepi(html);
+		}catch(ArrayIndexOutOfBoundsException exception){
+			System.out.println("Exception catched!!!");
+			return null;
+		}
 	}
 	
 	/**
@@ -25,7 +30,7 @@ public class KoepiEventLoader implements EventLoader{
 	 * @param theHtml the String containing the html from the Koepi website
 	 * @return a List of Event with the name, day and links set
 	 */
-	private List<Event> extractEventsFromKoepi(String theHtml) {
+	private List<Event> extractEventsFromKoepi(String theHtml) throws ArrayIndexOutOfBoundsException{
 		String[] uselessAndGood = theHtml.split("</div -->");
 		String myPattern = "<span class=\"datum\">"; //<p class=\"konzerte\">.*?</p>
 		String[] result = uselessAndGood[1].split(myPattern);

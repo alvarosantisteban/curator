@@ -16,7 +16,12 @@ public class MetalConcertsEventLoader implements EventLoader{
 		if(html.equals("Exception")){
 			return null;
 		}
-		return extractEventsFromMetalConcerts(html);
+		try{
+			return extractEventsFromMetalConcerts(html);
+		}catch(ArrayIndexOutOfBoundsException exception){
+			System.out.println("Exception catched!!!");
+			return null;
+		}
 	}
 
 	/**
@@ -26,7 +31,7 @@ public class MetalConcertsEventLoader implements EventLoader{
 	 * @param theHtml the String containing the html from the Metal Concerts website
 	 * @return a List of Event with the name, day and links set
 	 */
-	private List<Event> extractEventsFromMetalConcerts(String theHtml){  
+	private List<Event> extractEventsFromMetalConcerts(String theHtml) throws ArrayIndexOutOfBoundsException{  
 		String myPattern = "<p class=\"konzerte\">"; //<p class=\"konzerte\">.*?</p>
 		String[] result = theHtml.split(myPattern);
 		

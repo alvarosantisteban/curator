@@ -13,10 +13,14 @@ public class ArtParasitesEventLoader implements EventLoader {
 	public List<Event> load(Context context) {
 		String html = WebUtils.downloadHtml(URL, context);
 		// TODO Control that it's only done from thursday to sunday
-		String subUrl = extractUrlFromMainArtParasites(html);
-		System.out.println("subUrl"+subUrl);
-		html = WebUtils.downloadHtml(subUrl, context);
-		return extractEventsFromArtParasites(html);
+		try{
+			String subUrl = extractUrlFromMainArtParasites(html);
+			System.out.println("subUrl"+subUrl);
+			html = WebUtils.downloadHtml(subUrl, context);
+			return extractEventsFromArtParasites(html);
+		}catch(ArrayIndexOutOfBoundsException e){
+			return null;
+		}
 	}
 
 	
@@ -27,7 +31,7 @@ public class ArtParasitesEventLoader implements EventLoader {
 	 * @param theHtml the String containing the html from the Berlin Art Parasites website
 	 * @return a List of Event with the name, day, hour, description and links set
 	 */
-	private List<Event> extractEventsFromArtParasites(String theHtml){  
+	private List<Event> extractEventsFromArtParasites(String theHtml) throws ArrayIndexOutOfBoundsException{  
 		// First, get rid of everthing that goes after <em>
 		String[] clearnerHtml = theHtml.split("<em>",2);
 		String myPattern = "<strong>"; // Marks the number of days
@@ -107,7 +111,7 @@ public class ArtParasitesEventLoader implements EventLoader {
 	 * @param parasitesMainSite the html of the main site of Berlin Art Parasites
 	 * @return the url of the site with the events for the weekend
 	 */
-	private String extractUrlFromMainArtParasites(String parasitesMainSite){
+	private String extractUrlFromMainArtParasites(String parasitesMainSite) throws ArrayIndexOutOfBoundsException{
 		
 		// Look for the first entry of Best Weekend Art Events
 		String myPattern = "Best Weekend Art Events";

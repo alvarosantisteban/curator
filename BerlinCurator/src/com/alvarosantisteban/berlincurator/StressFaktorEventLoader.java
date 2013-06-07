@@ -15,7 +15,12 @@ public class StressFaktorEventLoader implements EventLoader {
 		if(html.equals("Exception")){
 			return null;
 		}
-		return extractEventsFromStressFaktor(html);
+		try{
+			return extractEventsFromStressFaktor(html);
+		}catch(ArrayIndexOutOfBoundsException exception){
+			System.out.println("Exception catched!!!");
+			return null;
+		}
 	}
 
 	/**
@@ -25,7 +30,7 @@ public class StressFaktorEventLoader implements EventLoader {
 	 * @param theHtml the String containing the html from the Stress Faktor website
 	 * @return a List of Event with the name, day, time, description and link
 	 */
-	private List<Event> extractEventsFromStressFaktor(String theHtml) {
+	private List<Event> extractEventsFromStressFaktor(String theHtml) throws ArrayIndexOutOfBoundsException {
 		String[] eventsAndRest = theHtml.split("<!-- Ende Spalte 2 -->");
 		String myPattern = "<table width=\"100%\" bgcolor=\"#000000\" cellpadding=\"3\" cellspacing=\"1\">";
 		String[] result = eventsAndRest[0].split(myPattern);

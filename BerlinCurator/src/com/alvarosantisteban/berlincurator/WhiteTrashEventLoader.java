@@ -14,8 +14,12 @@ public class WhiteTrashEventLoader implements EventLoader{
 		String html = WebUtils.downloadHtml(URL, context);
 		if(html.equals("Exception")){
 			return null;
+		}try{
+			return extractEventsFromWhiteTrash(html);
+		}catch(ArrayIndexOutOfBoundsException exception){
+			System.out.println("Exception catched!!!");
+			return null;
 		}
-		return extractEventsFromWhiteTrash(html);
 	}
 	
 	/**
@@ -25,7 +29,7 @@ public class WhiteTrashEventLoader implements EventLoader{
 	 * @param theHtml the String containing the html from the White Trash website
 	 * @return a List of Event with the name, day, hour and link set
 	 */
-	private List<Event> extractEventsFromWhiteTrash(String theHtml){  
+	private List<Event> extractEventsFromWhiteTrash(String theHtml) throws ArrayIndexOutOfBoundsException{  
 		String myPattern = "<h4>";
 		String[] result = theHtml.split(myPattern);
 		
