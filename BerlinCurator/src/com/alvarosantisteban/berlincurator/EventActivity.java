@@ -1,6 +1,7 @@
 package com.alvarosantisteban.berlincurator;
 
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,6 +40,10 @@ public class EventActivity extends Activity {
 		// Get the intent with the Event
 		Intent intent = getIntent();
 		Event event = (Event)intent.getSerializableExtra(DateActivity.EXTRA_EVENT);
+		
+		// Enable the app's icon to act as home
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		eventLayout = (LinearLayout) findViewById(R.id.eventLayout);
 		name = (TextView)findViewById(R.id.events_name);
@@ -108,6 +113,13 @@ public class EventActivity extends Activity {
         	Intent i2 = new Intent(this, CalendarActivity.class);
         	startActivity(i2);
         	break; 
+        // Goes to the Main Activity
+        case android.R.id.home:
+            // app icon in action bar clicked; go home
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            break;
         }
  
         return true;

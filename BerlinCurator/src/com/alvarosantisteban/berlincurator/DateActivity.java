@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -65,6 +66,10 @@ public class DateActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_date);
+		
+		// Enable the app's icon to act as home
+		ActionBar actionBar = getActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		Intent intent = getIntent();
 		String choosenDate = intent.getStringExtra(CalendarActivity.EXTRA_DATE);
@@ -262,18 +267,25 @@ public class DateActivity extends Activity{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
  
-        /*
-        // Goes to the settings activity
-        case R.id.menu_settings:
-            Intent i = new Intent(this, SettingsActivity.class);
-            startActivityForResult(i, RESULT_SETTINGS);
-            break;  
-            */
-         // Goes to the calendar activity
-        case R.id.menu_calendar:
-        	Intent i2 = new Intent(this, CalendarActivity.class);
-        	startActivity(i2);
-        	break; 
+	        /*
+	        // Goes to the settings activity
+	        case R.id.menu_settings:
+	            Intent i = new Intent(this, SettingsActivity.class);
+	            startActivityForResult(i, RESULT_SETTINGS);
+	            break;  
+	            */
+	        // Goes to the calendar activity
+	        case R.id.menu_calendar:
+	        	Intent i2 = new Intent(this, CalendarActivity.class);
+	        	startActivity(i2);
+	        	break; 
+	        // Goes to the Main Activity
+	        case android.R.id.home:
+	            // app icon in action bar clicked; go home
+	            Intent intent = new Intent(this, MainActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(intent);
+	            break;
         }
  
         return true;
