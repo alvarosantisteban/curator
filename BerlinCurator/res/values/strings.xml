@@ -29,7 +29,7 @@
      Settings "Activity"
      -->
     <string name="multilist_title">Events sources</string>
-    <string name="multilist_summary">Choose the websites from where the information will be taken</string>
+    <string name="multilist_summary">Choose the websites from where the events will be taken</string>
     <string name="multilist_dialog">Active websites</string>
     
     <!-- 

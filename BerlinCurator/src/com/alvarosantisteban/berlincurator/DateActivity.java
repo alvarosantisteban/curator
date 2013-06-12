@@ -39,7 +39,9 @@ public class DateActivity extends Activity{
 	Calendar calendar = Calendar.getInstance();
 	
 	// Settings
-		private static final int RESULT_SETTINGS = 1;
+	private static final int RESULT_SETTINGS = 1;
+		
+	String tag = "DateActivity";
 	
 	/**
 	 * A LinkedHashMap with the a String as key and a HeaderInfo as value
@@ -277,4 +279,33 @@ public class DateActivity extends Activity{
         return true;
     }
 	
+	public void onStart() {
+		super.onStart();
+		System.out.println(tag +"In the onStart() event");
+	}		   
+
+	public void onRestart() {
+		super.onRestart();
+	    System.out.println(tag + "In the onRestart() event");
+	}
+	    
+	public void onResume() {
+		super.onResume();
+	    System.out.println(tag +"In the onResume() event");
+	}
+	    
+	public void onPause() {
+	    super.onPause();
+	    System.out.println(tag + "In the onPause() event");
+	}
+	    
+	public void onStop() {
+	    super.onStop();
+	    System.out.println(tag + "In the onStop() event");
+	}
+	    
+	public void onDestroy() {
+	    super.onDestroy();
+	    System.out.println(tag + "In the onDestroy() event");
+	}
 }

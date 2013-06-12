@@ -27,6 +27,8 @@ public class EventActivity extends Activity {
 	TextView link;
 	TextView description;
 	//TextView image;
+	
+	String tag = "EventActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,4 +112,34 @@ public class EventActivity extends Activity {
  
         return true;
     }
+	
+	public void onStart() {
+		super.onStart();
+		System.out.println(tag +"In the onStart() event");
+	}		   
+
+	public void onRestart() {
+		super.onRestart();
+	    System.out.println(tag + "In the onRestart() event");
+	}
+	    
+	public void onResume() {
+		super.onResume();
+	    System.out.println(tag +"In the onResume() event");
+	}
+	    
+	public void onPause() {
+	    super.onPause();
+	    System.out.println(tag + "In the onPause() event");
+	}
+	    
+	public void onStop() {
+	    super.onStop();
+	    System.out.println(tag + "In the onStop() event");
+	}
+	    
+	public void onDestroy() {
+	    super.onDestroy();
+	    System.out.println(tag + "In the onDestroy() event");
+	}
 }
