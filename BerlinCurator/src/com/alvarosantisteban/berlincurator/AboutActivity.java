@@ -1,13 +1,19 @@
 package com.alvarosantisteban.berlincurator;
 
-import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class AboutActivity extends Activity {
+	
+	TextView email;
+	TextView gitHubUrl;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +22,15 @@ public class AboutActivity extends Activity {
 		// Enable the app's icon to act as home
 	    ActionBar actionBar = getActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
+	    
+	    email = (TextView) findViewById(R.id.email_address);
+	    email.setMovementMethod(LinkMovementMethod.getInstance());
+	    email.setText(Html.fromHtml("<a href=\"mailto:alvarosantisteban@gmail.com?Subject=BerlinCurator\">alvarosantisteban@gmail.com</a>"));
+	    
+	    gitHubUrl = (TextView) findViewById(R.id.codeUrl);
+	    gitHubUrl.setMovementMethod(LinkMovementMethod.getInstance());
+	    gitHubUrl.setText(Html.fromHtml("<a href=\"https://github.com/alvarosantisteban/curator\">My GitHub account</a>"));
+	    
 	}
 
 	@Override
