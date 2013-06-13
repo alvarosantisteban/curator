@@ -43,8 +43,8 @@
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
-            android:name="com.alvarosantisteban.berlincurator.AppInfoActivity"
-            android:label="@string/title_activity_app_info" >
+            android:name="com.alvarosantisteban.berlincurator.AboutActivity"
+            android:label="@string/title_activity_about" >
         </activity>
     </application>
 

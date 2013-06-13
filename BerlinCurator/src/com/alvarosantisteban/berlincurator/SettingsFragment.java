@@ -2,6 +2,7 @@ package com.alvarosantisteban.berlincurator;
 
 import java.util.Set;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -27,6 +28,8 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
         System.out.println("ON CREATE THE SETTINGS FRAGMENT");
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
+        
+        findPreference("about").setIntent(new Intent(getActivity(), AboutActivity.class));
     }
 
 	/**

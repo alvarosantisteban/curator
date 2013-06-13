@@ -9,4 +9,11 @@
         android:entryValues="@array/sites_array"
         android:defaultValue="@array/sites_array"
         />
+    <Preference 
+        android:key="about"
+        android:dialogTitle="@string/about_title"
+        android:summary="@string/about_summary"        
+        android:title="@string/about_title"
+        />
+        
 </PreferenceScreen>
