@@ -2,7 +2,7 @@
 <resources>
 
 <!--      Title from the activities on the Action Bar -->
-    <string name="app_name">Berlin Curator</string>
+    <string name="app_name">Berlin Event Curator</string>
     <string name="title_activity_date">Events of the day</string>
     <string name="title_activity_event">Event information</string>
     <string name="title_activity_calendar">Calendar</string>
@@ -11,6 +11,7 @@
 
 <!--      Main Activity  -->
     <string name="loading_events">Click the button to load the events</string>
+    <string name="image_find_text">Find what\'s going on in Berlin tonight!</string>
 
 <!--      Event Activity  -->
     <string name="events_name">Name of the event</string>
@@ -24,7 +25,7 @@
     <string name="multilist_summary">Choose the websites from where the events will be taken</string>
     <string name="multilist_dialog">Active websites</string>
     <string name="about_title">About</string>
-    <string name="about_summary">General information about Berlin Curator</string>
+    <string name="about_summary">General information about Berlin Event Curator</string>
     
 
 <!--      Info Activity
