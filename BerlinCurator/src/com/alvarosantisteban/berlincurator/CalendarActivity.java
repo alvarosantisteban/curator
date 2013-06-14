@@ -71,8 +71,8 @@ public class CalendarActivity extends Activity {
         switch (item.getItemId()) {
 	        // Goes to the Main Activity
 	        case android.R.id.home:
-	            // app icon in action bar clicked; go home
-	            Intent intent = new Intent(this, MainActivity.class);
+	            // app icon in action bar clicked; go to the DateActivity
+	            Intent intent = new Intent(this, DateActivity.class);
 	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	            startActivity(intent);
 	            break;

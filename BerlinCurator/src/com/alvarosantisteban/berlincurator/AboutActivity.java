@@ -46,14 +46,9 @@ public class AboutActivity extends Activity {
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-	     	// Goes to the settings activity
-	        case R.id.menu_settings:
-	            Intent i = new Intent(this, SettingsActivity.class);
-	            startActivityForResult(i, 1);
-	            break;
 	        case android.R.id.home:
-	            // app icon in action bar clicked; go home
-	            Intent intent = new Intent(this, MainActivity.class);
+	            // app icon in action bar clicked; go to Settings
+	            Intent intent = new Intent(this, SettingsActivity.class);
 	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	            startActivity(intent);
 	            break;
