@@ -72,6 +72,14 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:text="@string/events_links" />
+
+	    <TextView
+	        android:id="@+id/events_add_to_calendar"
+	        android:layout_marginTop="30dp"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/add_to_calendar" 
+	        android:clickable="true"/>
 	
 	</LinearLayout>
 </ScrollView>

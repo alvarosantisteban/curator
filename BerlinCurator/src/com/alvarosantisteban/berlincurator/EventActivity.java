@@ -1,15 +1,23 @@
 package com.alvarosantisteban.berlincurator;
 
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,7 +35,7 @@ public class EventActivity extends Activity {
 	TextView time;
 	TextView link;
 	TextView description;
-	//TextView image;
+	TextView addToCalendar;
 	
 	String tag = "EventActivity";
 
@@ -51,12 +59,12 @@ public class EventActivity extends Activity {
 		time = (TextView)findViewById(R.id.events_time);
 		link = (TextView)findViewById(R.id.events_link);
 		description = (TextView)findViewById(R.id.events_description);
-		//image = (TextView)findViewById(R.id.events_image_in_text);
+		addToCalendar = (TextView)findViewById(R.id.events_add_to_calendar);
 		
 		name.setMovementMethod(LinkMovementMethod.getInstance());
 		name.setText(Html.fromHtml(event.getName()));
 		
-		day.setText(event.getDay());
+		day.setText(event.getDay().trim());
 		// Check if there is a description to show
 		if (!event.getDescription().equals("")){
 			description.setMovementMethod(LinkMovementMethod.getInstance());
@@ -85,6 +93,59 @@ public class EventActivity extends Activity {
 			image.setText(Html.fromHtml(event.getImage()));
 		}
 		*/
+		
+		addToCalendar.setOnClickListener(new OnClickListener() {
+			
+			/**
+			 * Adds the event to the Google calendar
+			 */
+			public void onClick(View v) {
+				Calendar cal = new GregorianCalendar(); 
+				cal.setTime(new Date()); 
+				cal.add(Calendar.MONTH, 2); 
+				Intent intent = new Intent(Intent.ACTION_INSERT); 
+				intent.setData(Events.CONTENT_URI); 
+				intent.putExtra(Events.TITLE, name.getText().toString()); 
+				intent.putExtra(Events.DESCRIPTION, description.getText().toString()); 
+				// If we know when will the event begin 
+				if (!time.getText().toString().equals("")){
+					long startEvent = getTimeInMilliseconds(day.getText().toString(),time.getText().toString());
+					intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startEvent); 
+				}else{
+					// If not, we set it to happen during the whole day
+					intent.putExtra(Events.ALL_DAY, true); 
+					long startEvent = getTimeInMilliseconds(day.getText().toString(),"00:00");
+					intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startEvent); 
+				}
+				
+				startActivity(intent); 
+			}
+
+			/**
+			 * Retrieves the time in milliseconds for a start time of an event on a concrete date
+			 * 
+			 * @param date the day when the event will take place in the format DD/MM/YYYY
+			 * @param startTime the time when the event will take place in the format HH:MM
+			 * @return a long with the number of milliseconds
+			 */
+			private long getTimeInMilliseconds(String date, String startTime) {
+				int year, month, day;
+				String[] dayMonthYear = date.split("/");
+				day = Integer.parseInt(dayMonthYear[0]);
+				month = Integer.parseInt(dayMonthYear[1]);
+				year = Integer.parseInt(dayMonthYear[2]);
+				
+				int hour, minutes;
+				String[] hourMinutes = startTime.split(":");
+				hour = Integer.parseInt(hourMinutes[0]);
+				minutes = Integer.parseInt(hourMinutes[1]);
+				
+				Calendar beginTime = Calendar.getInstance();
+				beginTime.set(year, month-1, day, hour, minutes);
+				// TODO TAKE CARE HERE, that month-1 could create problems
+				return beginTime.getTimeInMillis();
+			}
+		});
 	}
 
 	@Override
