@@ -15,7 +15,7 @@
 
 <!--      Event Activity  -->
     <string name="events_name">Name of the event</string>
-    <string name="extra_info">Extra info:</string>
+    <string name="extra_info">Event\'s info:</string>
     <string name="description">There are no more details about this event.</string>
     <string name="related_links">Related links:</string>
     <string name="events_links">There are no links for this event.</string>
