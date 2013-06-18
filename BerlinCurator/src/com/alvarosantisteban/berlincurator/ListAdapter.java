@@ -137,12 +137,13 @@ public class ListAdapter extends BaseExpandableListAdapter {
 	 * 
 	 * @return the View corresponding to the group at the specified position 
 	 */
-	public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+	public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {	
 		HeaderInfo headerInfo = (HeaderInfo) getGroup(groupPosition);
-		if (convertView == null) {
+		// I had to comment it, because it creates problems with the views
+		//if (convertView == null) {
 			LayoutInflater inf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inf.inflate(R.layout.group_heading, null);
-		}
+		//}
 			   
 		TextView heading = (TextView) convertView.findViewById(R.id.heading);
 		String singPl = " events";
