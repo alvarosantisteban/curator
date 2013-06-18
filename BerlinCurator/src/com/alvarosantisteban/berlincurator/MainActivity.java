@@ -198,20 +198,10 @@ public class MainActivity extends Activity {
 	 */
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
- 
-        // Goes to the settings activity
-        case R.id.menu_settings:
-            Intent i = new Intent(this, SettingsActivity.class);
-            startActivityForResult(i, RESULT_SETTINGS);
-            break;
-            /*
-        case R.id.menu_calendar:
-        	Intent i2 = new Intent(this, CalendarActivity.class);
-        	startActivity(i2);
-        	break; 
-        	*/
-        }
+        if (item.getItemId() == R.id.menu_settings) {
+			Intent i = new Intent(this, SettingsActivity.class);
+			startActivityForResult(i, RESULT_SETTINGS);
+		}
  
         return true;
     }

@@ -53,8 +53,10 @@ public class StressFaktorEventLoader implements EventLoader {
 				// Set the time
 				event.setHour(timeAndRest[0].replace('.',':').trim());				
 				String[] placeAndRest = nothingTimeAndRest[2].split("</b>",2);
-				// Extract the place
+				// Extract the location
 				String place = extractPlace(placeAndRest[0]);
+				// Set the location
+				event.setLocation(place);
 				String[] nameAndRest = placeAndRest[1].split("<br>",2);
 				// set the name
 				event.setName(nameAndRest[0].replaceFirst(": ", "").trim());	
@@ -82,7 +84,8 @@ public class StressFaktorEventLoader implements EventLoader {
 	 * @return string with a predefined sentence with the address of the event to be added at the end of the description
 	 */
 	private String extractPlace(String maybeLink) {	
-		String address = "<br>The event will take place at ";
+		//String address = "<br>The event will take place at ";
+		String address = "";
 		if(maybeLink.contains("<a href=\"http:")){
 			String[] links = maybeLink.split("<a href=\"http:");
 			String[] nothingAddress = links[1].split("title=\"");

@@ -68,15 +68,12 @@ public class CalendarActivity extends Activity {
 	 */
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-	        // Goes to the Main Activity
-	        case android.R.id.home:
-	            // app icon in action bar clicked; go to the DateActivity
-	            Intent intent = new Intent(this, DateActivity.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
-	            break;
-        }
+        if (item.getItemId() == android.R.id.home) {
+			// app icon in action bar clicked; go to the DateActivity
+			Intent intent = new Intent(this, DateActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+		}
  
         return true;
     }

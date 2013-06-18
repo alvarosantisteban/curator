@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import com.google.android.gms.maps.MapView;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -21,6 +23,7 @@ import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+
 /**
  * Displays all the information of an event: Day, name, hour, description and links
  * 
@@ -36,6 +39,7 @@ public class EventActivity extends Activity {
 	TextView link;
 	TextView description;
 	TextView addToCalendar;
+	MapView mapita;
 	
 	String tag = "EventActivity";
 
@@ -60,6 +64,8 @@ public class EventActivity extends Activity {
 		link = (TextView)findViewById(R.id.events_link);
 		description = (TextView)findViewById(R.id.events_description);
 		addToCalendar = (TextView)findViewById(R.id.events_add_to_calendar);
+		// JODERRRRRRRR
+		//mapita = new MapView(this);
 		
 		name.setMovementMethod(LinkMovementMethod.getInstance());
 		name.setText(Html.fromHtml(event.getName()));
@@ -87,12 +93,10 @@ public class EventActivity extends Activity {
 			//time.setText(event.getHour());
 		}
 		
-		/*
-		if (!event.getImage().equals("")){
-			image.setMovementMethod(LinkMovementMethod.getInstance());
-			image.setText(Html.fromHtml(event.getImage()));
+		if(!event.getLocation().equals("")){
+			//location.setText(event.getLocation());
 		}
-		*/
+
 		
 		addToCalendar.setOnClickListener(new OnClickListener() {
 			
@@ -160,28 +164,15 @@ public class EventActivity extends Activity {
 	 */
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
- 
-        /*
-        // Goes to the settings activity
-        case R.id.menu_settings:
-            Intent i = new Intent(this, SettingsActivity.class);
-            startActivityForResult(i, RESULT_SETTINGS);
-            break;  
-            */
-         // Goes to the calendar activity
-        case R.id.menu_calendar:
-        	Intent i2 = new Intent(this, CalendarActivity.class);
-        	startActivity(i2);
-        	break; 
-        // Goes to the Main Activity
-        case android.R.id.home:
-            // app icon in action bar clicked; go to the DateActivity
+        if (item.getItemId() == R.id.menu_calendar) {
+			Intent i2 = new Intent(this, CalendarActivity.class);
+			startActivity(i2);
+		} else if (item.getItemId() == android.R.id.home) {
+			// app icon in action bar clicked; go to the DateActivity
             Intent intent = new Intent(this, DateActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            break;
-        }
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+		}
  
         return true;
     }

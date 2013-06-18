@@ -50,6 +50,11 @@ public class Event implements Serializable{
 	private String image="";
 	
 	/**
+	 * The location of the event (if known)
+	 */
+	private String location = "";
+	
+	/**
 	 * The links with more information
 	 */
 	private String[] links = {"",""};
@@ -80,6 +85,14 @@ public class Event implements Serializable{
 	
 	public String[] getLinks(){
 		return links;
+	}
+	
+	public String getLocation(){
+		return location;
+	}
+	
+	public void setLocation(String theLocation){
+		this.location = theLocation;
 	}
 	
 	/**

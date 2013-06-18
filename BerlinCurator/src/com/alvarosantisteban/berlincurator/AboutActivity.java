@@ -45,14 +45,12 @@ public class AboutActivity extends Activity {
 	 */
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-	        case android.R.id.home:
-	            // app icon in action bar clicked; go to Settings
-	            Intent intent = new Intent(this, SettingsActivity.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
-	            break;
-        }
+        if (item.getItemId() == android.R.id.home) {
+			// app icon in action bar clicked; go to Settings
+			Intent intent = new Intent(this, SettingsActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+		}
  
         return true;
     }
