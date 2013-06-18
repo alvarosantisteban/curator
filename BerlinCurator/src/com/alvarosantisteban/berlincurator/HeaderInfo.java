@@ -14,6 +14,12 @@ public class HeaderInfo {
 	 * Name of the website
 	 */
 	private String name;
+	
+	/**
+	 * The number of events that eventsList contains
+	 */
+	private int eventsNumber;
+	
 	/**
 	 * The ArrayList of events
 	 */
@@ -25,6 +31,14 @@ public class HeaderInfo {
  
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public int getEventsNumber(){
+		return eventsNumber;
+	}
+	
+	public void setEventsNumber(int theNumberEvents){
+		this.eventsNumber = theNumberEvents;
 	}
  
 	public ArrayList<Event> getEventsList() {

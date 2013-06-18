@@ -22,7 +22,10 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupClickListener;
+import android.widget.ExpandableListView.OnGroupCollapseListener;
+import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Displays a list with the events for a concrete day organized by the origin of the website and the time.
@@ -109,6 +112,10 @@ public class DateActivity extends Activity{
 		expandableSitesList.setOnChildClickListener(myEventClicked);
 		// Listener for the sites
 		expandableSitesList.setOnGroupClickListener(myListGroupClicked);
+		// Listener for the collapsed group
+		//expandableSitesList.setOnGroupCollapseListener(myCollapsedGroup);
+		// Listener for the expanded group
+		//expandableSitesList.setOnGroupExpandListener(myExpandedGroup);
 	}
 
 	/**
@@ -140,6 +147,9 @@ public class DateActivity extends Activity{
 			if(listAdapter.getChildrenCount(i) > 0){
 				expandableSitesList.expandGroup(i);
 			}
+			/*else{
+				expandableSitesList.setGroupIndicator(null);
+			}*/
 		}
 	}
 	
@@ -195,6 +205,7 @@ public class DateActivity extends Activity{
 		eventsList.add(newEvent);
 		// Update the site with the "new" eventsList
 		headerInfo.setEventsList(eventsList);
+		headerInfo.setEventsNumber(listSize);
 		 
 		//find the group position inside the list
 		groupPosition = websitesList.indexOf(headerInfo);
@@ -227,15 +238,40 @@ public class DateActivity extends Activity{
 	private OnGroupClickListener myListGroupClicked =  new OnGroupClickListener() {
 		 
 		  public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-	    
+			  System.out.println("onGroupClick");
 			  // Get the group header
 			  HeaderInfo headerInfo = websitesList.get(groupPosition);
-			  // Display it or do something with it
-			  //Toast.makeText(getBaseContext(), "Child on Header " + headerInfo.getName(), Toast.LENGTH_LONG).show();
-	     
+			  // If the group does not contain events, tell the user
+			  if(headerInfo.getEventsNumber() == 0){
+				  Toast.makeText(getBaseContext(), "There are no events to show for " + headerInfo.getName(), Toast.LENGTH_SHORT).show();
+				  // Avoid propagation = the group is not expanded/collapsed
+				  return true;
+			  }
 			  return false;
 		  }
 	   
+	};
+	
+	/**
+	 * The group collapse listener 
+	 */
+	private OnGroupCollapseListener myCollapsedGroup = new OnGroupCollapseListener(){
+		
+		public void onGroupCollapse(int groupPosition){
+			System.out.println("onGroupCollapse");
+			Toast.makeText(getBaseContext(), "COLLAPSED ", Toast.LENGTH_SHORT).show();
+		}
+	};
+	
+	/**
+	 * The group expand listener
+	 */
+	private OnGroupExpandListener myExpandedGroup = new OnGroupExpandListener(){
+		
+		public void onGroupExpand(int groupPosition){
+			System.out.println("onGroupExpand");
+			Toast.makeText(getBaseContext(), "EXPANDED ", Toast.LENGTH_SHORT).show();
+		}
 	};
 	
 	/**

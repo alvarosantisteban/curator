@@ -3,6 +3,7 @@ package com.alvarosantisteban.berlincurator;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -137,16 +138,22 @@ public class ListAdapter extends BaseExpandableListAdapter {
 	 * @return the View corresponding to the group at the specified position 
 	 */
 	public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-	   
 		HeaderInfo headerInfo = (HeaderInfo) getGroup(groupPosition);
 		if (convertView == null) {
 			LayoutInflater inf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inf.inflate(R.layout.group_heading, null);
 		}
-	   
+			   
 		TextView heading = (TextView) convertView.findViewById(R.id.heading);
-		heading.setText(headerInfo.getName().trim());
-	   
+		String singPl = " events";
+		if (headerInfo.getEventsNumber() == 1){
+			singPl =" event";
+		}
+		heading.setText(headerInfo.getName().trim() +" - " +headerInfo.getEventsNumber() +singPl);
+		// If there are no events, make the header's color gray
+		if(headerInfo.getEventsNumber() == 0){
+			heading.setTextColor(Color.GRAY);
+		}
 		return convertView;
 	}
 	 
