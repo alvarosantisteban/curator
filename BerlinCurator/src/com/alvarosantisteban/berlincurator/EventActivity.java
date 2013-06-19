@@ -16,12 +16,15 @@ import android.provider.CalendarContract.Events;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -40,8 +43,14 @@ public class EventActivity extends Activity {
 	TextView description;
 	TextView addToCalendar;
 	MapView mapita;
+	CheckBox interestingCheck;
 	
 	String tag = "EventActivity";
+	
+	/**
+	 * The event being displayed
+	 */
+	Event event;
 	
 	public static final String EXTRA_DATE = "date";
 
@@ -53,32 +62,46 @@ public class EventActivity extends Activity {
 		
 		// Get the intent with the Event
 		Intent intent = getIntent();
-		Event event = (Event)intent.getSerializableExtra(DateActivity.EXTRA_EVENT);
+		event = (Event)intent.getSerializableExtra(DateActivity.EXTRA_EVENT);
 		
 		// Enable the app's icon to act as home
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		eventLayout = (LinearLayout) findViewById(R.id.eventLayout);
+		interestingCheck = (CheckBox)findViewById(R.id.checkbox_interesting);
 		name = (TextView)findViewById(R.id.events_name);
 		day = (TextView)findViewById(R.id.date);
 		time = (TextView)findViewById(R.id.events_time);
 		link = (TextView)findViewById(R.id.events_link);
 		description = (TextView)findViewById(R.id.events_description);
 		addToCalendar = (TextView)findViewById(R.id.events_add_to_calendar);
-		// JODERRRRRRRR
+
 		//mapita = new MapView(this);
 		
+		// Get the date
+		day.setText(event.getDay().trim());
+		
+		// Get the state of the check
+		interestingCheck.setChecked(event.isTheEventMarked()); 
+		
+		// Get the name
 		name.setMovementMethod(LinkMovementMethod.getInstance());
 		name.setText(Html.fromHtml(event.getName()));
 		
-		day.setText(event.getDay().trim());
-		// Check if there is a description to show
+		// Get the hour, if any
+		if(!event.getHour().equals("")){
+			time.setText(Html.fromHtml(event.getHour()));
+			//time.setText(event.getHour());
+		}
+		
+		// Get the description, if any
 		if (!event.getDescription().equals("")){
 			description.setMovementMethod(LinkMovementMethod.getInstance());
 			description.setText(Html.fromHtml(event.getDescription()));
 		}
-		// Check if there is a link to show
+		
+		// Get the the links, if any
 		if (!event.getLink().equals("")){
 			String[] links = event.getLinks();
 			
@@ -89,17 +112,12 @@ public class EventActivity extends Activity {
 			
 		}
 		
-		// Check if there is an hour to show
-		if(!event.getHour().equals("")){
-			time.setText(Html.fromHtml(event.getHour()));
-			//time.setText(event.getHour());
-		}
-		
+		// Get the location, if any
 		if(!event.getLocation().equals("")){
 			//location.setText(event.getLocation());
 		}
 
-		
+		// Set the listener to add a event on the google calendar
 		addToCalendar.setOnClickListener(new OnClickListener() {
 			
 			/**
@@ -152,6 +170,29 @@ public class EventActivity extends Activity {
 				return beginTime.getTimeInMillis();
 			}
 		});
+	}
+	
+	/**
+	 * Listener for the checkbox that determines if an event is interesting to a user or not.
+	 * 
+	 * @param view the CheckBox clicked
+	 */
+	public void onCheckboxClicked(View view) {
+	    // Is the view now checked?
+	    boolean checked = ((CheckBox) view).isChecked();
+	    event.markEvent(checked);
+	    // Check which checkbox was clicked
+	    switch(view.getId()) {
+	        case R.id.checkbox_interesting:
+	            if (checked){
+	            	Toast toast = Toast.makeText(getBaseContext(), "You marked this event as interesting", Toast.LENGTH_SHORT);
+					toast.setGravity(Gravity.TOP, 0, MainActivity.actionBarHeight);
+					toast.show();
+	            }else{
+	            	
+	            }
+	            break;
+	    }
 	}
 
 	@Override

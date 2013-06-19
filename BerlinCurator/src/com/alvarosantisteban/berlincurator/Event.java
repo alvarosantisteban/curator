@@ -58,6 +58,16 @@ public class Event implements Serializable{
 	 * The links with more information
 	 */
 	private String[] links = {"",""};
+	
+	/**
+	 * Tells if the user marked the event as "interesting"
+	 */
+	private boolean isMarked = false;
+	
+	/**
+	 * Tells if the description of the event is in german
+	 */
+	private boolean isDescriptionInGerman = false;
 	  
 	/**
 	 * Returns the position of the event inside its list
@@ -89,6 +99,22 @@ public class Event implements Serializable{
 	
 	public String getLocation(){
 		return location;
+	}
+	
+	public boolean isTheEventMarked(){
+		return this.isMarked;
+	}
+	
+	public void markEvent(boolean isItMarked){
+		this.isMarked = isItMarked;
+	}
+	
+	public boolean isTheEventInGerman(){
+		return this.isDescriptionInGerman;
+	}
+	
+	public void descriptionInGerman(boolean isInGerman){
+		this.isMarked = isInGerman;
 	}
 	
 	public void setLocation(String theLocation){

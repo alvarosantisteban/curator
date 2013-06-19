@@ -21,6 +21,7 @@
     <string name="events_links">There are no links for this event.</string>
     <string name="add_to_calendar">Add this event to my Google Calendar</string>
     <string name="events_map_tag">Location of the event</string>
+    <string name="events_interesting">Mark if you find this event interesting</string>
 
 <!--      Settings Activity -->
     <string name="multilist_title">Events sources</string>
