@@ -42,6 +42,8 @@ public class EventActivity extends Activity {
 	MapView mapita;
 	
 	String tag = "EventActivity";
+	
+	public static final String EXTRA_DATE = "date";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +172,7 @@ public class EventActivity extends Activity {
 		} else if (item.getItemId() == android.R.id.home) {
 			// app icon in action bar clicked; go to the DateActivity
             Intent intent = new Intent(this, DateActivity.class);
+            intent.putExtra(EXTRA_DATE, day.getText().toString());
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 		}

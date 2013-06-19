@@ -16,7 +16,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,15 +38,47 @@ import android.widget.Toast;
  */
 public class DateActivity extends Activity{
 
-	private TextView date;
-	ExpandableListView expandableSitesList;
 	public static final String EXTRA_EVENT = "com.alvarosantisteban.berlincurator.event";
-	Calendar calendar = Calendar.getInstance();
-	
 	// Settings
 	private static final int RESULT_SETTINGS = 1;
-		
+	
+	//private boolean isToday=false;
+	//private boolean isTomorrow =false;
+			
+	/**
+	 * Used for logging purposes
+	 */
 	String tag = "DateActivity";
+	
+	/**
+	 * Format of the date
+	 */
+	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMAN);
+	
+	/**
+	 * The calendar used to get the actual date
+	 */
+	Calendar currentDay = Calendar.getInstance();
+	
+	/**
+	 * The TextView displaying the selected date. It may also display the words "Today" or "Tomorrow"
+	 */
+	private TextView displayedDate;
+	
+	/**
+	 * The String with the date of today in the format DD/MM/YYYY
+	 */
+	private String today = dateFormat.format(currentDay.getTime());
+	
+	/**
+	 * The String with the choosenDate by the user in the format DD/MM/YYYY
+	 */
+	public String choosenDate;
+	
+	/**
+	 * The expandable list with the groups and events
+	 */
+	ExpandableListView expandableSitesList;
 	
 	/**
 	 * A LinkedHashMap with the a String as key and a HeaderInfo as value
@@ -58,6 +89,9 @@ public class DateActivity extends Activity{
 	 */
 	private ArrayList<HeaderInfo> websitesList = new ArrayList<HeaderInfo>();
 	 
+	/**
+	 * The adapter for the ExpandableListView
+	 */
 	private ListAdapter listAdapter;
 	
 	final Context context = this;
@@ -77,15 +111,22 @@ public class DateActivity extends Activity{
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		Intent intent = getIntent();
-		String choosenDate = intent.getStringExtra(CalendarActivity.EXTRA_DATE);
-		//String[] htmls = intent.getStringArrayExtra(MainActivity.EXTRA_HTML);
-		date = (TextView) findViewById(R.id.date);
-		if (choosenDate == null){
-			// Get the actual date
-			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.GERMAN);
-			date.setText(dateFormat.format(calendar.getTime()));
+		// Get the choosen date from the calendar or from the event details that the user was consulting
+		choosenDate = intent.getStringExtra(CalendarActivity.EXTRA_DATE);
+		choosenDate = intent.getStringExtra(EventActivity.EXTRA_DATE);
+		displayedDate = (TextView) findViewById(R.id.date);
+		if (choosenDate == null){	
+			// The user did not select anything, the default date is today
+			displayedDate.setText("These are the events for today!");
+			choosenDate = today;
 		}else{
-			date.setText(choosenDate);
+			if (choosenDate.equals(today)){
+				displayedDate.setText("These are the events for today!");
+			}else if (choosenDate.equals(getTomorrow())){
+				displayedDate.setText("These are the events for tomorrow");
+			}else{
+				displayedDate.setText("Events for the " +choosenDate);
+			}
 		}
 		
 		/*
@@ -118,6 +159,18 @@ public class DateActivity extends Activity{
 		//expandableSitesList.setOnGroupCollapseListener(myCollapsedGroup);
 		// Listener for the expanded group
 		//expandableSitesList.setOnGroupExpandListener(myExpandedGroup);
+	}
+
+	/**
+	 * Returns the date of tomorrow formated like DD/MM/YYYY
+	 * 
+	 * @return a String with tomorrow in the format DD/MM/YYYY
+	 */
+	private String getTomorrow() {
+		Calendar tomorrow = currentDay;
+		// add one day to the date/calendar
+	    tomorrow.add(Calendar.DAY_OF_YEAR, 1);
+		return dateFormat.format(tomorrow.getTime());
 	}
 
 	/**
@@ -166,7 +219,7 @@ public class DateActivity extends Activity{
 			Entry<String, List<Event>> entry = keyValueIterator.next();
 			List<Event> eventsList = entry.getValue();
 			for (int i=0; i<eventsList.size();i++){
-				if(eventsList.get(i).getDay().equals(date.getText().toString())){
+				if(eventsList.get(i).getDay().equals(choosenDate)){
 					addEvent(entry.getKey(), eventsList.get(i));
 				}
 			}
