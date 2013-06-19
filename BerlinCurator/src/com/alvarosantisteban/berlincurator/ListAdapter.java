@@ -75,10 +75,10 @@ public class ListAdapter extends BaseExpandableListAdapter {
 		}
 	    
 		// Write the information of the event in the way we want 
-		TextView sequence = (TextView) convertView.findViewById(R.id.sequence);
-		sequence.setText(detailInfo.getSequence().trim() + ") ");
+		//TextView sequence = (TextView) convertView.findViewById(R.id.sequence);
+		//sequence.setText(detailInfo.getSequence().trim() + ") ");
 		TextView childItem = (TextView) convertView.findViewById(R.id.childItem);
-		childItem.setText(Html.fromHtml(detailInfo.getName().trim())); // <------------------------ CAMBIADO
+		childItem.setText("- " +Html.fromHtml(detailInfo.getName().trim()));
 	   
 		return convertView;
 	}
