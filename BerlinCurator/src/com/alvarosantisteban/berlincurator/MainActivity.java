@@ -17,6 +17,8 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +46,8 @@ public class MainActivity extends Activity {
 	 * The key is the name of the website and the value its corresponding list of events.
 	 */
 	public static Map<String, List<Event>> events = (Map<String, List<Event>>)(Map<String,?>) new HashMap <String, ArrayList<Event>>();
+	
+	public static int actionBarHeight;
 	
 	/**
 	 *  Settings
@@ -112,6 +116,11 @@ public class MainActivity extends Activity {
 		}
 		System.out.println();
 		
+		// Get the height of the action bar
+		TypedValue tv = new TypedValue();
+		context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
+		actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId);
+		
 		
 		/*
 		calendarText.setOnClickListener(new OnClickListener() {
@@ -143,7 +152,9 @@ public class MainActivity extends Activity {
 					download.execute(stringUrls);
 			    } else {
 			    	// Inform the user that there is no network connection available
-			    	Toast.makeText(getBaseContext(), "No network connection available.", Toast.LENGTH_LONG).show();
+			    	Toast toast = Toast.makeText(getBaseContext(), "No network connection available.", Toast.LENGTH_LONG);
+			    	toast.setGravity(Gravity.TOP, 0, MainActivity.actionBarHeight);
+			    	toast.show();
 			        System.out.println("No network connection available.");
 			    }
 			    
@@ -275,7 +286,9 @@ public class MainActivity extends Activity {
 		protected void onProgressUpdate(String... progress) {
     		System.out.println("Estoy en onProgressUpdate:"+progress[0]);
     		if (progress[0].equals("Exception")){
-    			Toast.makeText(context, "There were problems downloading the content from: " +progress[1] +" It's events won't be displayed.", Toast.LENGTH_LONG).show();
+    			Toast toast = Toast.makeText(context, "There were problems downloading the content from: " +progress[1] +" It's events won't be displayed.", Toast.LENGTH_LONG);
+    			toast.setGravity(Gravity.TOP, 0, MainActivity.actionBarHeight);
+		    	toast.show();
     		}
     		//loadProgressBar.setProgress(progress[0].intValue());
 		}

@@ -16,6 +16,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -243,7 +245,9 @@ public class DateActivity extends Activity{
 			  HeaderInfo headerInfo = websitesList.get(groupPosition);
 			  // If the group does not contain events, tell the user
 			  if(headerInfo.getEventsNumber() == 0){
-				  Toast.makeText(getBaseContext(), "There are no events to show for " + headerInfo.getName(), Toast.LENGTH_SHORT).show();
+				  Toast toast = Toast.makeText(getBaseContext(), "There are no events to show for " + headerInfo.getName(), Toast.LENGTH_SHORT);
+				  toast.setGravity(Gravity.TOP, 0, MainActivity.actionBarHeight);
+				  toast.show();
 				  // Avoid propagation = the group is not expanded/collapsed
 				  return true;
 			  }
@@ -259,7 +263,6 @@ public class DateActivity extends Activity{
 		
 		public void onGroupCollapse(int groupPosition){
 			System.out.println("onGroupCollapse");
-			Toast.makeText(getBaseContext(), "COLLAPSED ", Toast.LENGTH_SHORT).show();
 		}
 	};
 	
@@ -270,7 +273,6 @@ public class DateActivity extends Activity{
 		
 		public void onGroupExpand(int groupPosition){
 			System.out.println("onGroupExpand");
-			Toast.makeText(getBaseContext(), "EXPANDED ", Toast.LENGTH_SHORT).show();
 		}
 	};
 	

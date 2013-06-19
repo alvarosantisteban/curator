@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CalendarView;
@@ -33,7 +34,9 @@ public class CalendarActivity extends Activity {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                     int dayOfMonth) {
-                 Toast.makeText(getApplicationContext(), "You selected to see the events for the day: "+dayOfMonth +"/" +(++month) +"/" +year, Toast.LENGTH_SHORT).show();
+                 Toast toast = Toast.makeText(getApplicationContext(), "You selected to see the events for the day: "+dayOfMonth +"/" +(++month) +"/" +year, Toast.LENGTH_SHORT);
+                 toast.setGravity(Gravity.TOP, 0, MainActivity.actionBarHeight);
+				 toast.show();
                  selectedDay = dayOfMonth;
                  Intent intent = new Intent(context, DateActivity.class);
                  String day;
