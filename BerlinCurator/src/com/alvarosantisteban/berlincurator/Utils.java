@@ -1,6 +1,29 @@
 package com.alvarosantisteban.berlincurator;
 
+import java.util.Date;
+import java.util.Locale;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 public class Utils {
+	
+	/**
+	 * Converts a string of time in the format of 12hours HH:MMa to 24 hours 
+	 * 
+	 * @param timeIn12Hours the time written in 12 hours
+	 * @return a string with the time in 24 hours HH:MM or an empty string if there was a problem.
+	 */
+	public static String convertTo24Hours(String timeIn12Hours){
+		SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+	    SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mma", Locale.ENGLISH);
+	    try {
+			Date date = parseFormat.parse(timeIn12Hours);
+			return displayFormat.format(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
 
 	/**
 	 * Normalizes a date from the I Heart Berlin and Berlin Art Parasites format: "May 13 2013"  

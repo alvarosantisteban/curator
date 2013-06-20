@@ -68,7 +68,7 @@ public class ListAdapter extends BaseExpandableListAdapter {
 	 */
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
-		Event detailInfo = (Event) getChild(groupPosition, childPosition);
+		Event event = (Event) getChild(groupPosition, childPosition);
 		if (convertView == null) {
 			LayoutInflater infalInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = infalInflater.inflate(R.layout.child_row, null);
@@ -78,8 +78,13 @@ public class ListAdapter extends BaseExpandableListAdapter {
 		//TextView sequence = (TextView) convertView.findViewById(R.id.sequence);
 		//sequence.setText(detailInfo.getSequence().trim() + ") ");
 		TextView childItem = (TextView) convertView.findViewById(R.id.childItem);
-		childItem.setText("- " +Html.fromHtml(detailInfo.getName().trim()));
-	   
+		childItem.setText("- " +Html.fromHtml(event.getName().trim()));
+		//System.out.println(event.getName() +"with id:" +event.getId() +" is interesting =" +event.isTheEventInteresting());
+	    //if(EventActivity.getFromSP("cb" +event.getId())){
+		if (event.isTheEventInteresting()){
+	    	System.out.println("getChildView - event marked");
+	    	childItem.append(" X");
+	    }
 		return convertView;
 	}
 	 

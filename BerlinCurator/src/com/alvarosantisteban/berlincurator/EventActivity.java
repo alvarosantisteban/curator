@@ -182,7 +182,8 @@ public class EventActivity extends Activity {
 	public void onCheckboxClicked(View view) {
 	    // Is the view now checked?
 	    boolean checked = ((CheckBox) view).isChecked();
-	    event.markEvent(checked);
+	    event.markEventAsInteresting(checked);
+	    System.out.println(event.getName() +"with id:" +event.getId() +" is interesting =" +event.isTheEventInteresting());
 	    // Check which checkbox was clicked
 	    switch(view.getId()) {
 	        case R.id.checkbox_interesting:

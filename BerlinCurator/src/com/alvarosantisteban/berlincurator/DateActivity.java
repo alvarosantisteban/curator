@@ -104,6 +104,9 @@ public class DateActivity extends Activity{
 	 */
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		System.out.println(tag +"onCreate-----------------");
+		
 		setContentView(R.layout.activity_date);
 		
 		// Enable the app's icon to act as home
@@ -111,7 +114,7 @@ public class DateActivity extends Activity{
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		Intent intent = getIntent();
-		// Get the choosen date from the calendar or from the event details that the user was consulting
+		// Get the choosen date from the calendar or from the event that the user was consulting
 		choosenDate = intent.getStringExtra(CalendarActivity.EXTRA_DATE);
 		choosenDate = intent.getStringExtra(EventActivity.EXTRA_DATE);
 		displayedDate = (TextView) findViewById(R.id.date);

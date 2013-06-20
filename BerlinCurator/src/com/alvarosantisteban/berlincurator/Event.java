@@ -72,7 +72,7 @@ public class Event implements Serializable{
 	/**
 	 * Tells if the user marked the event as "interesting"
 	 */
-	private boolean isMarked = false;
+	private boolean isInteresting = false;
 	
 	/**
 	 * Tells if the description of the event is in german
@@ -115,12 +115,12 @@ public class Event implements Serializable{
 		return location;
 	}
 	
-	public boolean isTheEventMarked(){
-		return this.isMarked;
+	public boolean isTheEventInteresting(){
+		return this.isInteresting;
 	}
 	
-	public void markEvent(boolean isItMarked){
-		this.isMarked = isItMarked;
+	public void markEventAsInteresting(boolean isThisInteresting){
+		this.isInteresting = isThisInteresting;
 	}
 	
 	public boolean isTheEventInGerman(){
@@ -128,7 +128,7 @@ public class Event implements Serializable{
 	}
 	
 	public void descriptionInGerman(boolean isInGerman){
-		this.isMarked = isInGerman;
+		this.isDescriptionInGerman = isInGerman;
 	}
 	
 	public void setLocation(String theLocation){
