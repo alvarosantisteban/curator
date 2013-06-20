@@ -1,6 +1,7 @@
 package com.alvarosantisteban.berlincurator;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 
 /**
@@ -14,11 +15,20 @@ import java.io.Serializable;
  *
  */
 public class Event implements Serializable{
+	
+	public Event(){
+		this.id = UUID.randomUUID();
+	}
 	  
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * The unique ID from the event, which is randomly generated
+	 */
+	private final UUID id;
 	
 	/**
 	 * The position of the event inside the list
@@ -68,6 +78,10 @@ public class Event implements Serializable{
 	 * Tells if the description of the event is in german
 	 */
 	private boolean isDescriptionInGerman = false;
+	
+	public UUID getId(){
+		return this.id;
+	}
 	  
 	/**
 	 * Returns the position of the event inside its list

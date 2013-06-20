@@ -2,7 +2,6 @@ package com.alvarosantisteban.berlincurator;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.Context;
 
 public class ArtParasitesEventLoader implements EventLoader {

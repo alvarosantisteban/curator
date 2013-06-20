@@ -10,6 +10,7 @@ import com.google.android.gms.maps.MapView;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
@@ -83,7 +84,8 @@ public class EventActivity extends Activity {
 		day.setText(event.getDay().trim());
 		
 		// Get the state of the check
-		interestingCheck.setChecked(event.isTheEventMarked()); 
+		interestingCheck.setChecked(getFromSP("cb" +event.getId()));
+		//interestingCheck.setChecked(event.isTheEventMarked()); 
 		
 		// Get the name
 		name.setMovementMethod(LinkMovementMethod.getInstance());
@@ -188,11 +190,36 @@ public class EventActivity extends Activity {
 	            	Toast toast = Toast.makeText(getBaseContext(), "You marked this event as interesting", Toast.LENGTH_SHORT);
 					toast.setGravity(Gravity.TOP, 0, MainActivity.actionBarHeight);
 					toast.show();
+					saveInSp("cb"+event.getId(), true);
 	            }else{
-	            	
+	            	saveInSp("cb"+event.getId(), false);
 	            }
 	            break;
 	    }
+	}
+	
+	/**
+	 * Saves the state of the checkbox into the SharedPreferences
+	 * 
+	 * @param key the key to be saved 
+	 * @param value the value to be saved
+	 */
+	private void saveInSp(String key, boolean value){
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences("PROJECT_NAME", android.content.Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(key, value);
+        editor.commit();
+    }
+	
+	/**
+	 * Returns the state of the checkbox with the key given as parameter
+	 * 
+	 * @param key the checkbox key
+	 * @return the state of the checkbox 
+	 */
+	private boolean getFromSP(String key){
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences("PROJECT_NAME", android.content.Context.MODE_PRIVATE);
+        return preferences.getBoolean(key, false);
 	}
 
 	@Override
