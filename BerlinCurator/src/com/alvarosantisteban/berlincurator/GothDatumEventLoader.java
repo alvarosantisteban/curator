@@ -78,6 +78,7 @@ public class GothDatumEventLoader implements EventLoader {
 				String[] placeAndRest = timeAndRest[1].split("<",2);
 				// Get the place for the description
 				String place = "The event will take place in " +placeAndRest[0].trim() +"<br>"; // In many cases includes the word "Berlin"	
+				event.setLocation("<a href=\"https://maps.google.es/maps?q="+placeAndRest[0].trim().replace(' ', '+')+"\">"+placeAndRest[0].trim()+"</a>");
 				String[] nothingNameAndRest = placeAndRest[1].split("<i>",2);
 				String[] nameAndRest = nothingNameAndRest[1].split("<",2);
 				// Set the name

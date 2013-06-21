@@ -83,7 +83,7 @@ public class StressFaktorEventLoader implements EventLoader {
 	 * @return string with a predefined sentence with the address of the event to be added at the end of the description
 	 */
 	private String extractPlace(String maybeLink) {	
-		//String address = "<br>The event will take place at ";
+		//TODO Check if the address can be written in a way that is better for google maps
 		String address = "";
 		if(maybeLink.contains("<a href=\"http:")){
 			String[] links = maybeLink.split("<a href=\"http:");
@@ -98,6 +98,7 @@ public class StressFaktorEventLoader implements EventLoader {
 			String[] nothingAndPlace = maybeLink.split("<b>");
 			address = address + nothingAndPlace[1];
 		}
+		address = "<a href=\"https://maps.google.es/maps?q=" +address.replace(' ', '+') +",+Berlin\">" +address +"</a>";
 		return address;
 	}
 	

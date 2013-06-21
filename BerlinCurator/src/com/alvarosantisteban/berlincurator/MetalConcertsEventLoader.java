@@ -58,9 +58,11 @@ public class MetalConcertsEventLoader implements EventLoader{
 				String[] concertPlace = htmlLink.split(">"); // Get name
 				event.setLink(pureLink[1]);
 				event.setDescription("The concert will take place at the " +concertPlace[1]);
+				event.setLocation("<a href=\"https://maps.google.es/maps?q=" +concertPlace[1].replace(' ', '+') +",+Berlin\">" +concertPlace[1] +"</a>");
 			}else{
 				String concertPlace = htmlLink;
 				event.setDescription("The concert will take place at the " +concertPlace);
+				event.setLocation("<a href=\"https://maps.google.es/maps?q=" +concertPlace.replace(' ', '+') +",+Berlin\">" +concertPlace +"</a>");
 			}
 			events.add(event);
 		}

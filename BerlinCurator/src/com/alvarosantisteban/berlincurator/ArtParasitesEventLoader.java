@@ -60,8 +60,10 @@ public class ArtParasitesEventLoader implements EventLoader {
 				
 				//System.out.println("eventsOfADay[(j*2)-1]"+eventsOfADay[(j*2)-1]);
 				String[] linkAndPlace = eventsOfADay[(j*2)-1].split("</a>",2);
-				// We will use the "place" for the description ---> place[1]
 				String[] place = linkAndPlace[0].split("\">"); 
+				// Extract the location
+				//event.setLocation("https://maps.google.es/maps?q="+place[1].replace(' ', '+')+",+Berlin");
+				event.setLocation("<a href=\"https://maps.google.es/maps?q="+place[1].replace(' ', '+')+",+Berlin\">"+place[1]+"</a>");
 				String placeLink = place[0];
 				// Check if the link still contains crap
 				if(placeLink.contains("\"")){
@@ -79,7 +81,7 @@ public class ArtParasitesEventLoader implements EventLoader {
 				// Extract the name and a link and set them
 				String[] linkNameAndRest = eventsOfADay[(j*2)].split("</a>",2);
 				String[] linkAndName = linkNameAndRest[0].split("\">"); 
-				System.out.println("name:" +linkAndName[1]);
+				//System.out.println("name:" +linkAndName[1]);
 				event.setName(linkAndName[1]);
 				
 				// Extract the links
@@ -95,7 +97,7 @@ public class ArtParasitesEventLoader implements EventLoader {
 				
 				// Create the description and set it
 				String description = linkAndName[1] + " at the " +place[1] +":" +"<br>" + descriptionAndNothing[0].trim();
-				System.out.println("description:" +description);
+				//System.out.println("description:" +description);
 				event.setDescription(description);
 				
 				events.add(event);

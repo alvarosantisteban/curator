@@ -68,6 +68,9 @@ public class WhiteTrashEventLoader implements EventLoader{
 				String[] description2a = description1[1].split("<span class=\"summ\">");
 				String[] description2b = description2a[1].split("</span>");
 				event.setDescription(description + description2b[0] + description3[0]);
+				
+				// Set the location
+				event.setLocation("<a href=\"https://maps.google.es/maps?q=Schoenhauser+Allee+6-7,+Berlin\">White Trash Bar</a>");
 				events.add(event);
 			}
 		}

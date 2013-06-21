@@ -22,6 +22,7 @@
     <string name="add_to_calendar">Add this event to my Google Calendar</string>
     <string name="events_map_tag">Location of the event</string>
     <string name="events_interesting">Mark if you find this event interesting</string>
+    <string name="events_location">There is no known location for this event</string>
 
 <!--      Settings Activity -->
     <string name="multilist_title">Events sources</string>

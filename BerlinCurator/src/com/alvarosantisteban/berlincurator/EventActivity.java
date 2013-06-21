@@ -43,6 +43,7 @@ public class EventActivity extends Activity {
 	TextView link;
 	TextView description;
 	TextView addToCalendar;
+	TextView location;
 	MapView mapita;
 	CheckBox interestingCheck;
 	
@@ -77,6 +78,7 @@ public class EventActivity extends Activity {
 		link = (TextView)findViewById(R.id.events_link);
 		description = (TextView)findViewById(R.id.events_description);
 		addToCalendar = (TextView)findViewById(R.id.events_add_to_calendar);
+		location = (TextView)findViewById(R.id.events_location);
 
 		//mapita = new MapView(this);
 		
@@ -117,6 +119,10 @@ public class EventActivity extends Activity {
 		// Get the location, if any
 		if(!event.getLocation().equals("")){
 			//location.setText(event.getLocation());
+			location.setMovementMethod(LinkMovementMethod.getInstance());
+			location.setText(Html.fromHtml(event.getLocation()));
+			//Linkify.addLinks(location, Linkify.WEB_URLS);
+			//location.setMovementMethod(LinkMovementMethod.getInstance());
 		}
 
 		// Set the listener to add a event on the google calendar

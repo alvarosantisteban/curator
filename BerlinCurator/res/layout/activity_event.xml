@@ -96,8 +96,12 @@
 	        android:layout_height="wrap_content"
 	        android:textStyle="bold"
 	        android:text="@string/events_map_tag" />
-	    
 
+	    <TextView
+	        android:id="@+id/events_location"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/events_location" />
 	
 	</LinearLayout>
 </ScrollView>

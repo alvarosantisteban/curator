@@ -61,6 +61,7 @@ public class IHeartBerlinEventLoader implements EventLoader {
 				// Set the description
 				String description = descriptionAndLinks[0].replaceFirst("<p>", "").replaceFirst(">", "").trim();
 				event.setDescription(description);
+				event.setLocation(extractLocation(description));
 				// Set the links
 				String[] trashAndLinks = descriptionAndLinks[1].split("<div class=\"event_links\">");
 				// Check if there are links
@@ -79,4 +80,43 @@ public class IHeartBerlinEventLoader implements EventLoader {
 		}
 		return events;
     }
+
+	/**
+	 * Extract the street name from the description.
+	 * It does not get it if it's written like "NAME Str" or "NAMEstrasse".
+	 * It also misses the posible letter that it might go after the number of the street.
+	 * 
+	 * @param description the string with the street name on it
+	 * @return the street or an empty string if it was not found
+	 */
+	private String extractLocation(String description) {
+		String pattern="";
+		int street = description.indexOf("str.");
+		if(street > -1){
+			pattern = "str.";
+		}else {
+			street = description.indexOf("damm");
+			if(street > -1){
+				pattern = "damm";
+			}
+		}
+		if (!pattern.equals("")){
+			//System.out.println("description:" +description);
+			String streetName = description.substring(0, street);
+			String streetNumber = description.substring(street);
+			//System.out.println("streetName:" +streetName);
+			//System.out.println("streetNumber:" +streetNumber);
+			int startOfStreet = streetName.lastIndexOf(" ");
+			//System.out.println("startOfStreet:" +startOfStreet);
+			int i = 0;
+			while (!Character.isDigit(streetNumber.charAt(i))) i++;
+			//System.out.println("i:"+i);
+			int j = i;
+			while (Character.isDigit(streetNumber.charAt(j))) j++;
+			//System.out.println("startOfStreet:"+startOfStreet +" j:" +j);
+			String fullStreet = description.substring(startOfStreet,street+j);
+			return "<a href=\"https://maps.google.es/maps?q="+fullStreet.replace(' ', '+') +",+Berlin\">" +fullStreet +"</a>";
+		}
+		return "";
+	}
 }

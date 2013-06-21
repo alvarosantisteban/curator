@@ -56,6 +56,9 @@ public class KoepiEventLoader implements EventLoader{
 			// Set the description (with lots of html code)
 			event.setDescription(paragraphs[1]);
 			
+			// Set the location
+			event.setLocation("<a href=\"https://maps.google.es/maps?q=Koepenicker+139,+Berlin\">Köpi</a>");
+			
 			// Check if there is a link
 			String[] htmlLink = twoParts[1].split("<a href=\"", 2);
 			if(htmlLink.length == 2){
