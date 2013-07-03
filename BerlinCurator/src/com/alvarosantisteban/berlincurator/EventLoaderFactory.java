@@ -29,4 +29,8 @@ public class EventLoaderFactory {
 	public static EventLoader newStressFaktorEventLoader() {
 		return new StressFaktorEventLoader();
 	}
+	
+	public static EventLoader newIndexEventLoader() {
+		return new IndexEventLoader();
+	}
 }

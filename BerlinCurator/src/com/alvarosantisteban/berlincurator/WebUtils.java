@@ -29,8 +29,7 @@ public class WebUtils {
 	 * @throws IOException if there is a connecting problem
 	 */
 	public final static String downloadHtml(String myurl, Context context){
-			InputStream is = null;
-		   
+		InputStream is = null;
    	   	try {
    	   		URL url = new URL(myurl);
    	   		HttpURLConnection conn = (HttpURLConnection) url.openConnection();

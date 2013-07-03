@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.CalendarView;
 import android.widget.CalendarView.OnDateChangeListener;
 import android.widget.Toast;
@@ -28,13 +30,14 @@ public class CalendarActivity extends Activity {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
-		calendar = (CalendarView) findViewById(R.id.calendarView);
+		calendar = (MyCalendarView) findViewById(R.id.calendarView);
+		
 		calendar.setOnDateChangeListener(new OnDateChangeListener() {
 
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
                     int dayOfMonth) {
-                 Toast toast = Toast.makeText(getApplicationContext(), "You selected to see the events for the day: "+dayOfMonth +"/" +(++month) +"/" +year, Toast.LENGTH_SHORT);
+                 Toast toast = Toast.makeText(getApplicationContext(), "You selected to see the events for the day: "+dayOfMonth +"/" +(++month) +"/" +year, Toast.LENGTH_LONG);
                  toast.setGravity(Gravity.TOP, 0, MainActivity.actionBarHeight);
 				 toast.show();
                  selectedDay = dayOfMonth;
@@ -57,6 +60,18 @@ public class CalendarActivity extends Activity {
              	 startActivity(intent);
             }
         });
+		
+		calendar.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				System.out.println("ecooooo2------------");
+				Toast toast = Toast.makeText(getApplicationContext(), "View=" +((CalendarView) arg0).getDate(), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.TOP, 0, MainActivity.actionBarHeight);
+				toast.show();
+			}
+			
+		});
 	}
 
 	@Override

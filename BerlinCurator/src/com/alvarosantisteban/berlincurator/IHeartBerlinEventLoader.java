@@ -89,7 +89,7 @@ public class IHeartBerlinEventLoader implements EventLoader {
 	 * @param description the string with the street name on it
 	 * @return the street or an empty string if it was not found
 	 */
-	private String extractLocation(String description) {
+	private String extractLocation(String description){
 		String pattern="";
 		int street = description.indexOf("str.");
 		if(street > -1){
@@ -101,21 +101,25 @@ public class IHeartBerlinEventLoader implements EventLoader {
 			}
 		}
 		if (!pattern.equals("")){
-			//System.out.println("description:" +description);
-			String streetName = description.substring(0, street);
-			String streetNumber = description.substring(street);
-			//System.out.println("streetName:" +streetName);
-			//System.out.println("streetNumber:" +streetNumber);
-			int startOfStreet = streetName.lastIndexOf(" ");
-			//System.out.println("startOfStreet:" +startOfStreet);
-			int i = 0;
-			while (!Character.isDigit(streetNumber.charAt(i))) i++;
-			//System.out.println("i:"+i);
-			int j = i;
-			while (Character.isDigit(streetNumber.charAt(j))) j++;
-			//System.out.println("startOfStreet:"+startOfStreet +" j:" +j);
-			String fullStreet = description.substring(startOfStreet,street+j);
-			return "<a href=\"https://maps.google.es/maps?q="+fullStreet.replace(' ', '+') +",+Berlin\">" +fullStreet +"</a>";
+			try{
+				//System.out.println("description:" +description);
+				String streetName = description.substring(0, street);
+				String streetNumber = description.substring(street);
+				//System.out.println("streetName:" +streetName);
+				//System.out.println("streetNumber:" +streetNumber);
+				int startOfStreet = streetName.lastIndexOf(" ");
+				//System.out.println("startOfStreet:" +startOfStreet);
+				int i = 0;
+				while (!Character.isDigit(streetNumber.charAt(i))) i++;
+				//System.out.println("i:"+i);
+				int j = i;
+				while (j < streetNumber.length() && Character.isDigit(streetNumber.charAt(j))) j++;
+				//System.out.println("startOfStreet:"+startOfStreet +" j:" +j);
+				String fullStreet = description.substring(startOfStreet,street+j);
+				return "<a href=\"https://maps.google.es/maps?q="+fullStreet.replace(' ', '+') +",+Berlin\">" +fullStreet +"</a>";
+			}catch(Exception e){
+				System.out.println("\nException in extractLocation.\n" +e);
+			}
 		}
 		return "";
 	}

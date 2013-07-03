@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
 	/**
 	 * The total set of webs where the events can be extracted
 	 */
-	public static String[] webs = {"I Heart Berlin", "Berlin Art Parasites", "Metal Concerts", "White Trashs concerts", "Koepis activities", "Goth Datum", "Stress Faktor"};
+	public static String[] webs = {"I Heart Berlin", "Berlin Art Parasites", "Metal Concerts", "White Trashs concerts", "Koepis activities", "Goth Datum", "Stress Faktor", "Index"};
 	
 	/**
 	 * The set of urls from where the html will be downloaded
@@ -72,7 +72,8 @@ public class MainActivity extends Activity {
 				   			"http://www.whitetrashfastfood.com/events/",
 				   			"http://www.koepi137.net/eventskonzerte.php",
 				   			"http://www.goth-city-radio.com/dsb/dates.php",
-				   			"http://stressfaktor.squat.net/termine.php?display=7",};
+				   			"http://stressfaktor.squat.net/termine.php?display=7",
+				   			"http://www.indexberlin.de/openings-and-events"};
    	/**
    	 * The progress bar for downloading and extracting the events
    	 */
@@ -265,6 +266,9 @@ public class MainActivity extends Activity {
 				}else if(webs[i].equals("Stress Faktor")){
 					System.out.println("Stresssssss faktor dentro");
 					event = EventLoaderFactory.newStressFaktorEventLoader().load(context);
+				}else if(webs[i].equals("Index")){
+					System.out.println("Index dentro");
+					event = EventLoaderFactory.newIndexEventLoader().load(context);
 				}else{
 					return null;
 				}
