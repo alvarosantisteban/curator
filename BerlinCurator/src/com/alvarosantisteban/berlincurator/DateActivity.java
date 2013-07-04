@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,8 +33,6 @@ import android.widget.Toast;
  * Displays a list with the events for a concrete day organized by the origin of the website and the time.
  * 
  * @author Alvaro Santisteban 2013 - alvarosantisteban@gmail.com
- * 
- *  implements OnClickListener
  *
  */
 public class DateActivity extends Activity{
@@ -132,14 +131,6 @@ public class DateActivity extends Activity{
 			}
 		}
 		
-		/*
-		 * The old way
-		// Get the names of the sites
-		Resources res = this.getResources();
-		String[] sitesNames = res.getStringArray(R.array.sites_array); 
-		// Populate the ArrayList "websitesList" and the LinkedHashMap "websites"
-		createHeaderGroups(sitesNames);
-		*/
 		createHeaderGroups(MainActivity.websNames);
 		
 		expandableSitesList = (ExpandableListView) findViewById(R.id.expandableSitesList);
@@ -223,8 +214,8 @@ public class DateActivity extends Activity{
 			List<Event> eventsList = entry.getValue();
 			for (int i=0; i<eventsList.size();i++){
 				if(eventsList.get(i).getDay().equals(choosenDate)){
-					addEvent(entry.getKey(), eventsList.get(i));
-					//addEvent(eventsList.get(i).getEventsOrigin(), eventsList.get(i));
+					//addEvent(entry.getKey(), eventsList.get(i));
+					addEvent(eventsList.get(i).getEventsOrigin(), eventsList.get(i));
 				}
 			}
 		}
@@ -340,6 +331,7 @@ public class DateActivity extends Activity{
 	 * @param sitesNames the names of the sites which contain the events
 	 */
 	private void createHeaderGroups(String[] sitesNames) {
+		//System.out.println("createHeaderGroups");
 		for (int i=0; i<sitesNames.length; i++){
 			HeaderInfo headerInfo = new HeaderInfo();
 			headerInfo.setName(sitesNames[i]);

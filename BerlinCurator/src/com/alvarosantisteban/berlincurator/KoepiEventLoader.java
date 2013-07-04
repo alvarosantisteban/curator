@@ -7,7 +7,7 @@ import android.content.Context;
 public class KoepiEventLoader implements EventLoader{
 	
 	public final static String websiteURL = "http://www.koepi137.net/eventskonzerte.php";
-	public final static String webName = "Köpi´s events";
+	public final static String webName = "Köpi's events";
 
 	@Override
 	public List<Event> load(Context context) {

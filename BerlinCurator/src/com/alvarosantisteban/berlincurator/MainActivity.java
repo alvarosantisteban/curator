@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -70,7 +71,7 @@ public class MainActivity extends Activity {
 									GothDatumEventLoader.webName, 
 									StressFaktorEventLoader.webName, 
 									IndexEventLoader.webName};
-	
+
 	/**
 	 * The set of urls from where the html will be downloaded
 	 */
@@ -101,16 +102,17 @@ public class MainActivity extends Activity {
 		
 		context = this;
 		loadButton = (Button) findViewById(R.id.loadButton);
-		loadProgressBar = (ProgressBar)findViewById(R.id.progressLoadHtml);		
+		loadProgressBar = (ProgressBar)findViewById(R.id.progressLoadHtml);	
 		// Get the default shared preferences
 		sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 		
+		
 		// This is suppose to be used to clear the data from shared preferences
-		/*
+		
 		Editor editor = sharedPref.edit();
 		editor.clear();
 		editor.commit();
-		 */
+		 
 		
 		// Check which sites are meant to be shown
 		Set<String> set = sharedPref.getStringSet("multilist", new HashSet<String>(Arrays.asList(websNames)));
@@ -262,10 +264,10 @@ public class MainActivity extends Activity {
 				}else if(websNames[i].equals("Metal Concerts")){
 					System.out.println("metalConcerts dentro");
 					event = EventLoaderFactory.newMetalConcertsEventLoader().load(context);
-				}else if(websNames[i].equals("White Trashs concerts")){
+				}else if(websNames[i].equals("White Trash")){
 					System.out.println("whitetrash dentro");
 					event = EventLoaderFactory.newWhiteTrashEventLoader().load(context);
-				}else if(websNames[i].equals("Koepis activities")){
+				}else if(websNames[i].equals("Köpi's events")){
 					System.out.println("koepi dentro");
 					event = EventLoaderFactory.newKoepiEventLoader().load(context);
 				}else if(websNames[i].equals("Goth Datum")){
