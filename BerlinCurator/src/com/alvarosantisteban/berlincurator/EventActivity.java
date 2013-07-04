@@ -21,7 +21,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,7 +41,6 @@ public class EventActivity extends Activity {
 	TextView time;
 	TextView link;
 	TextView description;
-	TextView addToCalendar;
 	TextView location;
 	MapView mapita;
 	CheckBox interestingCheck;
@@ -77,7 +75,6 @@ public class EventActivity extends Activity {
 		time = (TextView)findViewById(R.id.events_time);
 		link = (TextView)findViewById(R.id.events_link);
 		description = (TextView)findViewById(R.id.events_description);
-		addToCalendar = (TextView)findViewById(R.id.events_add_to_calendar);
 		location = (TextView)findViewById(R.id.events_location);
 
 		//mapita = new MapView(this);
@@ -124,60 +121,58 @@ public class EventActivity extends Activity {
 			//Linkify.addLinks(location, Linkify.WEB_URLS);
 			//location.setMovementMethod(LinkMovementMethod.getInstance());
 		}
-
-		// Set the listener to add a event on the google calendar
-		addToCalendar.setOnClickListener(new OnClickListener() {
-			
-			/**
-			 * Adds the event to the Google calendar
-			 */
-			public void onClick(View v) {
-				Calendar cal = new GregorianCalendar(); 
-				cal.setTime(new Date()); 
-				cal.add(Calendar.MONTH, 2); 
-				Intent intent = new Intent(Intent.ACTION_INSERT); 
-				intent.setData(Events.CONTENT_URI); 
-				intent.putExtra(Events.TITLE, name.getText().toString()); 
-				intent.putExtra(Events.DESCRIPTION, description.getText().toString()); 
-				// If we know when will the event begin 
-				if (!time.getText().toString().equals("")){
-					long startEvent = getTimeInMilliseconds(day.getText().toString(),time.getText().toString());
-					intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startEvent); 
-				}else{
-					// If not, we set it to happen during the whole day
-					intent.putExtra(Events.ALL_DAY, true); 
-					long startEvent = getTimeInMilliseconds(day.getText().toString(),"00:00");
-					intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startEvent); 
-				}
-				
-				startActivity(intent); 
-			}
-
-			/**
-			 * Retrieves the time in milliseconds for a start time of an event on a concrete date
-			 * 
-			 * @param date the day when the event will take place in the format DD/MM/YYYY
-			 * @param startTime the time when the event will take place in the format HH:MM
-			 * @return a long with the number of milliseconds
-			 */
-			private long getTimeInMilliseconds(String date, String startTime) {
-				int year, month, day;
-				String[] dayMonthYear = date.split("/");
-				day = Integer.parseInt(dayMonthYear[0]);
-				month = Integer.parseInt(dayMonthYear[1]);
-				year = Integer.parseInt(dayMonthYear[2]);
-				
-				int hour, minutes;
-				String[] hourMinutes = startTime.split(":");
-				hour = Integer.parseInt(hourMinutes[0]);
-				minutes = Integer.parseInt(hourMinutes[1]);
-				
-				Calendar beginTime = Calendar.getInstance();
-				beginTime.set(year, month-1, day, hour, minutes);
-				// TODO TAKE CARE HERE, that month-1 could create problems
-				return beginTime.getTimeInMillis();
-			}
-		});
+	}
+	
+	/**
+	 * Adds the event to a Google Calendar of the user.
+	 * 
+	 * @param v the View
+	 */
+	public void addToMyGoogleCalendar(View v){
+		Calendar cal = new GregorianCalendar(); 
+		cal.setTime(new Date()); 
+		cal.add(Calendar.MONTH, 2); 
+		Intent intent = new Intent(Intent.ACTION_INSERT); 
+		intent.setData(Events.CONTENT_URI); 
+		intent.putExtra(Events.TITLE, name.getText().toString()); 
+		intent.putExtra(Events.DESCRIPTION, description.getText().toString()); 
+		// If we know when will the event begin 
+		if (!time.getText().toString().equals("")){
+			long startEvent = getTimeInMilliseconds(day.getText().toString(),time.getText().toString());
+			intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startEvent); 
+		}else{
+			// If not, we set it to happen during the whole day
+			intent.putExtra(Events.ALL_DAY, true); 
+			long startEvent = getTimeInMilliseconds(day.getText().toString(),"00:00");
+			intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startEvent); 
+		}
+		
+		startActivity(intent); 
+	}
+	
+	/**
+	 * Retrieves the time in milliseconds for a start time of an event on a concrete date
+	 * 
+	 * @param date the day when the event will take place in the format DD/MM/YYYY
+	 * @param startTime the time when the event will take place in the format HH:MM
+	 * @return a long with the number of milliseconds
+	 */
+	private long getTimeInMilliseconds(String date, String startTime) {
+		int year, month, day;
+		String[] dayMonthYear = date.split("/");
+		day = Integer.parseInt(dayMonthYear[0]);
+		month = Integer.parseInt(dayMonthYear[1]);
+		year = Integer.parseInt(dayMonthYear[2]);
+		
+		int hour, minutes;
+		String[] hourMinutes = startTime.split(":");
+		hour = Integer.parseInt(hourMinutes[0]);
+		minutes = Integer.parseInt(hourMinutes[1]);
+		
+		Calendar beginTime = Calendar.getInstance();
+		beginTime.set(year, month-1, day, hour, minutes);
+		// TODO TAKE CARE HERE, that month-1 could create problems
+		return beginTime.getTimeInMillis();
 	}
 	
 	/**

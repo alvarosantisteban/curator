@@ -31,7 +31,16 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content" 
 	            android:layout_weight="0" 
-	            android:onClick="onCheckboxClicked"/>		
+	            android:onClick="onCheckboxClicked"/>
+
+	        <ImageView
+	            android:id="@+id/add_to_calendar_icon"
+	            android:layout_width="24dp"
+	            android:layout_height="34dp"
+	            android:paddingRight="5dp"
+	            android:src="@drawable/google_calendar_icon" 
+	            android:contentDescription="@string/add_to_calendar"
+	            android:onClick="addToMyGoogleCalendar"/>
 			
 	        <TextView
 	            android:id="@+id/events_name"
@@ -80,14 +89,6 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:text="@string/events_links" />
-
-	    <TextView
-	        android:id="@+id/events_add_to_calendar"
-	        android:layout_marginTop="30dp"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/add_to_calendar" 
-	        android:clickable="true"/>
 
 	    <TextView
 	        android:id="@+id/events_map_tag"
