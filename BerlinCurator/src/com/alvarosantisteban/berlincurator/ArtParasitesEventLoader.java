@@ -90,7 +90,7 @@ public class ArtParasitesEventLoader implements EventLoader {
 				String[] timeAndRest = linkNameAndRest[1].split("</p>",2);
 				
 				// Extract the hour
-				event.setHour(extractTime(timeAndRest[0]));
+				event.setHour(Utils.extractTime(timeAndRest[0]));
 				
 				String[] nothingAndDescription = timeAndRest[1].split(">", 2);
 				String[] descriptionAndNothing = nothingAndDescription[1].split("</p>",2);
@@ -100,6 +100,8 @@ public class ArtParasitesEventLoader implements EventLoader {
 				//System.out.println("description:" +description);
 				event.setDescription(description);
 				
+				// Set the origin
+				event.setEventsOrigin(MainActivity.websNames[1]);
 				events.add(event);
 			}
 		}
@@ -111,7 +113,7 @@ public class ArtParasitesEventLoader implements EventLoader {
 	 *  
 	 * @param theTime the String with the time
 	 * @return the time in the format HH:MM or HH:MM-HH:MM or an empty string if there was no time or a problem arose.
-	 */
+	 *
 	private String extractTime(String theTime) {
 		String a = "";
 		// Make sure that there is a time
@@ -165,7 +167,8 @@ public class ArtParasitesEventLoader implements EventLoader {
 		}
 	}
 
-
+*/
+	
 	/**
 	 *  A small separate function to extract the links from the html mess
 	 *  

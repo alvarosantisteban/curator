@@ -26,72 +26,73 @@ public class Utils {
 	}
 	
 	/**
-	 *  A small separate function to extract the hour from the html mess
+	 *  A small separate function to extract the hour from the html mess.
 	 *  
 	 * @param theTime the String with the time
 	 * @return the time in the format HH:MM or HH:MM-HH:MM or an empty string if there was no time or a problem arose.
 	 */
 	public static String extractTime(String theTime) {
-		System.out.println("|"+theTime +"|");
+		//System.out.println("|"+theTime +"|");
 		theTime = theTime.replace(".", ":");
-		System.out.println("|"+theTime +"|");
-		String a = "";
+		//System.out.println("|"+theTime +"|");
+		String timePeriod = "";
 		// Make sure that there is a time
 		if (theTime.contains("pm")){
-			a = "pm";
+			timePeriod = "pm";
 		}else if (theTime.contains("am")){
-			a = "am";
+			timePeriod = "am";
 		}else{
 			// Is not a time
-			System.out.println("return nothing");
+			System.out.println("It's not a time. We return an empty string");
 			return "";
 		}
 		// Extract the time and set it
-		String[] timeAndRest = theTime.split(a); 
+		String[] timeAndRest = theTime.split(timePeriod); 
 					
 		// Search for a digit
 		int z = 0;
 		while (!Character.isDigit(timeAndRest[0].charAt(z))) z++;
 		String hour = timeAndRest[0].substring(z);
 		hour = hour.trim();
+		String timeSeparator = "";
+		// Check if there is a time interval by looking at a time separator
 		if (hour.contains("-")){
-			System.out.println("hour con -:"+hour);
-			String[] hour24 = new String[2];
-			String[] startEnd = hour.split("-");
-			for (int i=0; i<startEnd.length; i++){
-				if (startEnd[i].contains(":")){
-					if (startEnd[i].length() == 4){
-						hour24[i] = "0"+startEnd[i];
-					}else{
-						hour24[i] = startEnd[i];
-					}
-				}else{
-					System.out.println("|"+startEnd[i] +"|");
-					if (startEnd[i].length() == 1){
-						System.out.println("length es 1");
-						hour24[i] = "0"+startEnd[i]+":00";
-					}else{
-						hour24[i] = startEnd[i]+":00";
-					}
-				}
-				System.out.println(hour24[i]);
-				hour24[i] = Utils.convertTo24Hours(hour24[i]+a);
-			}
-			return hour24[0]+"-"+hour24[1];
+			timeSeparator = "-";
+		}else if (hour.contains("–")){
+			timeSeparator = "–";
 		}else{	
-			System.out.println("hour:"+hour);
 			String hour24;
 			if (hour.length() == 1){
-				hour24 = Utils.convertTo24Hours("0"+hour+":00"+a);
+				hour24 = Utils.convertTo24Hours("0"+hour+":00"+timePeriod);
 			}else if(hour.length() == 4){
-				hour24 = Utils.convertTo24Hours("0"+hour+a);
+				hour24 = Utils.convertTo24Hours("0"+hour+timePeriod);
 			}else if(hour.length() == 2){
-				hour24 = Utils.convertTo24Hours(hour+":00"+a);
+				hour24 = Utils.convertTo24Hours(hour+":00"+timePeriod);
 			}else{
-				hour24 = Utils.convertTo24Hours(hour+a);
+				hour24 = Utils.convertTo24Hours(hour+timePeriod);
 			}
 			return hour24;
 		}
+		String[] hour24 = new String[2];
+		String[] startEnd = hour.split(timeSeparator);
+		for (int i=0; i<startEnd.length; i++){
+			if (startEnd[i].contains(":")){
+				if (startEnd[i].length() == 4){
+					hour24[i] = "0"+startEnd[i];
+				}else{
+					hour24[i] = startEnd[i];
+				}
+			}else{
+				//System.out.println("|"+startEnd[i] +"|");
+				if (startEnd[i].length() == 1){
+					hour24[i] = "0"+startEnd[i]+":00";
+				}else{
+					hour24[i] = startEnd[i]+":00";
+				}
+			}
+			hour24[i] = Utils.convertTo24Hours(hour24[i]+timePeriod);
+		}
+		return hour24[0]+"-"+hour24[1];
 	}
 
 	/**

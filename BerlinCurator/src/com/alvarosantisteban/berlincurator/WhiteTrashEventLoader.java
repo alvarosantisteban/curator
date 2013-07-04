@@ -71,6 +71,8 @@ public class WhiteTrashEventLoader implements EventLoader{
 				
 				// Set the location
 				event.setLocation("<a href=\"https://maps.google.es/maps?q=Schoenhauser+Allee+6-7,+Berlin\">White Trash Bar</a>");
+				// Set the origin
+				event.setEventsOrigin(MainActivity.websNames[3]);
 				events.add(event);
 			}
 		}

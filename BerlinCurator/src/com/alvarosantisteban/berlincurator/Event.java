@@ -79,6 +79,11 @@ public class Event implements Serializable{
 	 */
 	private boolean isDescriptionInGerman = false;
 	
+	/**
+	 * The name of the website where the event comes from
+	 */
+	private String eventsOrigin = "";
+	
 	public UUID getId(){
 		return this.id;
 	}
@@ -187,6 +192,14 @@ public class Event implements Serializable{
 	
 	public void setImage(String image){
 		this.image = image;
+	}
+	
+	public String getEventsOrigin(){
+		return this.eventsOrigin;
+	}
+	
+	public void setEventsOrigin(String websiteName){
+		this.eventsOrigin = websiteName;
 	}
 	
 	public void print() {

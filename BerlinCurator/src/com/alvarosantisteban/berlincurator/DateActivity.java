@@ -140,7 +140,7 @@ public class DateActivity extends Activity{
 		// Populate the ArrayList "websitesList" and the LinkedHashMap "websites"
 		createHeaderGroups(sitesNames);
 		*/
-		createHeaderGroups(MainActivity.webs);
+		createHeaderGroups(MainActivity.websNames);
 		
 		expandableSitesList = (ExpandableListView) findViewById(R.id.expandableSitesList);
 		// Create the adapter by passing the ArrayList data
@@ -212,7 +212,7 @@ public class DateActivity extends Activity{
 	}
 	
 	/**
-	 * Loads the events from the selected websites into out list if the day is the right one
+	 * Loads the events from the selected websites into the list if the day is the right one
 	 */
 	private void loadEvents(){ 
 		// Load the events for the selected websites
@@ -224,6 +224,7 @@ public class DateActivity extends Activity{
 			for (int i=0; i<eventsList.size();i++){
 				if(eventsList.get(i).getDay().equals(choosenDate)){
 					addEvent(entry.getKey(), eventsList.get(i));
+					//addEvent(eventsList.get(i).getEventsOrigin(), eventsList.get(i));
 				}
 			}
 		}
@@ -231,7 +232,7 @@ public class DateActivity extends Activity{
 	
 	
 	/**
-	 * Add a event to its corresponding group (site where it comes from)
+	 * Add an event to its corresponding group (site where it comes from)
 	 * 
 	 * @param websiteName String with the name of the website from where the event comes from
 	 * @param newEvent The event to be attached

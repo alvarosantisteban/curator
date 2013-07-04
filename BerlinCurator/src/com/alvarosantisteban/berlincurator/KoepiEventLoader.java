@@ -7,6 +7,8 @@ import android.content.Context;
 public class KoepiEventLoader implements EventLoader{
 	
 	private final static String URL = "http://www.koepi137.net/eventskonzerte.php";
+	
+	private final String origin = "Koepies activities";
 
 	@Override
 	public List<Event> load(Context context) {
@@ -66,6 +68,8 @@ public class KoepiEventLoader implements EventLoader{
 				String[] pureLink = htmlLink[1].split("\"",2); // Get link
 				event.setLink(pureLink[0]);
 			}			
+			// Set the origin
+			event.setEventsOrigin(MainActivity.websNames[4]);
 			events.add(event);
 		}
 		return events;

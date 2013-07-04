@@ -75,6 +75,8 @@ public class IHeartBerlinEventLoader implements EventLoader {
 					}
 					event.setLink(links);
 				}
+				// Set the origin
+				event.setEventsOrigin(MainActivity.websNames[0]);
 				events.add(event);
 			}
 		}

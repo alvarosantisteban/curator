@@ -64,6 +64,8 @@ public class MetalConcertsEventLoader implements EventLoader{
 				event.setDescription("The concert will take place at the " +concertPlace);
 				event.setLocation("<a href=\"https://maps.google.es/maps?q=" +concertPlace.replace(' ', '+') +",+Berlin\">" +concertPlace +"</a>");
 			}
+			// Set the origin
+			event.setEventsOrigin(MainActivity.websNames[2]);
 			events.add(event);
 		}
 		return events;

@@ -68,7 +68,8 @@ public class StressFaktorEventLoader implements EventLoader {
 				String description = removeImageLinks(descriptionAndNothing[0]);
 				// Set the description
 				event.setDescription(description +"<br>" +place);
-				
+				// Set the origin
+				event.setEventsOrigin(MainActivity.websNames[6]);
 				events.add(event);
 			}
 		}

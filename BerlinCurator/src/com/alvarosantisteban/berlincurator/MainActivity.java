@@ -58,10 +58,18 @@ public class MainActivity extends Activity {
 	 */
 	SharedPreferences sharedPref;
 	Context context;
+	
 	/**
 	 * The total set of webs where the events can be extracted
 	 */
-	public static String[] webs = {"I Heart Berlin", "Berlin Art Parasites", "Metal Concerts", "White Trashs concerts", "Koepis activities", "Goth Datum", "Stress Faktor", "Index"};
+	public static String[] websNames = {"I Heart Berlin", 
+									"Berlin Art Parasites", 
+									"Metal Concerts", 
+									"White Trashs concerts", 
+									"Koepis activities", 
+									"Goth Datum", 
+									"Stress Faktor", 
+									"Index"};
 	
 	/**
 	 * The set of urls from where the html will be downloaded
@@ -105,15 +113,15 @@ public class MainActivity extends Activity {
 		 */
 		
 		// Check which sites are meant to be shown
-		Set<String> set = sharedPref.getStringSet("multilist", new HashSet<String>(Arrays.asList(webs)));
-		webs = set.toArray(new String[0]);
+		Set<String> set = sharedPref.getStringSet("multilist", new HashSet<String>(Arrays.asList(websNames)));
+		websNames = set.toArray(new String[0]);
 
 		/*
 		 * To check that the websites are there
 		 * */
 		System.out.println();
-		for(int i=0;i<webs.length;i++){
-			System.out.print(webs[i] + " / ");
+		for(int i=0;i<websNames.length;i++){
+			System.out.print(websNames[i] + " / ");
 		}
 		System.out.println();
 		
@@ -243,30 +251,30 @@ public class MainActivity extends Activity {
 			events.clear();
 			// TODO Instead of clearing all the events, maintain the ones that did not change
 			// Load the events from the selected websites
-			for (int i=0; i<webs.length; i++){
+			for (int i=0; i<websNames.length; i++){
 				List<Event> event = null;
-				if (webs[i].equals("I Heart Berlin")){
+				if (websNames[i].equals("I Heart Berlin")){
 					System.out.println("Ihearberlin dentro");
 					event = EventLoaderFactory.newIHeartBerlinEventLoader().load(context);
-				}else if(webs[i].equals("Berlin Art Parasites")){
+				}else if(websNames[i].equals("Berlin Art Parasites")){
 					System.out.println("artParasites dentro");
 					event = EventLoaderFactory.newArtParasitesEventLoader().load(context);
-				}else if(webs[i].equals("Metal Concerts")){
+				}else if(websNames[i].equals("Metal Concerts")){
 					System.out.println("metalConcerts dentro");
 					event = EventLoaderFactory.newMetalConcertsEventLoader().load(context);
-				}else if(webs[i].equals("White Trashs concerts")){
+				}else if(websNames[i].equals("White Trashs concerts")){
 					System.out.println("whitetrash dentro");
 					event = EventLoaderFactory.newWhiteTrashEventLoader().load(context);
-				}else if(webs[i].equals("Koepis activities")){
+				}else if(websNames[i].equals("Koepis activities")){
 					System.out.println("koepi dentro");
 					event = EventLoaderFactory.newKoepiEventLoader().load(context);
-				}else if(webs[i].equals("Goth Datum")){
+				}else if(websNames[i].equals("Goth Datum")){
 					System.out.println("goth dentro");
 					event = EventLoaderFactory.newGothDatumEventLoader().load(context);
-				}else if(webs[i].equals("Stress Faktor")){
+				}else if(websNames[i].equals("Stress Faktor")){
 					System.out.println("Stresssssss faktor dentro");
 					event = EventLoaderFactory.newStressFaktorEventLoader().load(context);
-				}else if(webs[i].equals("Index")){
+				}else if(websNames[i].equals("Index")){
 					System.out.println("Index dentro");
 					event = EventLoaderFactory.newIndexEventLoader().load(context);
 				}else{
@@ -275,10 +283,10 @@ public class MainActivity extends Activity {
 				// If there was a problem loading the events we tell the user
 				if (event == null){
 					System.out.println("Event is null");
-					publishProgress("Exception", webs[i]);		
+					publishProgress("Exception", websNames[i]);		
 				}else{
 					// If not, we store its events
-					events.put(webs[i], event);
+					events.put(websNames[i], event);
 				}
 			}
 			return events;

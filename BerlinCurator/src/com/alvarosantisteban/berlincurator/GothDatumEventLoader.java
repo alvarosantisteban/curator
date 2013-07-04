@@ -92,6 +92,8 @@ public class GothDatumEventLoader implements EventLoader {
 				if (!link.equals("no link")){
 					event.setLink(link);
 				}
+				// Set the origin
+				event.setEventsOrigin(MainActivity.websNames[5]);
 				events.add(event);
 			}
 		}

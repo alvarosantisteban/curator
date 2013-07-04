@@ -44,8 +44,8 @@ public class SettingsFragment extends PreferenceFragment implements OnSharedPref
             // Get the new values
             Set<String> set = sharedPreferences.getStringSet(key, null);
             // Set the new values on the list
-    		MainActivity.webs = set.toArray(new String[0]);
-    		// Set the values on the list
+    		MainActivity.websNames = set.toArray(new String[0]);
+    		// Set the values on the list shown
             connectionPref.setValues(set);
         }
 		

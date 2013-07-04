@@ -25,10 +25,10 @@ public class IndexEventLoader implements EventLoader {
 	
 	/**
 	 * Creates a set of events from the html of the Index website. 
-	 * Each Event has name, day, description, time, link and tag.
+	 * Each Event has name, day, description, time, location, origin and tag.
 	 * 
 	 * @param theHtml the String containing the html from the Index website
-	 * @return a List of Event with the name, day, description, time, link and tag.
+	 * @return a List of Event with the name, day, description, time, location, origin and tag.
 	 */
 	private List<Event> extractEventsFromIndex(String theHtml) throws ArrayIndexOutOfBoundsException{  	
 		String myPattern = "<div class=\"line-thick\">";
@@ -37,26 +37,20 @@ public class IndexEventLoader implements EventLoader {
 		// Throw away the first entry of the array because it does not contain an event
 		List<Event> events = new ArrayList<Event>(result.length-1); 
 		for (int i=1; i<result.length; i++){
-			// Separate up to the first "</strong>"
+			// Separate up to the first "</h1>"
 			String[] dateAndRest = result[i].split("</h1>", 2);
 			// Get the date
 			String[] dayAndDate = dateAndRest[0].split("<h1>", 2);
 			String[] eventsOfADay = dateAndRest[1].split("<li>"); // Marks the number of events
 			for (int j=1; j<eventsOfADay.length; j++){
-				//System.out.println(j);
 				Event event = new Event();
 				// Format the date and set it
-				//System.out.println("dayAndDate[1].trim()" +dayAndDate[1].trim());
 				String date = Utils.formatDate(dayAndDate[1].trim());
-				System.out.println("Date:"+date+".");
 				event.setDay(date);
-				//System.out.println("eo: "+eventsOfADay.length);
-				String[] placeAndRest = eventsOfADay[j].split("</a>",2);
 				
+				String[] placeAndRest = eventsOfADay[j].split("</a>",2);
 				String[] placeAndRest2 = placeAndRest[0].split(">");
-				//System.out.println("eo2");
-				// Set the place
-				//System.out.println("placeAndRest2[2]: "+placeAndRest2[2]);
+				// Set the location
 				event.setLocation("<a href=\"https://maps.google.es/maps?q="+placeAndRest2[2].trim().replace(' ', '+')+"\">"+placeAndRest2[2].trim()+"</a>");
 				String[] tagAndHour = placeAndRest[1].split("<br />");
 				String[] tagAndMaybeHour = tagAndHour[1].split(",",2);
@@ -70,15 +64,17 @@ public class IndexEventLoader implements EventLoader {
 				String[] name2 = name[1].split("</em>",2);
 				if(name2[0].equals("")){
 					// There is no name, we use the tag as name
-					//System.out.println("tagAndMaybeHour[0]: " +tagAndMaybeHour[0]);
 					event.setName(tagAndMaybeHour[0]);
 				}else{
-					//System.out.println("name2[0]: " +name2[0]);
-					event.setName(tagAndMaybeHour[0] +":" +name2[0]);
+					event.setName(tagAndMaybeHour[0] +": " +name2[0]);
 				}
-				String[] description = tagAndHour[2].split("<div class=\"cal-holder\">");
-				//System.out.println("description[0]: "+description[0]);
-				event.setDescription(description[0]);
+				String[] description = placeAndRest[1].split("<br />",2);
+				String[] description2 = description[1].split("<div class=\"cal-holder\">");
+				
+				// Set the description
+				event.setDescription(description2[0].replace("<strong>", "Artist/s: ").replace("</strong>", ""));
+				// Set the origin
+				event.setEventsOrigin(MainActivity.websNames[7]);
 				events.add(event);
 			}
 		}
@@ -87,13 +83,15 @@ public class IndexEventLoader implements EventLoader {
 
 	
 	/**
+	 * THIS METHOD HAS NOT BEEN TESTED AND PROBABLY IT WONT BE NEEDED
+	 * 
 	 * Creates a set of events from the html of the Index website. 
 	 * Each Event has name, day, description, time, link and tag.
 	 * 
 	 * @param theHtml the String containing the html from the Index website
 	 * @return a List of Event with the name, day, description, time, link and tag.
-	 *
-	private List<Event> extractEventsFromIndex(String theHtml) throws ArrayIndexOutOfBoundsException{  
+	 */
+	private List<Event> extractEventsFromIndexNotMobile(String theHtml) throws ArrayIndexOutOfBoundsException{  
 		//System.out.println("\n\n\n\n"+theHtml);
 		
 		String myPattern = "<tr class=\"venuesItem\">";
@@ -137,19 +135,9 @@ public class IndexEventLoader implements EventLoader {
 			String[] description = nothingAndRest[1].split("<div class=\"mapExhibitions\">",2);
 			// Set the description
 			event.setDescription(description[0]);
-			/*
-			String[] artists = tagAndRest2[1].split("<div style=\"display:inline; font-weight:bold;\">",2);
-			if (artists.length > 1){
-				// Make the artists part of the description
-				String[] artists2 = artists[1].split("<",2);
-				description += "The artist/s is/are: "+artists2[0];
-			}
-			*
-			System.out.println("--------------------------------\n"+description[0]);
 			events.add(event);
 		}
 		return events;
 	}
 
-	*/
 }
