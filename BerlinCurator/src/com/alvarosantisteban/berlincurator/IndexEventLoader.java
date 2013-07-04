@@ -7,11 +7,12 @@ import android.content.Context;
 
 public class IndexEventLoader implements EventLoader {
 	
-	private final static String URL = "http://www.indexberlin.de/openings-and-events";
+	public final static String websiteURL = "http://www.indexberlin.de/openings-and-events";
+	public final static String webName = "Index";
 
 	@Override
 	public List<Event> load(Context context) {
-		String html = WebUtils.downloadHtml(URL, context);
+		String html = WebUtils.downloadHtml(websiteURL, context);
 		if(html.equals("Exception")){
 			return null;
 		}
@@ -74,7 +75,7 @@ public class IndexEventLoader implements EventLoader {
 				// Set the description
 				event.setDescription(description2[0].replace("<strong>", "Artist/s: ").replace("</strong>", ""));
 				// Set the origin
-				event.setEventsOrigin(MainActivity.websNames[7]);
+				event.setEventsOrigin(webName);
 				events.add(event);
 			}
 		}

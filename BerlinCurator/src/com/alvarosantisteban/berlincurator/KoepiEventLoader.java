@@ -6,13 +6,12 @@ import android.content.Context;
 
 public class KoepiEventLoader implements EventLoader{
 	
-	private final static String URL = "http://www.koepi137.net/eventskonzerte.php";
-	
-	private final String origin = "Koepies activities";
+	public final static String websiteURL = "http://www.koepi137.net/eventskonzerte.php";
+	public final static String webName = "Köpi´s events";
 
 	@Override
 	public List<Event> load(Context context) {
-		String html = WebUtils.downloadHtml(URL, context);
+		String html = WebUtils.downloadHtml(websiteURL, context);
 		if(html.equals("Exception")){
 			return null;
 		}
@@ -69,7 +68,7 @@ public class KoepiEventLoader implements EventLoader{
 				event.setLink(pureLink[0]);
 			}			
 			// Set the origin
-			event.setEventsOrigin(MainActivity.websNames[4]);
+			event.setEventsOrigin(webName);
 			events.add(event);
 		}
 		return events;

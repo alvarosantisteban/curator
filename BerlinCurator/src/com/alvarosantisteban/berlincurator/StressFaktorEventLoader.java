@@ -6,11 +6,12 @@ import android.content.Context;
 
 public class StressFaktorEventLoader implements EventLoader {
 	
-	private final static String URL = "http://stressfaktor.squat.net/termine.php?display=7";
+	public final static String websiteURL = "http://stressfaktor.squat.net/termine.php?display=7";
+	public final static String webName = "Stress Faktor";
 
 	@Override
 	public List<Event> load(Context context) {
-		String html = WebUtils.downloadHtml(URL, context);
+		String html = WebUtils.downloadHtml(websiteURL, context);
 		if(html.equals("Exception")){
 			return null;
 		}
@@ -69,7 +70,7 @@ public class StressFaktorEventLoader implements EventLoader {
 				// Set the description
 				event.setDescription(description +"<br>" +place);
 				// Set the origin
-				event.setEventsOrigin(MainActivity.websNames[6]);
+				event.setEventsOrigin(webName);
 				events.add(event);
 			}
 		}

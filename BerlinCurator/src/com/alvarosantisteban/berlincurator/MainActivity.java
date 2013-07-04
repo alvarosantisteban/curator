@@ -62,26 +62,26 @@ public class MainActivity extends Activity {
 	/**
 	 * The total set of webs where the events can be extracted
 	 */
-	public static String[] websNames = {"I Heart Berlin", 
-									"Berlin Art Parasites", 
-									"Metal Concerts", 
-									"White Trashs concerts", 
-									"Koepis activities", 
-									"Goth Datum", 
-									"Stress Faktor", 
-									"Index"};
+	public static String[] websNames = {IHeartBerlinEventLoader.webName, 
+									ArtParasitesEventLoader.webName, 
+									MetalConcertsEventLoader.webName, 
+									WhiteTrashEventLoader.webName, 
+									KoepiEventLoader.webName, 
+									GothDatumEventLoader.webName, 
+									StressFaktorEventLoader.webName, 
+									IndexEventLoader.webName};
 	
 	/**
 	 * The set of urls from where the html will be downloaded
 	 */
-   	String[] stringUrls = {"http://www.iheartberlin.de/events/",
-				   			"http://www.berlin-artparasites.com/recommended",
-				   			"http://berlinmetal.lima-city.de/index.php/index.php?id=start",
-				   			"http://www.whitetrashfastfood.com/events/",
-				   			"http://www.koepi137.net/eventskonzerte.php",
-				   			"http://www.goth-city-radio.com/dsb/dates.php",
-				   			"http://stressfaktor.squat.net/termine.php?display=7",
-				   			"http://www.indexberlin.de/openings-and-events"};
+   	String[] stringUrls = {IHeartBerlinEventLoader.websiteURL,
+				   			ArtParasitesEventLoader.websiteURL,
+				   			MetalConcertsEventLoader.websiteURL,
+				   			WhiteTrashEventLoader.websiteURL,
+				   			KoepiEventLoader.websiteURL,
+				   			GothDatumEventLoader.websiteURL,
+				   			StressFaktorEventLoader.websiteURL,
+				   			IndexEventLoader.websiteURL};
    	/**
    	 * The progress bar for downloading and extracting the events
    	 */

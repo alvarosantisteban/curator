@@ -6,11 +6,12 @@ import android.content.Context;
 
 public class WhiteTrashEventLoader implements EventLoader{
 	
-	private final static String URL = "http://www.whitetrashfastfood.com/events/";
+	public final static String websiteURL = "http://www.whitetrashfastfood.com/events/";
+	public final static String webName = "White Trash";
 
 	@Override
 	public List<Event> load(Context context) {
-		String html = WebUtils.downloadHtml(URL, context);
+		String html = WebUtils.downloadHtml(websiteURL, context);
 		if(html.equals("Exception")){
 			return null;
 		}try{
@@ -72,7 +73,7 @@ public class WhiteTrashEventLoader implements EventLoader{
 				// Set the location
 				event.setLocation("<a href=\"https://maps.google.es/maps?q=Schoenhauser+Allee+6-7,+Berlin\">White Trash Bar</a>");
 				// Set the origin
-				event.setEventsOrigin(MainActivity.websNames[3]);
+				event.setEventsOrigin(webName);
 				events.add(event);
 			}
 		}

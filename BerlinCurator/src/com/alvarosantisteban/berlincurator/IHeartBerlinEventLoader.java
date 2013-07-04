@@ -6,11 +6,12 @@ import android.content.Context;
 
 public class IHeartBerlinEventLoader implements EventLoader {
 	
-	private final static String URL = "http://www.iheartberlin.de/events/";
+	public final static String websiteURL = "http://www.iheartberlin.de/events/";
+	public final static String webName = "I Heart Berlin";
 
 	@Override
 	public List<Event> load(Context context) {
-		String html = WebUtils.downloadHtml(URL, context);
+		String html = WebUtils.downloadHtml(websiteURL, context);
 		if(html.equals("Exception")){
 			return null;
 		}
@@ -76,7 +77,7 @@ public class IHeartBerlinEventLoader implements EventLoader {
 					event.setLink(links);
 				}
 				// Set the origin
-				event.setEventsOrigin(MainActivity.websNames[0]);
+				event.setEventsOrigin(webName);
 				events.add(event);
 			}
 		}

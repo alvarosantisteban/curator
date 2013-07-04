@@ -1,36 +1,45 @@
 package com.alvarosantisteban.berlincurator;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Context;
 
 public class ArtParasitesEventLoader implements EventLoader {
 	
-	private final static String URL = "http://www.berlin-artparasites.com/recommended";
+	public final static String websiteURL = "http://www.berlin-artparasites.com/recommended";
+	public final static String webName = "Berlin Art Parasites";
 
 	@Override
 	public List<Event> load(Context context) {
-		String html = WebUtils.downloadHtml(URL, context);
-		// TODO Control that it's only done from thursday to sunday
-		try{
-			String subUrl = extractUrlFromMainArtParasites(html);
-			System.out.println("subUrl"+subUrl);
-			html = WebUtils.downloadHtml(subUrl, context);
-			return extractEventsFromArtParasites(html);
-		}catch(ArrayIndexOutOfBoundsException e){
-			System.out.println(e);
-			return null;
+		String html = WebUtils.downloadHtml(websiteURL, context);
+		if(isBerlinWeekend()){
+			System.out.println("Is Berlin Weeeeeeekend");
+			try{
+				String subUrl = extractUrlFromMainArtParasites(html);
+				System.out.println("subUrl"+subUrl);
+				html = WebUtils.downloadHtml(subUrl, context);
+				return extractEventsFromArtParasites(html);
+			}catch(ArrayIndexOutOfBoundsException e){
+				System.out.println(e);
+				return null;
+			}
 		}
+		return null;
 	}
 
-	
+	/**
+	 * The weekend in Berlin starts on Thursday. This function checks if today is thursday, friday, saturday or sunday.
+	 * 
+	 * @return true if the day when the function is running is thursday, friday, saturday or sunday. False otherwise.
+	 */
+	private boolean isBerlinWeekend() {
+		Calendar calendar = Calendar.getInstance();
+		int day = calendar.get(Calendar.DAY_OF_WEEK); 
+		return (day== Calendar.THURSDAY || day == Calendar.FRIDAY || day == Calendar.SATURDAY || day == Calendar.SUNDAY);
+	}
+
+
 	/**
 	 * Creates a set of events from the html of the Berlin Art Parasites website. 
 	 * Each Event has name, day, description and a link.
@@ -58,7 +67,7 @@ public class ArtParasitesEventLoader implements EventLoader {
 				String day = Utils.formatDate(dayAndDate[1].replace(",", "").trim());
 				event.setDay(day);
 				
-				//System.out.println("eventsOfADay[(j*2)-1]"+eventsOfADay[(j*2)-1]);
+				System.out.println("eventsOfADay[(j*2)-1]"+eventsOfADay[(j*2)-1]);
 				String[] linkAndPlace = eventsOfADay[(j*2)-1].split("</a>",2);
 				String[] place = linkAndPlace[0].split("\">"); 
 				// Extract the location
@@ -81,7 +90,7 @@ public class ArtParasitesEventLoader implements EventLoader {
 				// Extract the name and a link and set them
 				String[] linkNameAndRest = eventsOfADay[(j*2)].split("</a>",2);
 				String[] linkAndName = linkNameAndRest[0].split("\">"); 
-				//System.out.println("name:" +linkAndName[1]);
+				System.out.println("name:" +linkAndName[1]);
 				event.setName(linkAndName[1]);
 				
 				// Extract the links
@@ -97,11 +106,11 @@ public class ArtParasitesEventLoader implements EventLoader {
 				
 				// Create the description and set it
 				String description = linkAndName[1] + " at the " +place[1] +":" +"<br>" + descriptionAndNothing[0].trim();
-				//System.out.println("description:" +description);
+				System.out.println("description:" +description);
 				event.setDescription(description);
 				
 				// Set the origin
-				event.setEventsOrigin(MainActivity.websNames[1]);
+				event.setEventsOrigin(webName);
 				events.add(event);
 			}
 		}

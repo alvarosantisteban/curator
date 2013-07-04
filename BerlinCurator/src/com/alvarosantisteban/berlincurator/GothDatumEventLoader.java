@@ -8,7 +8,9 @@ import android.content.Context;
 
 public class GothDatumEventLoader implements EventLoader {
 	
-	private final static String URL = "http://www.goth-city-radio.com/dsb/dates.php";
+	public final static String websiteURL = "http://www.goth-city-radio.com/dsb/dates.php";
+	public final static String webName = "Goth Datum";
+	
 	/**
 	 * Map with names of clubs and its corresponding website url
 	 */
@@ -37,7 +39,7 @@ public class GothDatumEventLoader implements EventLoader {
 
 	@Override
 	public List<Event> load(Context context) {
-		String html = WebUtils.downloadHtml(URL, context);
+		String html = WebUtils.downloadHtml(websiteURL, context);
 		if(html.equals("Exception")){
 			return null;
 		}
@@ -93,7 +95,7 @@ public class GothDatumEventLoader implements EventLoader {
 					event.setLink(link);
 				}
 				// Set the origin
-				event.setEventsOrigin(MainActivity.websNames[5]);
+				event.setEventsOrigin(webName);
 				events.add(event);
 			}
 		}
